@@ -1,4 +1,11 @@
 package rbdavis.server.services;
 
-public class ClearService {
+import javax.xml.ws.spi.http.HttpExchange;
+
+public class ClearService
+{
+    HttpExchange clear(HttpExchange request)
+    {
+        return request;
+    }
 }

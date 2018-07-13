@@ -26,7 +26,7 @@ public class UserSqlDAO implements DAO<User>
     }
 
     @Override
-    public User find(String id)
+    public User findById(String id)
     {
         return null;
     }

@@ -1,17 +1,13 @@
 package rbdavis.server.database.dataaccess.sql;
 
 import rbdavis.server.database.dataaccess.DAO;
-import rbdavis.shared.models.Gender;
 import rbdavis.shared.models.User;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.UUID;
 
 public class SqlDAO
 {

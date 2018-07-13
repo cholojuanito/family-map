@@ -26,7 +26,7 @@ public class PersonSqlDAO extends SqlDAO implements DAO<Person>
     }
 
     @Override
-    public Person find(String id)
+    public Person findById(String id)
     {
         return null;
     }

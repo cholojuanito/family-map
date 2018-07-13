@@ -1,4 +1,11 @@
 package rbdavis.server.services;
 
-public class RegisterService {
+import javax.xml.ws.spi.http.HttpExchange;
+
+public class RegisterService
+{
+    HttpExchange register(HttpExchange request)
+    {
+        return request;
+    }
 }

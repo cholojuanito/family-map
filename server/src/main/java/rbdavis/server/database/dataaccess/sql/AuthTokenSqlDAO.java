@@ -26,7 +26,7 @@ public class AuthTokenSqlDAO implements DAO<AuthToken>
     }
 
     @Override
-    public AuthToken find(String id)
+    public AuthToken findById(String id)
     {
         return null;
     }

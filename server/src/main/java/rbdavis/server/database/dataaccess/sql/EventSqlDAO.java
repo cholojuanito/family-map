@@ -26,7 +26,7 @@ public class EventSqlDAO implements DAO<Event>
     }
 
     @Override
-    public Event find(String id)
+    public Event findById(String id)
     {
         return null;
     }
