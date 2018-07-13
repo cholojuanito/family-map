@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.UUID;
@@ -70,5 +71,21 @@ public class EventTest {
         assertEquals(newCity, eventUnderTest.getCity());
         assertEquals(newCountry, eventUnderTest.getCountry());
         assertEquals(newHappenedOn.toString(), eventUnderTest.getDateHappened().toString());
+    }
+
+    @Test
+    public void testNullConstructor()
+    {
+        try
+        {
+            eventUnderTest = new Event(null, null, null, null, null,
+                                    null, null, null, null);
+        }
+        catch (InvalidParameterException e)
+        {
+            eventUnderTest = null;
+        }
+
+        assertNull(eventUnderTest);
     }
 }

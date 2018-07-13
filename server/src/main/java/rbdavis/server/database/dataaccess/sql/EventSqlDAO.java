@@ -1,7 +1,7 @@
 package rbdavis.server.database.dataaccess.sql;
 
-import database.dataaccess.DAO;
-import models.Event;
+import rbdavis.server.database.dataaccess.DAO;
+import rbdavis.shared.models.Event;
 
 import java.util.List;
 

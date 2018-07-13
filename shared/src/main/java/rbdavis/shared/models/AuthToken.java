@@ -19,7 +19,7 @@ public class AuthToken
     public AuthToken(String token, String userId)
     {
         this(userId);
-        this.setToken(token);
+        setToken(token);
     }
 
 
@@ -58,7 +58,7 @@ public class AuthToken
     {
         if (token == null)
         {
-            this.token = UUID.randomUUID().toString();
+            throw new InvalidParameterException("Token cannot be empty.");
         }
         else
         {
@@ -99,7 +99,8 @@ public class AuthToken
     {
         if (startTime != null)
         {
-            this.endTime = this.startTime.plusMinutes(30);
+            //this.endTime = this.startTime.plusMinutes(30);
+            this.endTime = this.startTime.plusSeconds(10);
         }
     }
 }

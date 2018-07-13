@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -14,8 +13,7 @@ public class AuthTokenTest
 {
     private String token;
     private String userID;
-    private LocalDateTime createdAt;
-    private LocalDateTime endsAt;
+    private LocalDateTime startTime;
 
     AuthToken tokenUnderTest;
 
@@ -24,10 +22,9 @@ public class AuthTokenTest
     {
         token = UUID.randomUUID().toString();
         userID = UUID.randomUUID().toString();
-        createdAt = LocalDateTime.now();
-        endsAt = createdAt.plusSeconds(5);
+        startTime = LocalDateTime.now();
 
-        tokenUnderTest = new AuthToken(token, userID, createdAt, endsAt);
+        tokenUnderTest = new AuthToken(token, userID, startTime);
     }
 
     @After
@@ -42,9 +39,8 @@ public class AuthTokenTest
         String token = UUID.randomUUID().toString();
         String userID = UUID.randomUUID().toString();
         LocalDateTime createdAt = LocalDateTime.now();
-        LocalDateTime endsAt = createdAt.plusSeconds(10);
 
-        tokenUnderTest = new AuthToken(token, userID, createdAt, endsAt);
+        tokenUnderTest = new AuthToken(token, userID, createdAt);
     }
 
 
@@ -55,7 +51,7 @@ public class AuthTokenTest
 
         try
         {
-            Thread.sleep(5000);
+            Thread.sleep(10000);
         }
         catch (InterruptedException e)
         {

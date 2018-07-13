@@ -1,5 +1,6 @@
 package rbdavis.shared.models;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
 
 public class Event
@@ -18,21 +19,21 @@ public class Event
     public Event(String personId, String userId, EventType type, String latitude, String longitude,
                     String city, String country, LocalDate dateHappened)
     {
-        this.personId = personId;
-        this.userId = userId;
-        this.type = type;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.city = city;
-        this.country = country;
-        this.dateHappened = dateHappened;
+        setPersonId(personId);
+        setUserId(userId);
+        setType(type);
+        setLatitude(latitude);
+        setLongitude(longitude);
+        setCity(city);
+        setCountry(country);
+        setDateHappened(dateHappened);
     }
 
     public Event(String id, String personId, String userId, EventType type, String latitude,
                     String longitude, String city, String country, LocalDate dateHappened)
     {
         this(personId, userId, type, latitude, longitude, city, country, dateHappened);
-        this.id = id;
+        setId(id);
     }
 
     public String getId()
@@ -42,6 +43,10 @@ public class Event
 
     public void setId(String id)
     {
+        if (id == null)
+        {
+            throw new InvalidParameterException("Id cannot be empty.");
+        }
         this.id = id;
     }
 
@@ -52,6 +57,10 @@ public class Event
 
     public void setPersonId(String personId)
     {
+        if (personId == null)
+        {
+            throw new InvalidParameterException("Id cannot be empty.");
+        }
         this.personId = personId;
     }
 
@@ -62,6 +71,10 @@ public class Event
 
     public void setUserId(String userId)
     {
+        if (userId == null)
+        {
+            throw new InvalidParameterException("Id cannot be empty.");
+        }
         this.userId = userId;
     }
 
@@ -82,6 +95,10 @@ public class Event
 
     public void setLatitude(String latitude)
     {
+        if (latitude == null)
+        {
+            throw new InvalidParameterException("Id cannot be empty.");
+        }
         this.latitude = latitude;
     }
 
@@ -92,6 +109,10 @@ public class Event
 
     public void setLongitude(String longitude)
     {
+        if (longitude == null)
+        {
+            throw new InvalidParameterException("Id cannot be empty.");
+        }
         this.longitude = longitude;
     }
 
@@ -102,6 +123,10 @@ public class Event
 
     public void setCity(String city)
     {
+        if (city == null)
+        {
+            throw new InvalidParameterException("Id cannot be empty.");
+        }
         this.city = city;
     }
 
@@ -112,6 +137,10 @@ public class Event
 
     public void setCountry(String country)
     {
+        if (country == null)
+        {
+            throw new InvalidParameterException("Id cannot be empty.");
+        }
         this.country = country;
     }
 

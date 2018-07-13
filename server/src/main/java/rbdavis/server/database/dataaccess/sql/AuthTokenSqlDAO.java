@@ -1,7 +1,7 @@
 package rbdavis.server.database.dataaccess.sql;
 
-import database.dataaccess.DAO;
-import models.AuthToken;
+import rbdavis.server.database.dataaccess.DAO;
+import rbdavis.shared.models.AuthToken;
 
 import java.util.List;
 
