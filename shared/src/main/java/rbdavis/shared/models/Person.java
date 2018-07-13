@@ -1,6 +1,8 @@
 package rbdavis.shared.models;
 
-public class Person extends Model
+import java.security.InvalidParameterException;
+
+public class Person
 {
     private String id;
     private String userId;
@@ -11,26 +13,22 @@ public class Person extends Model
     private String motherID = null;
     private String spouseID = null;
 
-    public Person()
-    {
-    }
-
     public Person(String userId, String firstName, String lastName, Gender gender,
-                  String fatherId, String motherID, String spouseID) {
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.fatherId = fatherId;
-        this.motherID = motherID;
-        this.spouseID = spouseID;
+                    String fatherId, String motherID, String spouseID) {
+        setUserId(userId);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setGender(gender);
+        setFatherId(fatherId);
+        setMotherID(motherID);
+        setSpouseID(spouseID);
     }
 
     public Person(String id, String userId, String firstName, String lastName, Gender gender,
-                  String fatherId, String motherID, String spouseID)
+                    String fatherId, String motherID, String spouseID)
     {
         this(userId, firstName, lastName, gender, fatherId, motherID, spouseID);
-        this.id = id;
+        setId(id);
     }
 
     public String getId()
@@ -40,6 +38,10 @@ public class Person extends Model
 
     public void setId(String id)
     {
+        if (id == null)
+        {
+            throw new InvalidParameterException("Id cannot be empty.");
+        }
         this.id = id;
     }
 
@@ -50,6 +52,10 @@ public class Person extends Model
 
     public void setUserId(String userId)
     {
+        if (userId == null)
+        {
+            throw new InvalidParameterException("UserId cannot be empty.");
+        }
         this.userId = userId;
     }
 
@@ -60,6 +66,10 @@ public class Person extends Model
 
     public void setFirstName(String firstName)
     {
+        if (firstName == null)
+        {
+            throw new InvalidParameterException("First name cannot be empty.");
+        }
         this.firstName = firstName;
     }
 
@@ -70,6 +80,10 @@ public class Person extends Model
 
     public void setLastName(String lastName)
     {
+        if (lastName == null)
+        {
+            throw new InvalidParameterException("Last name cannot be empty.");
+        }
         this.lastName = lastName;
     }
 

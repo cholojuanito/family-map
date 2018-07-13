@@ -1,30 +1,52 @@
 package rbdavis.shared.models;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class AuthToken extends Model
+public class AuthToken
 {
     private String token;
-    private String userID;
-    private LocalDateTime createdAt;
-    private LocalDateTime endsAt;
+    private String userId;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
-    public AuthToken()
+    public AuthToken(String userId)
     {
+        setUserId(userId);
     }
 
-    public AuthToken(String userID, LocalDateTime createdAt, LocalDateTime endsAt)
+    public AuthToken(String token, String userId)
     {
-        this.userID = userID;
-        this.createdAt = createdAt;
-        this.endsAt = endsAt;
+        this(userId);
+        this.setToken(token);
     }
 
-    public AuthToken(String token, String userID, LocalDateTime createdAt, LocalDateTime endsAt)
+
+    public AuthToken(String userId, LocalDateTime startTime)
     {
-        this(userID, createdAt, endsAt);
-        this.token = token;
+        setUserId(userId);
+        setStartTime(startTime);
+        setEndsAt();
+    }
+
+    public AuthToken(String token, String userId, LocalDateTime startTime)
+    {
+        this(userId, startTime);
+        setToken(token);
+    }
+
+    public boolean isExpired()
+    {
+        if (startTime == null || endTime == null)
+        {
+            return false;
+        }
+
+        if (LocalDateTime.now().isAfter(endTime))
+            return true;
+        else
+            return false;
     }
 
     public String getToken()
@@ -34,36 +56,50 @@ public class AuthToken extends Model
 
     public void setToken(String token)
     {
-        this.token = token;
+        if (token == null)
+        {
+            this.token = UUID.randomUUID().toString();
+        }
+        else
+        {
+            this.token = token;
+        }
     }
 
-    public String getUserID()
+    public String getUserId()
     {
-        return userID;
+        return userId;
     }
 
-    public void setUserID(String userID)
+    public void setUserId(String userId)
     {
-        this.userID = userID;
+        if (userId == null)
+        {
+            throw new InvalidParameterException("UserId cannot be empty.");
+        }
+        this.userId = userId;
     }
 
-    public LocalDateTime getCreatedAt()
+    public LocalDateTime getStartTime()
     {
-        return createdAt;
+        return startTime;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt)
+    public void setStartTime(LocalDateTime startTime)
     {
-        this.createdAt = createdAt;
+        this.startTime = startTime;
     }
 
-    public LocalDateTime getEndsAt()
+    public LocalDateTime getEndTime()
     {
-        return endsAt;
+        return endTime;
     }
 
-    public void setEndsAt(LocalDateTime endsAt)
+    public void setEndsAt()
     {
-        this.endsAt = endsAt;
+        if (startTime != null)
+        {
+            this.endTime = this.startTime.plusMinutes(30);
+        }
     }
 }

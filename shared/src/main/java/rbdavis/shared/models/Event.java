@@ -1,9 +1,8 @@
 package rbdavis.shared.models;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
-public class Event extends Model
+public class Event
 {
     public final String TABLE = "Events";
     private String id;
@@ -14,14 +13,10 @@ public class Event extends Model
     private String longitude;
     private String city;
     private String country;
-    private LocalDate happenedOn;
-
-    public Event()
-    {
-    }
+    private LocalDate dateHappened;
 
     public Event(String personId, String userId, EventType type, String latitude, String longitude,
-                 String city, String country, LocalDate happenedOn)
+                    String city, String country, LocalDate dateHappened)
     {
         this.personId = personId;
         this.userId = userId;
@@ -30,13 +25,13 @@ public class Event extends Model
         this.longitude = longitude;
         this.city = city;
         this.country = country;
-        this.happenedOn = happenedOn;
+        this.dateHappened = dateHappened;
     }
 
-    public Event(String id, String personId, String userId, EventType type, String latitude, String longitude,
-                        String city, String country, LocalDate happenedOn)
+    public Event(String id, String personId, String userId, EventType type, String latitude,
+                    String longitude, String city, String country, LocalDate dateHappened)
     {
-        this(personId, userId, type, latitude, longitude, city, country, happenedOn);
+        this(personId, userId, type, latitude, longitude, city, country, dateHappened);
         this.id = id;
     }
 
@@ -120,14 +115,14 @@ public class Event extends Model
         this.country = country;
     }
 
-    public LocalDate getHappenedOn()
+    public LocalDate getDateHappened()
     {
-        return happenedOn;
+        return dateHappened;
     }
 
-    public void setHappenedOn(LocalDate happenedOn)
+    public void setDateHappened(LocalDate dateHappened)
     {
-        this.happenedOn = happenedOn;
+        this.dateHappened = dateHappened;
     }
 
     public enum EventType

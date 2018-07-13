@@ -1,6 +1,8 @@
 package rbdavis.shared.models;
 
-public class User extends Model
+import java.security.InvalidParameterException;
+
+public class User
 {
     public final String TABLE = "Users";
     private String username;
@@ -11,25 +13,22 @@ public class User extends Model
     private String lastName;
     private Gender gender;
 
-    public User()
+    public User(String personId, String password, String email, String firstName,
+                    String lastName, Gender gender)
     {
-    }
-
-    public User(String personId, String password, String email, String firstName, String lastName, Gender gender)
-    {
-        this.personId = personId;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
+        setPersonId(personId);
+        setPassword(password);
+        setEmail(email);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setGender(gender);
     }
 
     public User(String username, String personId, String password, String email,
                     String firstName, String lastName, Gender gender)
     {
         this(personId, password, email, firstName, lastName, gender);
-        this.username = username;
+        setUsername(username);
     }
 
     public String getUsername()
@@ -39,6 +38,10 @@ public class User extends Model
 
     public void setUsername(String username)
     {
+        if (username == null)
+        {
+            throw new InvalidParameterException("Username cannot be empty.");
+        }
         this.username = username;
     }
 
@@ -49,6 +52,10 @@ public class User extends Model
 
     public void setPersonId(String personId)
     {
+        if (personId == null)
+        {
+            throw new InvalidParameterException("PersonId cannot be empty.");
+        }
         this.personId = personId;
     }
 
@@ -59,6 +66,10 @@ public class User extends Model
 
     public void setPassword(String password)
     {
+        if (password == null)
+        {
+            throw new InvalidParameterException("Password cannot be empty.");
+        }
         this.password = password;
     }
 
@@ -69,6 +80,10 @@ public class User extends Model
 
     public void setEmail(String email)
     {
+        if (email == null)
+        {
+            throw new InvalidParameterException("Email cannot be empty.");
+        }
         this.email = email;
     }
 
@@ -79,6 +94,10 @@ public class User extends Model
 
     public void setFirstName(String firstName)
     {
+        if (firstName == null)
+        {
+            throw new InvalidParameterException("First name cannot be empty.");
+    }
         this.firstName = firstName;
     }
 
@@ -89,6 +108,10 @@ public class User extends Model
 
     public void setLastName(String lastName)
     {
+        if (lastName == null)
+        {
+            throw new InvalidParameterException("Last name cannot be empty.");
+        }
         this.lastName = lastName;
     }
 

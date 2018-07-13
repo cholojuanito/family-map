@@ -1,4 +1,4 @@
-package rbdavis.shared.http.exchanges;
+package rbdavis.shared.models.http;
 
 import java.util.HashMap;
 import java.util.Map;
