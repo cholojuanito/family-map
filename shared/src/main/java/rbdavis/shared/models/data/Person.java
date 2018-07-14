@@ -1,6 +1,24 @@
-package rbdavis.shared.models;
+package rbdavis.shared.models.data;
 
 import java.security.InvalidParameterException;
+
+/**
+ * The {@code Person} model represents the Person table in the database.
+ *
+ * This model serves as a Data Transfer Object (DTO).
+ *
+ * A {@code Person} is a part of a Family Tree and can (but does not need to)
+ * therefore be connected to 3 other {@code Person}s:
+ * <ul>
+ *     <li>Father</li>
+ *     <li>Mother</li>
+ *     <li>Spouse</li>
+ * </ul>
+ *
+ * @author  Tanner Davis
+ * @version 0.1
+ * @since   v0.1
+ */
 
 public class Person
 {

@@ -1,7 +1,26 @@
-package rbdavis.shared.models;
+package rbdavis.shared.models.data;
 
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
+
+/**
+ * The {@code Event} model represents the Event table in the database.
+ *
+ * This model serves as a Data Transfer Object (DTO).
+ *
+ * Each {@code Event} must be an {@code EventType}.
+ * The {@code EventType}s are as follows:
+ * <ul>
+ *      <li>Birth</li>
+ *      <li>Baptism</li>
+ *      <li>Marriage</li>
+ *      <li>Death</li>
+ * </ul>
+ *
+ * @author  Tanner Davis
+ * @version 0.1
+ * @since   v0.1
+ */
 
 public class Event
 {

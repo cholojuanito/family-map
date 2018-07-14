@@ -6,6 +6,9 @@ import org.junit.Test;
 
 import java.util.UUID;
 
+import rbdavis.shared.models.data.Gender;
+import rbdavis.shared.models.data.User;
+
 import static org.junit.Assert.*;
 
 public class UserTest

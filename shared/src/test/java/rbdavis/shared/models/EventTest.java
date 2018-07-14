@@ -9,6 +9,8 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.UUID;
 
+import rbdavis.shared.models.data.Event;
+
 import static org.junit.Assert.*;
 
 public class EventTest {

@@ -1,7 +1,16 @@
-package rbdavis.shared.models;
+package rbdavis.shared.models.data;
 
 import java.security.InvalidParameterException;
 
+/**
+ * The {@code User} model represents the User table in the database.
+ *
+ * This model serves as a Data Transfer Object (DTO).
+ *
+ * @author  Tanner Davis
+ * @version 0.1
+ * @since   v0.1
+ */
 public class User
 {
     public final String TABLE = "Users";

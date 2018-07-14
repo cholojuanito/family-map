@@ -4,49 +4,68 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.PreparedStatement;
 import java.util.UUID;
 
-import rbdavis.server.database.dataaccess.DAO;
-import rbdavis.shared.models.Gender;
-import rbdavis.shared.models.User;
+import rbdavis.server.database.DAO;
+import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
+import rbdavis.shared.models.data.Gender;
+import rbdavis.shared.models.data.User;
 
-import static org.junit.Assert.*;
+public class UserSqlDAOTest {
 
-public class SqlDAOTest
-{
-    SqlDAO sqlDAOUnderTest;
+    private UserSqlDAO daoUnderTest;
 
     @Before
     public void setUp() throws Exception
     {
-        sqlDAOUnderTest = new SqlDAO();
+        daoUnderTest = new UserSqlDAO();
     }
 
     @After
     public void tearDown() throws Exception
     {
+        daoUnderTest = null;
     }
 
     @Test
-    public void testCreateUser()
+    public void testCreate()
     {
-        final String newUN = "juls2011";
+        final String newUN = "myUsername";
         final String newID = UUID.randomUUID().toString();
         final String newPass = "secret_password";
         final String newEmail = "juls2011@hotmail.com";
         final String newFirst = "Julianne";
         final String newLast = "Capito";
         final Gender newGender = Gender.F;
-        User user = new User(newUN, newID, newPass, newEmail, newFirst, newLast, newGender);
 
+        User user = new User(newUN, newID, newPass, newEmail, newFirst, newLast, newGender);
         try
         {
-            sqlDAOUnderTest.createAUser(user);
+            daoUnderTest.create(user);
         }
         catch (DAO.DatabaseException e)
         {
             System.out.println(e.getMessage());
         }
+    }
+
+    @Test
+    public void testUpdate()
+    {
+    }
+
+    @Test
+    public void testDelete()
+    {
+    }
+
+    @Test
+    public void testFindById()
+    {
+    }
+
+    @Test
+    public void testAll()
+    {
     }
 }

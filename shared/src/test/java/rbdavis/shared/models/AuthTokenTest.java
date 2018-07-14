@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import rbdavis.shared.models.data.AuthToken;
+
 import static org.junit.Assert.*;
 
 public class AuthTokenTest

@@ -1,8 +1,18 @@
-package rbdavis.shared.models;
+package rbdavis.shared.models.data;
 
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+/**
+ * The {@code AuthToken} model mimics the AuthToken table in the database.
+ *
+ * This model serves as a Data Transfer Object (DTO).
+ *
+ * @author  Tanner Davis
+ * @version 0.1
+ * @since   v0.1
+ */
 
 public class AuthToken
 {

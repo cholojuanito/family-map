@@ -1,5 +1,6 @@
 package rbdavis.shared.models.http;
 
-public class Response
+public class RegisterRequest
 {
+    
 }
