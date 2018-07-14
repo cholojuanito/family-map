@@ -1,5 +1,4 @@
 package rbdavis.shared.utils;
 
-public class Constants
-{
+public class Constants {
 }

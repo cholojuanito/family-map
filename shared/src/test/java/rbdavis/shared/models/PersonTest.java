@@ -6,8 +6,7 @@ import org.junit.Test;
 
 import rbdavis.shared.models.data.Gender;
 
-public class PersonTest
-{
+public class PersonTest {
     private String id;
     private String userId;
     private String firstName;
@@ -18,20 +17,17 @@ public class PersonTest
     private String spouseID = null;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
 
     }
 
     @After
-    public void tearDown() throws Exception
-    {
+    public void tearDown() throws Exception {
 
     }
 
     @Test
-    public void testConstructor()
-    {
+    public void testConstructor() {
 
     }
 }

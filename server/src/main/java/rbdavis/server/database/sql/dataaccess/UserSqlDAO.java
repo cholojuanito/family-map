@@ -1,29 +1,28 @@
 package rbdavis.server.database.sql.dataaccess;
 
-import rbdavis.server.database.DAO;
-import rbdavis.server.database.sql.SqlConnectionFactory;
-import rbdavis.shared.models.data.User;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import rbdavis.server.database.DAO;
+import rbdavis.server.database.sql.SqlConnectionFactory;
+import rbdavis.shared.models.data.User;
+
 /**
  * A {@code UserSqlDAO} implements the core functionality of a {@code DAO} for the User table.
- *
+ * <p>
  * Each SQL{@code DAO} receives a {@code Connection} from the {@code SqlConnectionFactory}.
  *
+ * @author Tanner Davis
+ * @version 0.1
  * @see DAO
  * @see SqlConnectionFactory
- * @author  Tanner Davis
- * @version 0.1
- * @since   v0.1
+ * @since v0.1
  */
 
-public class UserSqlDAO implements DAO<User>
-{
+public class UserSqlDAO implements DAO<User> {
     private Connection connection = null;
 
     /**
@@ -34,16 +33,13 @@ public class UserSqlDAO implements DAO<User>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public User create(User user) throws DatabaseException
-    {
-        try
-        {
+    public User create(User user) throws DatabaseException {
+        try {
             connection = SqlConnectionFactory.getConnection();
             connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             ResultSet rs = null;
-            try
-            {
+            try {
 
                 String sql = "INSERT INTO " + user.TABLE +
                         "(username, person_id, password, email, first_name, last_name, gender)" +
@@ -57,30 +53,21 @@ public class UserSqlDAO implements DAO<User>
                 stmt.setString(6, user.getLastName());
                 stmt.setString(7, user.getGender().toString());
 
-                if (stmt.executeUpdate() != 1)
-                {
+                if (stmt.executeUpdate() != 1) {
                     throw new DAO.DatabaseException("Create user failed.");
-                }
-                else
-                {
+                } else {
                     connection.commit();
                 }
-            }
-            finally
-            {
-                if (stmt != null)
-                {
+            } finally {
+                if (stmt != null) {
                     stmt.close();
                 }
 
-                if (connection != null)
-                {
+                if (connection != null) {
                     connection.close();
                 }
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new DAO.DatabaseException("createUser failed " + e.getMessage(), e);
         }
         return user;
@@ -89,14 +76,13 @@ public class UserSqlDAO implements DAO<User>
     /**
      * Updates a row in the User table of the database.
      *
-     * @param id - The id of the row that needs to be updated
+     * @param id   - The id of the row that needs to be updated
      * @param user - A {@code User} model that will be used to get values
      * @return The new {@code User} model that came from the database
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public User update(String id, User user) throws DatabaseException
-    {
+    public User update(String id, User user) throws DatabaseException {
         return user;
     }
 
@@ -108,8 +94,7 @@ public class UserSqlDAO implements DAO<User>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public boolean delete(String id) throws DatabaseException
-    {
+    public boolean delete(String id) throws DatabaseException {
         return false;
     }
 
@@ -121,8 +106,7 @@ public class UserSqlDAO implements DAO<User>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public User findById(String id) throws DatabaseException
-    {
+    public User findById(String id) throws DatabaseException {
         return null;
     }
 
@@ -133,8 +117,7 @@ public class UserSqlDAO implements DAO<User>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public List<User> all() throws DatabaseException
-    {
+    public List<User> all() throws DatabaseException {
         return null;
     }
 }

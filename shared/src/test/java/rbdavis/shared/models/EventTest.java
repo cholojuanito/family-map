@@ -11,7 +11,9 @@ import java.util.UUID;
 
 import rbdavis.shared.models.data.Event;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 
 public class EventTest {
 
@@ -28,8 +30,7 @@ public class EventTest {
     Event eventUnderTest;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         id = UUID.randomUUID().toString();
         personId = UUID.randomUUID().toString();
         userId = UUID.randomUUID().toString();
@@ -44,14 +45,12 @@ public class EventTest {
     }
 
     @After
-    public void tearDown() throws Exception
-    {
+    public void tearDown() throws Exception {
         eventUnderTest = null;
     }
 
     @Test
-    public void testConstructor()
-    {
+    public void testConstructor() {
         String newId = UUID.randomUUID().toString();
         String newPersonId = UUID.randomUUID().toString();
         String newUserId = UUID.randomUUID().toString();
@@ -76,15 +75,11 @@ public class EventTest {
     }
 
     @Test
-    public void testNullConstructor()
-    {
-        try
-        {
+    public void testNullConstructor() {
+        try {
             eventUnderTest = new Event(null, null, null, null, null,
-                                    null, null, null, null);
-        }
-        catch (InvalidParameterException e)
-        {
+                    null, null, null, null);
+        } catch (InvalidParameterException e) {
             eventUnderTest = null;
         }
 

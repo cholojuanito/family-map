@@ -4,15 +4,14 @@ import java.security.InvalidParameterException;
 
 /**
  * The {@code User} model represents the User table in the database.
- *
+ * <p>
  * This model serves as a Data Transfer Object (DTO).
  *
- * @author  Tanner Davis
+ * @author Tanner Davis
  * @version 0.1
- * @since   v0.1
+ * @since v0.1
  */
-public class User
-{
+public class User {
     public final String TABLE = "Users";
     private String username;
     private String personId;
@@ -23,8 +22,7 @@ public class User
     private Gender gender;
 
     public User(String personId, String password, String email, String firstName,
-                    String lastName, Gender gender)
-    {
+                String lastName, Gender gender) {
         setPersonId(personId);
         setPassword(password);
         setEmail(email);
@@ -34,103 +32,82 @@ public class User
     }
 
     public User(String username, String personId, String password, String email,
-                    String firstName, String lastName, Gender gender)
-    {
+                String firstName, String lastName, Gender gender) {
         this(personId, password, email, firstName, lastName, gender);
         setUsername(username);
     }
 
-    public String getUsername()
-    {
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username)
-    {
-        if (username == null)
-        {
+    public void setUsername(String username) {
+        if (username == null) {
             throw new InvalidParameterException("Username cannot be empty.");
         }
         this.username = username;
     }
 
-    public String getPersonId()
-    {
+    public String getPersonId() {
         return personId;
     }
 
-    public void setPersonId(String personId)
-    {
-        if (personId == null)
-        {
+    public void setPersonId(String personId) {
+        if (personId == null) {
             throw new InvalidParameterException("PersonId cannot be empty.");
         }
         this.personId = personId;
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password)
-    {
-        if (password == null)
-        {
+    public void setPassword(String password) {
+        if (password == null) {
             throw new InvalidParameterException("Password cannot be empty.");
         }
         this.password = password;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email)
-    {
-        if (email == null)
-        {
+    public void setEmail(String email) {
+        if (email == null) {
             throw new InvalidParameterException("Email cannot be empty.");
         }
         this.email = email;
     }
 
-    public String getFirstName()
-    {
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName)
-    {
-        if (firstName == null)
-        {
+    public void setFirstName(String firstName) {
+        if (firstName == null) {
             throw new InvalidParameterException("First name cannot be empty.");
-    }
+        }
         this.firstName = firstName;
     }
 
-    public String getLastName()
-    {
+    public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName)
-    {
-        if (lastName == null)
-        {
+    public void setLastName(String lastName) {
+        if (lastName == null) {
             throw new InvalidParameterException("Last name cannot be empty.");
         }
         this.lastName = lastName;
     }
 
-    public Gender getGender()
-    {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender)
-    {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 }

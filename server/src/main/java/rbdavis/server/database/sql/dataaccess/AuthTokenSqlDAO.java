@@ -1,26 +1,25 @@
 package rbdavis.server.database.sql.dataaccess;
 
+import java.sql.Connection;
+import java.util.List;
+
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionFactory;
 import rbdavis.shared.models.data.AuthToken;
 
-import java.sql.Connection;
-import java.util.List;
-
 /**
  * A {@code AuthTokenSqlDAO} implements the core functionality of a {@code DAO} for the AuthToken table.
- *
+ * <p>
  * Each SQL{@code DAO} receives a {@code Connection} from the {@code SqlConnectionFactory}.
  *
+ * @author Tanner Davis
+ * @version 0.1
  * @see DAO
  * @see SqlConnectionFactory
- * @author  Tanner Davis
- * @version 0.1
- * @since   v0.1
+ * @since v0.1
  */
 
-public class AuthTokenSqlDAO implements DAO<AuthToken>
-{
+public class AuthTokenSqlDAO implements DAO<AuthToken> {
     private Connection connection = null;
 
     /**
@@ -31,22 +30,20 @@ public class AuthTokenSqlDAO implements DAO<AuthToken>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public AuthToken create(AuthToken token) throws DatabaseException
-    {
+    public AuthToken create(AuthToken token) throws DatabaseException {
         return token;
     }
 
     /**
      * Updates a row in the AuthToken table of the database.
      *
-     * @param id - The id of the row that needs to be updated
+     * @param id    - The id of the row that needs to be updated
      * @param token - A {@code AuthToken} model that will be used to get values
      * @return The new {@code AuthToken} model that came from the database
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public AuthToken update(String id, AuthToken token) throws DatabaseException
-    {
+    public AuthToken update(String id, AuthToken token) throws DatabaseException {
         return token;
     }
 
@@ -58,8 +55,7 @@ public class AuthTokenSqlDAO implements DAO<AuthToken>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public boolean delete(String id) throws DatabaseException
-    {
+    public boolean delete(String id) throws DatabaseException {
         return false;
     }
 
@@ -71,8 +67,7 @@ public class AuthTokenSqlDAO implements DAO<AuthToken>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public AuthToken findById(String id) throws DatabaseException
-    {
+    public AuthToken findById(String id) throws DatabaseException {
         return null;
     }
 
@@ -83,8 +78,7 @@ public class AuthTokenSqlDAO implements DAO<AuthToken>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public List<AuthToken> all() throws DatabaseException
-    {
+    public List<AuthToken> all() throws DatabaseException {
         return null;
     }
 }

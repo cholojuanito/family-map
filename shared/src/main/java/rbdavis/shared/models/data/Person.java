@@ -4,24 +4,23 @@ import java.security.InvalidParameterException;
 
 /**
  * The {@code Person} model represents the Person table in the database.
- *
+ * <p>
  * This model serves as a Data Transfer Object (DTO).
- *
+ * <p>
  * A {@code Person} is a part of a Family Tree and can (but does not need to)
  * therefore be connected to 3 other {@code Person}s:
  * <ul>
- *     <li>Father</li>
- *     <li>Mother</li>
- *     <li>Spouse</li>
+ * <li>Father</li>
+ * <li>Mother</li>
+ * <li>Spouse</li>
  * </ul>
  *
- * @author  Tanner Davis
+ * @author Tanner Davis
  * @version 0.1
- * @since   v0.1
+ * @since v0.1
  */
 
-public class Person
-{
+public class Person {
     private String id;
     private String userId;
     private String firstName;
@@ -32,7 +31,7 @@ public class Person
     private String spouseID = null;
 
     public Person(String userId, String firstName, String lastName, Gender gender,
-                    String fatherId, String motherID, String spouseID) {
+                  String fatherId, String motherID, String spouseID) {
         setUserId(userId);
         setFirstName(firstName);
         setLastName(lastName);
@@ -43,105 +42,84 @@ public class Person
     }
 
     public Person(String id, String userId, String firstName, String lastName, Gender gender,
-                    String fatherId, String motherID, String spouseID)
-    {
+                  String fatherId, String motherID, String spouseID) {
         this(userId, firstName, lastName, gender, fatherId, motherID, spouseID);
         setId(id);
     }
 
-    public String getId()
-    {
+    public String getId() {
         return id;
     }
 
-    public void setId(String id)
-    {
-        if (id == null)
-        {
+    public void setId(String id) {
+        if (id == null) {
             throw new InvalidParameterException("Id cannot be empty.");
         }
         this.id = id;
     }
 
-    public String getUserId()
-    {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId)
-    {
-        if (userId == null)
-        {
+    public void setUserId(String userId) {
+        if (userId == null) {
             throw new InvalidParameterException("UserId cannot be empty.");
         }
         this.userId = userId;
     }
 
-    public String getFirstName()
-    {
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName)
-    {
-        if (firstName == null)
-        {
+    public void setFirstName(String firstName) {
+        if (firstName == null) {
             throw new InvalidParameterException("First name cannot be empty.");
         }
         this.firstName = firstName;
     }
 
-    public String getLastName()
-    {
+    public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName)
-    {
-        if (lastName == null)
-        {
+    public void setLastName(String lastName) {
+        if (lastName == null) {
             throw new InvalidParameterException("Last name cannot be empty.");
         }
         this.lastName = lastName;
     }
 
-    public Gender getGender()
-    {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender)
-    {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
-    public String getFatherId()
-    {
+    public String getFatherId() {
         return fatherId;
     }
 
-    public void setFatherId(String fatherId)
-    {
+    public void setFatherId(String fatherId) {
         this.fatherId = fatherId;
     }
 
-    public String getMotherID()
-    {
+    public String getMotherID() {
         return motherID;
     }
 
-    public void setMotherID(String motherID)
-    {
+    public void setMotherID(String motherID) {
         this.motherID = motherID;
     }
 
-    public String getSpouseID()
-    {
+    public String getSpouseID() {
         return spouseID;
     }
 
-    public void setSpouseID(String spouseID)
-    {
+    public void setSpouseID(String spouseID) {
         this.spouseID = spouseID;
     }
 }

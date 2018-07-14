@@ -1,21 +1,46 @@
 package rbdavis.shared.models.http.responses;
 
-public class Response
-{
-    String message;
+/**
+ * A {@code Response} Encapsulates a HTTP response and carries information
+ * from a {@code Serivce} to the corresponding {@code Handler}
+ * and back to the client that made the API call.
+ * <p>
+ * By default it contains a message and a status code.
+ *
+ * @author Tanner Davis
+ * @version 0.1
+ * @since v0.1
+ */
 
-    public Response(String message)
-    {
+public class Response {
+    private String message;
+    private int statusCode;
+
+    public Response() {
+    }
+
+    public Response(String message) {
         this.message = message;
     }
 
-    public String getMessage()
-    {
+    public Response(String message, int statusCode) {
+        this(message);
+        this.statusCode = statusCode;
+    }
+
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message)
-    {
+    public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
     }
 }
