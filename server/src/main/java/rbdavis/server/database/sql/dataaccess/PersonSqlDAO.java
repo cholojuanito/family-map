@@ -1,7 +1,8 @@
-package rbdavis.server.database.dataaccess.sql;
+package rbdavis.server.database.sql.dataaccess;
 
-import rbdavis.server.database.dataaccess.DAO;
-import rbdavis.shared.models.Person;
+import rbdavis.server.database.DAO;
+import rbdavis.server.database.sql.SqlConnectionFactory;
+import rbdavis.shared.models.data.Person;
 
 import java.sql.Connection;
 import java.util.List;
@@ -11,8 +12,8 @@ import java.util.List;
  *
  * Each SQL{@code DAO} receives a {@code Connection} from the {@code SqlConnectionFactory}.
  *
- * @see rbdavis.server.database.dataaccess.DAO
- * @see rbdavis.server.database.dataaccess.sql.SqlConnectionFactory
+ * @see DAO
+ * @see SqlConnectionFactory
  * @author  Tanner Davis
  * @version 0.1
  * @since   v0.1
