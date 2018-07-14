@@ -1,12 +1,10 @@
 package rbdavis.server.handlers;
 
-import com.sun.net.httpserver.HttpExchange;
-
 import java.io.IOException;
 
-public class DefaultHandler implements Handler {
-    @Override
-    public void handle(HttpExchange exchange) throws IOException {
+public class DefaultHandler {
+
+    public void handle() throws IOException {
 
     }
 }

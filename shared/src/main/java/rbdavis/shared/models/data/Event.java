@@ -17,6 +17,7 @@ import java.time.LocalDate;
  * <li>Death</li>
  * </ul>
  *
+ * @see EventType
  * @author Tanner Davis
  * @version 0.1
  * @since v0.1
@@ -145,6 +146,21 @@ public class Event {
         this.dateHappened = dateHappened;
     }
 
+    /**
+     * An enumeration of the 4 supported event types.
+     * The {@code EventType}s are as follows:
+     * <ul>
+     * <li>Birth</li>
+     * <li>Baptism</li>
+     * <li>Marriage</li>
+     * <li>Death</li>
+     * </ul>
+     *
+     * @see Event
+     * @author Tanner Davis
+     * @version 0.1
+     * @since v0.1
+     */
     public enum EventType {
         BIRTH("Birth"),
         BAPTISM("Baptism"),

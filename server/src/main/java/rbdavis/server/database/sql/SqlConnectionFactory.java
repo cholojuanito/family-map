@@ -37,7 +37,7 @@ public class SqlConnectionFactory {
      * to the main database
      *
      * @return A {@code Connection} to a SQL database
-     * @throws DAO.DatabaseException - Any issue with establishing connection is thrown
+     * @throws DAO.DatabaseException Any issue with establishing connection is thrown
      */
     public static Connection getConnection() throws DAO.DatabaseException {
         try {
@@ -54,7 +54,7 @@ public class SqlConnectionFactory {
      * to the unit test database.
      *
      * @return A {@code Connection} to a SQL database
-     * @throws DAO.DatabaseException - Any issue with establishing connection is thrown
+     * @throws DAO.DatabaseException Any issue with establishing connection is thrown
      */
     public static Connection getUnitTestConnection() throws DAO.DatabaseException {
         try {

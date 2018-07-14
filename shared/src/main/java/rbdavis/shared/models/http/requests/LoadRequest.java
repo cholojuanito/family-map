@@ -7,7 +7,7 @@ import rbdavis.shared.models.data.Person;
 import rbdavis.shared.models.data.User;
 
 /**
- * A specific {@code Request} Encapsulates a HTTP request and carries information
+ * A specific {@code Request} mimics a HTTP request and carries information
  * from the client that made the API call to the {@code LoadHandler} then
  * to the {@code LoadService}.
  * <p>

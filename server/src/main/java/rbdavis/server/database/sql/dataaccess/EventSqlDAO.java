@@ -10,7 +10,7 @@ import rbdavis.shared.models.data.Event;
 /**
  * A {@code EventSqlDAO} implements the core functionality of a {@code DAO} for the Event table.
  * <p>
- * Each SQL{@code DAO} receives a {@code Connection} from the {@code SqlConnectionFactory}.
+ * Each SQL {@code DAO} receives a {@code Connection} from the {@code SqlConnectionFactory}.
  *
  * @author Tanner Davis
  * @version 0.1
@@ -25,9 +25,9 @@ public class EventSqlDAO implements DAO<Event> {
     /**
      * Creates a row in the Event table of the database.
      *
-     * @param event - A {@code Event} model that will be used to get values
+     * @param event A {@code Event} model that will be used to get values
      * @return The {@code Event} model that came from the database
-     * @throws DatabaseException - Any issue with the database is thrown
+     * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
     public Event create(Event event) throws DatabaseException {
@@ -37,10 +37,10 @@ public class EventSqlDAO implements DAO<Event> {
     /**
      * Updates a row in the Event table of the database.
      *
-     * @param id    - The id of the row that needs to be updated
-     * @param event - A {@code Event} model that will be used to get values
+     * @param id The id of the row that needs to be updated
+     * @param event A {@code Event} model that will be used to get values
      * @return The new {@code Event} model that came from the database
-     * @throws DatabaseException - Any issue with the database is thrown
+     * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
     public Event update(String id, Event event) throws DatabaseException {
@@ -50,9 +50,9 @@ public class EventSqlDAO implements DAO<Event> {
     /**
      * Deletes a row in the Event table of the database.
      *
-     * @param id - The id of the row that needs to be deleted
+     * @param id The id of the row that needs to be deleted
      * @return True if a row was deleted, false otherwise
-     * @throws DatabaseException - Any issue with the database is thrown
+     * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
     public boolean delete(String id) throws DatabaseException {
@@ -62,9 +62,9 @@ public class EventSqlDAO implements DAO<Event> {
     /**
      * Finds a row in the Event table by id.
      *
-     * @param id - The id of the row to find
+     * @param id The id of the row to find
      * @return The {@code Event} model representation that was found
-     * @throws DatabaseException - Any issue with the database is thrown
+     * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
     public Event findById(String id) throws DatabaseException {
@@ -75,7 +75,7 @@ public class EventSqlDAO implements DAO<Event> {
      * Finds all rows in the Event table
      *
      * @return A {@code List} of {@code Event} models
-     * @throws DatabaseException - Any issue with the database is thrown
+     * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
     public List<Event> all() throws DatabaseException {

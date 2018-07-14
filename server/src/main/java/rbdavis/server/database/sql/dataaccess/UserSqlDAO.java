@@ -13,7 +13,7 @@ import rbdavis.shared.models.data.User;
 /**
  * A {@code UserSqlDAO} implements the core functionality of a {@code DAO} for the User table.
  * <p>
- * Each SQL{@code DAO} receives a {@code Connection} from the {@code SqlConnectionFactory}.
+ * Each SQL {@code DAO} receives a {@code Connection} from the {@code SqlConnectionFactory}.
  *
  * @author Tanner Davis
  * @version 0.1
@@ -28,9 +28,9 @@ public class UserSqlDAO implements DAO<User> {
     /**
      * Creates a row in the User table of the database.
      *
-     * @param user - A {@code User} model that will be used to get values
+     * @param user A {@code User} model that will be used to get values
      * @return The {@code User} model that came from the database
-     * @throws DatabaseException - Any issue with the database is thrown
+     * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
     public User create(User user) throws DatabaseException {
@@ -76,10 +76,10 @@ public class UserSqlDAO implements DAO<User> {
     /**
      * Updates a row in the User table of the database.
      *
-     * @param id   - The id of the row that needs to be updated
-     * @param user - A {@code User} model that will be used to get values
+     * @param id The id of the row that needs to be updated
+     * @param user A {@code User} model that will be used to get values
      * @return The new {@code User} model that came from the database
-     * @throws DatabaseException - Any issue with the database is thrown
+     * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
     public User update(String id, User user) throws DatabaseException {
@@ -89,9 +89,9 @@ public class UserSqlDAO implements DAO<User> {
     /**
      * Deletes a row in the User table of the database.
      *
-     * @param id - The id of the row that needs to be deleted
+     * @param id The id of the row that needs to be deleted
      * @return True if a row was deleted, false otherwise
-     * @throws DatabaseException - Any issue with the database is thrown
+     * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
     public boolean delete(String id) throws DatabaseException {
@@ -101,9 +101,9 @@ public class UserSqlDAO implements DAO<User> {
     /**
      * Finds a row in the User table by id.
      *
-     * @param id - The id of the row to find
+     * @param id The id of the row to find
      * @return The {@code User} model representation that was found
-     * @throws DatabaseException - Any issue with the database is thrown
+     * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
     public User findById(String id) throws DatabaseException {
@@ -114,7 +114,7 @@ public class UserSqlDAO implements DAO<User> {
      * Finds all rows in the User table
      *
      * @return A {@code List} of {@code User} models
-     * @throws DatabaseException - Any issue with the database is thrown
+     * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
     public List<User> all() throws DatabaseException {
