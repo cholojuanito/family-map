@@ -1,41 +1,36 @@
 package rbdavis.server.database.sql;
 
-import rbdavis.server.database.DAO;
-
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import rbdavis.server.database.DAO;
 
 /**
  * A {@code SqlConnectionFactory} generates a {@code Connection} to a SQL
  * database. It is up to each {@code DAO} implementation to close the {@code Connection}
  * that is generated.
  *
- * @author  Tanner Davis
+ * @author Tanner Davis
  * @version 0.1
- * @since   v0.1
+ * @since v0.1
  */
 
-public class SqlConnectionFactory
-{
-    static
-    {
-        try
-        {
+public class SqlConnectionFactory {
+    static {
+        try {
             final String driver = "org.sqlite.JDBC";
             Class.forName(driver);
-        }
-        catch (ClassNotFoundException e)
-        {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     /*URL to the database*/
-    private static final String DB_URL = "jdbc:sqlite:database" +  File.separator + "family_map.db";
+    private static final String DB_URL = "jdbc:sqlite:database" + File.separator + "family_map.db";
     /*URL to the unit test database*/
-    private static final String TEST_DB_URL = "jdbc:sqlite:database" +  File.separator + "test.db";
+    private static final String TEST_DB_URL = "jdbc:sqlite:database" + File.separator + "test.db";
 
     /**
      * Creates a new {@code Connection} through the {@code DriverManager}
@@ -44,16 +39,12 @@ public class SqlConnectionFactory
      * @return A {@code Connection} to a SQL database
      * @throws DAO.DatabaseException - Any issue with establishing connection is thrown
      */
-    public static Connection getConnection() throws DAO.DatabaseException
-    {
-        try
-        {
+    public static Connection getConnection() throws DAO.DatabaseException {
+        try {
             // Open a database connection
             return DriverManager.getConnection(DB_URL);
 
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new DAO.DatabaseException("openConnection failed", e);
         }
     }
@@ -65,16 +56,12 @@ public class SqlConnectionFactory
      * @return A {@code Connection} to a SQL database
      * @throws DAO.DatabaseException - Any issue with establishing connection is thrown
      */
-    public static Connection getUnitTestConnection() throws DAO.DatabaseException
-    {
-        try
-        {
+    public static Connection getUnitTestConnection() throws DAO.DatabaseException {
+        try {
             // Open a database connection
             return DriverManager.getConnection(TEST_DB_URL);
 
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new DAO.DatabaseException("openConnection failed", e);
         }
     }

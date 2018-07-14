@@ -9,26 +9,24 @@ import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
 
 /**
  * This is a generic Database Access Object (DAO) interface.
- *
+ * <p>
  * It defines the core functionality of the {@code DAO}'s that implement it.
  * The methods are just basic CRUD operations on the database.
- *
+ * <p>
  * Each individual DAO implementation interacts with that specific
  * table in the database.
  *
- *
  * @param <T> Type of data model
+ * @author Tanner Davis
+ * @version 0.1
  * @see UserSqlDAO
  * @see EventSqlDAO
  * @see PersonSqlDAO
  * @see AuthTokenSqlDAO
- * @author  Tanner Davis
- * @version 0.1
- * @since   v0.1
+ * @since v0.1
  */
 
-public interface DAO<T>
-{
+public interface DAO<T> {
     /**
      * Creates a row in the database based on the model type
      *
@@ -41,7 +39,7 @@ public interface DAO<T>
     /**
      * Updates a row in the database based on the id and type of object
      *
-     * @param id - The id of the row to update
+     * @param id   - The id of the row to update
      * @param type - The model type to interact with
      * @return The newly updated model from the SQL statement
      * @throws DatabaseException - Any issues with database queries
@@ -77,18 +75,25 @@ public interface DAO<T>
 
     /**
      * An exception to help with recognizing database issues.
-     *
+     * <p>
      * This way I don't have to deal with only {@code SQLExceptions}.
      * It inherits directly from the {@code Exception} class.
      */
-    class DatabaseException extends Exception
-    {
-        public DatabaseException() { super(); }
+    class DatabaseException extends Exception {
+        public DatabaseException() {
+            super();
+        }
 
-        public DatabaseException(String message) { super(message); }
+        public DatabaseException(String message) {
+            super(message);
+        }
 
-        public DatabaseException(String message, Throwable cause) { super(message, cause); }
+        public DatabaseException(String message, Throwable cause) {
+            super(message, cause);
+        }
 
-        public DatabaseException(Throwable cause) { super(cause); }
+        public DatabaseException(Throwable cause) {
+            super(cause);
+        }
     }
 }

@@ -4,16 +4,15 @@ package rbdavis.shared.models.http.requests;
  * A specific {@code Request} Encapsulates a HTTP request and carries information
  * from the client that made the API call to the {@code RequestHandler} then
  * to the {@code RequestService}.
- *
+ * <p>
  * It contains all the info needed to register the user.
  *
- * @author  Tanner Davis
+ * @author Tanner Davis
  * @version 0.1
- * @since   v0.1
+ * @since v0.1
  */
 
-public class RegisterRequest
-{
+public class RegisterRequest {
     private String userName;
     private String password;
     private String email;
@@ -22,8 +21,7 @@ public class RegisterRequest
     private String gender;
 
     public RegisterRequest(String userName, String password, String email, String firstName,
-                            String lastName, String gender)
-    {
+                           String lastName, String gender) {
         this.userName = userName;
         this.password = password;
         this.email = email;
@@ -32,63 +30,51 @@ public class RegisterRequest
         this.gender = gender;
     }
 
-    public String getUserName()
-    {
+    public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName)
-    {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password)
-    {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getFirstName()
-    {
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName)
-    {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public String getLastName()
-    {
+    public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName)
-    {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    public String getGender()
-    {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(String gender)
-    {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 }

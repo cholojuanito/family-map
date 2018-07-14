@@ -9,10 +9,10 @@ import java.util.UUID;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.User;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
-public class UserTest
-{
+public class UserTest {
 
     private String username;
     private String personId;
@@ -25,8 +25,7 @@ public class UserTest
     private User userUnderTest;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         username = "rbdavis";
         personId = UUID.randomUUID().toString();
         password = "password";
@@ -39,14 +38,12 @@ public class UserTest
     }
 
     @After
-    public void tearDown() throws Exception
-    {
+    public void tearDown() throws Exception {
         userUnderTest = null;
     }
 
     @Test
-    public void testConstructor()
-    {
+    public void testConstructor() {
         final String newUN = "juls2011";
         final String newID = UUID.randomUUID().toString();
         final String newPass = "secret_password";
@@ -67,8 +64,7 @@ public class UserTest
     }
 
     @Test
-    public void testSetters()
-    {
+    public void testSetters() {
         final String newUN = "juls2011";
         final String newPass = "secret_password";
         final String newEmail = "juls2011@hotmail.com";
@@ -92,8 +88,7 @@ public class UserTest
     }
 
     @Test
-    public void testWithNullValues()
-    {
+    public void testWithNullValues() {
         final String newUN = null;
         final String newPass = null;
         final String newEmail = null;

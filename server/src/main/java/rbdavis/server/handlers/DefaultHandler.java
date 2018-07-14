@@ -4,11 +4,9 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 
-public class DefaultHandler implements Handler
-{
+public class DefaultHandler implements Handler {
     @Override
-    public void handle(HttpExchange exchange) throws IOException
-    {
+    public void handle(HttpExchange exchange) throws IOException {
 
     }
 }

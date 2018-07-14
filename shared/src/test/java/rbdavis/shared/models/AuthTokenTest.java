@@ -9,10 +9,10 @@ import java.util.UUID;
 
 import rbdavis.shared.models.data.AuthToken;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class AuthTokenTest
-{
+public class AuthTokenTest {
     private String token;
     private String userID;
     private LocalDateTime startTime;
@@ -20,8 +20,7 @@ public class AuthTokenTest
     AuthToken tokenUnderTest;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         token = UUID.randomUUID().toString();
         userID = UUID.randomUUID().toString();
         startTime = LocalDateTime.now();
@@ -30,14 +29,12 @@ public class AuthTokenTest
     }
 
     @After
-    public void tearDown() throws Exception
-    {
+    public void tearDown() throws Exception {
         tokenUnderTest = null;
     }
 
     @Test
-    public void testConstructor()
-    {
+    public void testConstructor() {
         String token = UUID.randomUUID().toString();
         String userID = UUID.randomUUID().toString();
         LocalDateTime createdAt = LocalDateTime.now();
@@ -47,16 +44,12 @@ public class AuthTokenTest
 
 
     @Test
-    public void testIsExpired()
-    {
+    public void testIsExpired() {
         assertFalse(tokenUnderTest.isExpired());
 
-        try
-        {
+        try {
             Thread.sleep(10000);
-        }
-        catch (InterruptedException e)
-        {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 

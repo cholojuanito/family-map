@@ -1,26 +1,25 @@
 package rbdavis.server.database.sql.dataaccess;
 
+import java.sql.Connection;
+import java.util.List;
+
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionFactory;
 import rbdavis.shared.models.data.Person;
 
-import java.sql.Connection;
-import java.util.List;
-
 /**
  * A {@code PersonSqlDAO} implements the core functionality of a {@code DAO} for the Person table.
- *
+ * <p>
  * Each SQL{@code DAO} receives a {@code Connection} from the {@code SqlConnectionFactory}.
  *
+ * @author Tanner Davis
+ * @version 0.1
  * @see DAO
  * @see SqlConnectionFactory
- * @author  Tanner Davis
- * @version 0.1
- * @since   v0.1
+ * @since v0.1
  */
 
-public class PersonSqlDAO implements DAO<Person>
-{
+public class PersonSqlDAO implements DAO<Person> {
     private Connection connection = null;
 
     /**
@@ -31,22 +30,20 @@ public class PersonSqlDAO implements DAO<Person>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public Person create(Person person) throws DatabaseException
-    {
+    public Person create(Person person) throws DatabaseException {
         return null;
     }
 
     /**
      * Updates a row in the Person table of the database.
      *
-     * @param id - The id of the row that needs to be updated
+     * @param id     - The id of the row that needs to be updated
      * @param person - A {@code Person} model that will be used to get values
      * @return The new {@code Person} model that came from the database
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public Person update(String id, Person person) throws DatabaseException
-    {
+    public Person update(String id, Person person) throws DatabaseException {
         return null;
     }
 
@@ -58,8 +55,7 @@ public class PersonSqlDAO implements DAO<Person>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public boolean delete(String id) throws DatabaseException
-    {
+    public boolean delete(String id) throws DatabaseException {
         return false;
     }
 
@@ -71,8 +67,7 @@ public class PersonSqlDAO implements DAO<Person>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public Person findById(String id) throws DatabaseException
-    {
+    public Person findById(String id) throws DatabaseException {
         return null;
     }
 
@@ -83,8 +78,7 @@ public class PersonSqlDAO implements DAO<Person>
      * @throws DatabaseException - Any issue with the database is thrown
      */
     @Override
-    public List<Person> all() throws DatabaseException
-    {
+    public List<Person> all() throws DatabaseException {
         return null;
     }
 

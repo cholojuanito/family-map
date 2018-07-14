@@ -16,20 +16,17 @@ public class UserSqlDAOTest {
     private UserSqlDAO daoUnderTest;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         daoUnderTest = new UserSqlDAO();
     }
 
     @After
-    public void tearDown() throws Exception
-    {
+    public void tearDown() throws Exception {
         daoUnderTest = null;
     }
 
     @Test
-    public void testCreate()
-    {
+    public void testCreate() {
         final String newUN = "myUsername";
         final String newID = UUID.randomUUID().toString();
         final String newPass = "secret_password";
@@ -39,33 +36,26 @@ public class UserSqlDAOTest {
         final Gender newGender = Gender.F;
 
         User user = new User(newUN, newID, newPass, newEmail, newFirst, newLast, newGender);
-        try
-        {
+        try {
             daoUnderTest.create(user);
-        }
-        catch (DAO.DatabaseException e)
-        {
+        } catch (DAO.DatabaseException e) {
             System.out.println(e.getMessage());
         }
     }
 
     @Test
-    public void testUpdate()
-    {
+    public void testUpdate() {
     }
 
     @Test
-    public void testDelete()
-    {
+    public void testDelete() {
     }
 
     @Test
-    public void testFindById()
-    {
+    public void testFindById() {
     }
 
     @Test
-    public void testAll()
-    {
+    public void testAll() {
     }
 }
