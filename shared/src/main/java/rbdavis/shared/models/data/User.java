@@ -7,6 +7,7 @@ import java.security.InvalidParameterException;
  * <p>
  * This model serves as a Data Transfer Object (DTO).
  *
+ * @see Gender
  * @author Tanner Davis
  * @version 0.1
  * @since v0.1

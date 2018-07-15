@@ -1,7 +1,7 @@
 package rbdavis.shared.models.http.requests;
 
 /**
- * A specific {@code Request} Encapsulates a HTTP request and carries information
+ * A specific {@code Request} mimics a HTTP request and carries information
  * from the client that made the API call to the {@code RequestHandler} then
  * to the {@code RequestService}.
  * <p>

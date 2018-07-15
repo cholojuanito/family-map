@@ -4,8 +4,7 @@ import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 
 /**
- * The {@code AuthToken} model mimics the AuthToken table in the database.
- * <p>
+ * The {@code AuthToken} model represents the AuthToken table in the database.
  * This model serves as a Data Transfer Object (DTO).
  *
  * @author Tanner Davis
@@ -40,6 +39,13 @@ public class AuthToken {
         setToken(token);
     }
 
+    /**
+     * Compares the {@code AuthToken}'s endTime with
+     * the current time. If the current time is after
+     * the end time the token has expired.
+     *
+     * @return True if token is expired. False otherwise.
+     */
     public boolean isExpired() {
         if (startTime == null || endTime == null) {
             return false;

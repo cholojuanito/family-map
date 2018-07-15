@@ -8,13 +8,14 @@ import java.security.InvalidParameterException;
  * This model serves as a Data Transfer Object (DTO).
  * <p>
  * A {@code Person} is a part of a Family Tree and can (but does not need to)
- * therefore be connected to 3 other {@code Person}s:
+ * be connected to 3 other {@code Person}s:
  * <ul>
  * <li>Father</li>
  * <li>Mother</li>
  * <li>Spouse</li>
  * </ul>
  *
+ * @see Gender
  * @author Tanner Davis
  * @version 0.1
  * @since v0.1

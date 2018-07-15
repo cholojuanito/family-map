@@ -1,7 +1,7 @@
 package rbdavis.shared.models.http.responses;
 
 /**
- * A {@code Response} Encapsulates a HTTP response and carries information
+ * A {@code Response} encapsulates a HTTP response and carries information
  * from a {@code Serivce} to the corresponding {@code Handler}
  * and back to the client that made the API call.
  * <p>
