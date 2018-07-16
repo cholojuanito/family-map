@@ -4,18 +4,18 @@ import java.sql.Connection;
 import java.util.List;
 
 import rbdavis.server.database.DAO;
-import rbdavis.server.database.sql.SqlConnectionFactory;
+import rbdavis.server.database.sql.SqlConnectionManager;
 import rbdavis.shared.models.data.Person;
 
 /**
  * A {@code PersonSqlDAO} implements the core functionality of a {@code DAO} for the Person table.
  * <p>
- * Each SQL {@code DAO} receives a {@code Connection} from the {@code SqlConnectionFactory}.
+ * Each SQL {@code DAO} receives a {@code Connection} from the {@code SqlConnectionManager}.
  *
  * @author Tanner Davis
  * @version 0.1
  * @see DAO
- * @see SqlConnectionFactory
+ * @see SqlConnectionManager
  * @since v0.1
  */
 

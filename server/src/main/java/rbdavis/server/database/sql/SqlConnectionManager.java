@@ -8,9 +8,8 @@ import java.sql.SQLException;
 import rbdavis.server.database.DAO;
 
 /**
- * A {@code SqlConnectionManager} generates a {@code Connection} to a SQL
- * database. It is up to each {@code DAO} implementation to close the {@code Connection}
- * that is generated.
+ * A {@code SqlConnectionManager} manages a {@code Connection} to a SQL
+ * database. All methods are static.
  *
  * @author Tanner Davis
  * @version 0.1
