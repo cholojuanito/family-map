@@ -81,4 +81,25 @@ public class EventSqlDAO implements DAO<Event> {
     public List<Event> all() throws DatabaseException {
         return null;
     }
+
+    /**
+     * Uses the username to find all {@code Event}s associated with that user.
+     *
+     * @param username the foreign key used for finding {@code Event}s
+     * @return A {@code List} of {@code Event} models
+     */
+    public List<Event> findByUsername(String username) {
+        return null;
+    }
+
+
+    /**
+     * Uses the username to delete all {@code Event}s associated with that user.
+     *
+     * @param username the foreign key used for deleting
+     * @return True if anything was deleted. False otherwise.
+     */
+    public boolean deleteByUsername(String username) {
+        return false;
+    }
 }

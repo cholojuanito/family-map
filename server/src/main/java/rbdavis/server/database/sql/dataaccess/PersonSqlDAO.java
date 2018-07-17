@@ -133,6 +133,26 @@ public class PersonSqlDAO implements DAO<Person> {
         return null;
     }
 
+    /**
+     * Uses the username to find all {@code Person}s associated with that user.
+     *
+     * @param username the foreign key used for finding {@code Person}s
+     * @return A {@code List} of {@code Person} models
+     */
+    public List<Person> findByUsername(String username) {
+        return null;
+    }
+
+    /**
+     * Uses the username to delete all {@code Person}s associated with that user.
+     *
+     * @param username the foreign key used for deleting
+     * @return True if anything was deleted. False otherwise.
+     */
+    public boolean deleteByUsername(String username) {
+        return false;
+    }
+
     private Person extractPersonModel(ResultSet rs) throws SQLException {
         Person person = null;
 
