@@ -1,1 +1,1 @@
-include ':app', ':server', ':shared', ':junit-4.12', ':gson-2.6.2-javadoc'
+include ':app', ':server', ':shared', ':junit-4.12', ':gson-2.6.2-javadoc', ':gson'
