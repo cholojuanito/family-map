@@ -26,7 +26,11 @@ import rbdavis.shared.models.data.User;
  */
 
 public class UserSqlDAO implements DAO<User> {
-    private Connection connection = null;
+    private Connection connection;
+
+    public UserSqlDAO(Connection connection) {
+        this.connection = connection;
+    }
 
     /**
      * Creates a row in the User table of the database.
@@ -38,8 +42,6 @@ public class UserSqlDAO implements DAO<User> {
     @Override
     public User create(User user) throws DatabaseException {
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
                 String sql = "INSERT INTO Users" +
@@ -53,17 +55,9 @@ public class UserSqlDAO implements DAO<User> {
                 stmt.setString(5, user.getFirstName());
                 stmt.setString(6, user.getLastName());
                 stmt.setString(7, user.getGender().toString());
-
-                if (stmt.executeUpdate() == 1) {
-                    connection.commit();
-                }
-                else {
-                    connection.rollback();
-                }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -95,8 +89,6 @@ public class UserSqlDAO implements DAO<User> {
     @Override
     public User update(String id, User user) throws DatabaseException {
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
 
@@ -110,17 +102,9 @@ public class UserSqlDAO implements DAO<User> {
                 stmt.setString(4, user.getLastName());
                 stmt.setString(5, user.getGender().toString());
                 stmt.setString(6, id);
-
-                if (stmt.executeUpdate() == 1) {
-                    connection.commit();
-                }
-                else {
-                    connection.rollback();
-                }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -153,8 +137,6 @@ public class UserSqlDAO implements DAO<User> {
     public boolean delete(String id) throws DatabaseException {
         boolean worked = false;
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
 
@@ -163,16 +145,11 @@ public class UserSqlDAO implements DAO<User> {
                 stmt.setString(1, id);
 
                 if (stmt.executeUpdate() == 1) {
-                    connection.commit();
                     worked = true;
-                }
-                else {
-                    connection.rollback();
                 }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -192,7 +169,6 @@ public class UserSqlDAO implements DAO<User> {
     public User findById(String id) throws DatabaseException {
         User foundUser;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -210,7 +186,6 @@ public class UserSqlDAO implements DAO<User> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -228,7 +203,6 @@ public class UserSqlDAO implements DAO<User> {
     public List<User> all() throws DatabaseException {
         List<User> foundUsers = null;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -243,7 +217,6 @@ public class UserSqlDAO implements DAO<User> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {

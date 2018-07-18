@@ -18,12 +18,18 @@ public class SqlDatabase {
     // Connection
     private Connection connection;
 
-    public SqlDatabase() {
-        //connection = SqlConnectionManager.openConnection();
-        userDao = new UserSqlDAO();
-        personDao = new PersonSqlDAO();
-        eventDao = new EventSqlDAO();
-        authTokenDao = new AuthTokenSqlDAO();
+    public SqlDatabase() throws DAO.DatabaseException {
+        try {
+            connection = SqlConnectionManager.openConnection();
+            connection.setAutoCommit(false);
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("SQL database object creation failed", e);
+        }
+        userDao = new UserSqlDAO(connection);
+        personDao = new PersonSqlDAO(connection);
+        eventDao = new EventSqlDAO(connection);
+        authTokenDao = new AuthTokenSqlDAO(connection);
     }
 
 

@@ -26,7 +26,11 @@ import rbdavis.shared.models.data.Person;
  */
 
 public class PersonSqlDAO implements DAO<Person> {
-    private Connection connection = null;
+    private Connection connection;
+
+    public PersonSqlDAO(Connection connection) {
+        this.connection = connection;
+    }
 
     /**
      * Creates a row in the Person table of the database.
@@ -38,8 +42,6 @@ public class PersonSqlDAO implements DAO<Person> {
     @Override
     public Person create(Person person) throws DatabaseException {
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
                 String sql = "INSERT INTO Persons " +
@@ -54,17 +56,9 @@ public class PersonSqlDAO implements DAO<Person> {
                 stmt.setString(6, person.getFatherId());
                 stmt.setString(7, person.getMotherID());
                 stmt.setString(8, person.getSpouseID());
-
-                if (stmt.executeUpdate() == 1) {
-                    connection.commit();
-                }
-                else {
-                    connection.rollback();
-                }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -96,8 +90,6 @@ public class PersonSqlDAO implements DAO<Person> {
     @Override
     public Person update(String id, Person person) throws DatabaseException {
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
 
@@ -113,17 +105,9 @@ public class PersonSqlDAO implements DAO<Person> {
                 stmt.setString(5, person.getMotherID());
                 stmt.setString(6, person.getSpouseID());
                 stmt.setString(7, id);
-
-                if (stmt.executeUpdate() == 1) {
-                    connection.commit();
-                }
-                else {
-                    connection.rollback();
-                }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -156,8 +140,6 @@ public class PersonSqlDAO implements DAO<Person> {
     public boolean delete(String id) throws DatabaseException {
         boolean worked = false;
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
 
@@ -166,16 +148,11 @@ public class PersonSqlDAO implements DAO<Person> {
                 stmt.setString(1, id);
 
                 if (stmt.executeUpdate() == 1) {
-                    connection.commit();
                     worked = true;
-                }
-                else {
-                    connection.rollback();
                 }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -195,7 +172,6 @@ public class PersonSqlDAO implements DAO<Person> {
     public Person findById(String id) throws DatabaseException {
         Person foundPerson;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -213,7 +189,6 @@ public class PersonSqlDAO implements DAO<Person> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -231,7 +206,6 @@ public class PersonSqlDAO implements DAO<Person> {
     public List<Person> all() throws DatabaseException {
         List<Person> foundPersons;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -246,7 +220,6 @@ public class PersonSqlDAO implements DAO<Person> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -263,7 +236,6 @@ public class PersonSqlDAO implements DAO<Person> {
     public List<Person> findByUsername(String username) throws DatabaseException {
         List<Person> foundPersons;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -280,7 +252,6 @@ public class PersonSqlDAO implements DAO<Person> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -297,8 +268,6 @@ public class PersonSqlDAO implements DAO<Person> {
     public boolean deleteByUsername(String username) throws DatabaseException {
         boolean worked = false;
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
                 String sql = "DELETE FROM Persons WHERE user_id = ?";
@@ -306,16 +275,11 @@ public class PersonSqlDAO implements DAO<Person> {
                 stmt.setString(1, username);
 
                 if (stmt.executeUpdate() >= 1) {
-                    connection.commit();
                     worked = true;
-                }
-                else {
-                    connection.rollback();
                 }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
