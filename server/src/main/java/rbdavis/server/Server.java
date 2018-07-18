@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import rbdavis.server.handlers.FileHandler;
+import rbdavis.server.handlers.LoginHandler;
+import rbdavis.server.handlers.RegisterHandler;
 
 public class Server {
     private static final int MAX_WAITING_CONNECTIONS = 12;
@@ -33,18 +35,19 @@ public class Server {
 
         // Create and install the HTTP handlers
         server.createContext("/", new FileHandler());
-        //server.createContext("/games/list", new ListGamesHandler());
-        //server.createContext("/routes/claim", new ClaimRouteHandler());
+        server.createContext("/user/register", new RegisterHandler());
+        server.createContext("/user/login", new LoginHandler());
 
         // Log message indicating that the HttpServer is about the start accepting
         // incoming client connections.
+        // TODO: Log here
         System.out.println("Starting server");
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
         server.start();
 
         // Log message indicating that the server has successfully started.
-        System.out.println("Server started");
+        // TODO: Log here
+        System.out.println("Server listening on port: " + portNumber);
     }
 
     public static void main(String[] args) {

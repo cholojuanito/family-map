@@ -14,18 +14,12 @@ package rbdavis.shared.models.http.responses;
 
 public class Response {
     private String message;
-    private int statusCode;
 
     public Response() {
     }
 
     public Response(String message) {
         this.message = message;
-    }
-
-    public Response(String message, int statusCode) {
-        this(message);
-        this.statusCode = statusCode;
     }
 
     public String getMessage() {
@@ -36,11 +30,4 @@ public class Response {
         this.message = message;
     }
 
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
-    }
 }
