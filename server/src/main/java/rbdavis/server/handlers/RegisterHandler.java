@@ -12,10 +12,13 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.rmi.server.ExportException;
+import java.security.InvalidParameterException;
 
 import rbdavis.shared.models.http.requests.RegisterRequest;
+import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 import rbdavis.shared.models.http.responses.Response;
 
 import static rbdavis.server.StreamCommunicator.*;
@@ -40,11 +43,26 @@ public class RegisterHandler implements HttpHandler {
 
                         // Make a RegisterRequest obj
                         RegisterRequest request = gson.fromJson(reqData, RegisterRequest.class);
+                        if (isValidRegisterRequest(request)) {
 
-                        // Write response body
-                        respData = gson.toJson(request);
-                        responseCode = HttpURLConnection.HTTP_OK;
-                        // TODO: Log here
+                            // Pass it to the RegisterService
+
+                            // Write response body
+                            LoginOrRegisterResponse response = new LoginOrRegisterResponse("fakeToken", request.getUserName(), "fakePersonID");
+                            respData = gson.toJson(response);
+                            responseCode = HttpURLConnection.HTTP_OK;
+                            // TODO: Log here
+                        }
+                        else {
+                            // TODO: Log here
+                            throw new NullPointerException("Missing a property");
+                        }
+                    }
+                    catch (NullPointerException e) {
+                        System.out.println(e.getMessage());
+                        errorResponse = new Response("Request property missing or has invalid value.");
+                        responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
+                        respData = gson.toJson(errorResponse);
                     }
                     catch (JsonParseException e) {
                         errorResponse = new Response("Error occurred while reading JSON. Please check your syntax");
@@ -62,7 +80,7 @@ public class RegisterHandler implements HttpHandler {
                     break;
 
                 default:
-                    errorResponse = new Response(exchange.getRequestMethod() + " is not supported for this URL");
+                    errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for this URL");
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(errorResponse);
                     // TODO: Log here
@@ -74,6 +92,15 @@ public class RegisterHandler implements HttpHandler {
         writeString(respData, respBody);
         respBody.close();
 
+    }
+
+    private boolean isValidRegisterRequest (RegisterRequest request) throws NullPointerException {
+        boolean isValid = true;
+        if (request.getUserName() == null || request.getPassword() == null || request.getEmail() == null ||
+            request.getFirstName() == null || request.getLastName() == null || request.getGender() == null) {
+            isValid = false;
+        }
+        return isValid;
     }
 
 }

@@ -1,6 +1,7 @@
 package rbdavis.server.handlers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -11,6 +12,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
 import rbdavis.shared.models.http.requests.LoginRequest;
+import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
+import rbdavis.shared.models.http.responses.Response;
+import sun.rmi.runtime.Log;
+
 import static rbdavis.server.StreamCommunicator.*;
 
 public class LoginHandler implements HttpHandler {
@@ -18,40 +23,75 @@ public class LoginHandler implements HttpHandler {
     private Gson gson = new Gson();
 
     public void handle(HttpExchange exchange) throws IOException {
-        boolean success = false;
-        try {
-            if (exchange.getRequestMethod().toLowerCase().equals("post")) {
-                Headers reqHeaders = exchange.getRequestHeaders();
-                InputStream reqBody = exchange.getRequestBody();
-                String reqData = readString(reqBody);
+        String respData = null;
+        int responseCode = 0;
+        int emptyBodyCode = 0;
+        Response errorResponse;
 
-                // Read request body
-                String respData = "Something";
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                System.out.println(reqData);
+        switch (exchange.getRequestMethod().toLowerCase()) {
+            case "post":
+                try {
+                    // Read request body
+                    InputStream reqBody = exchange.getRequestBody();
+                    String reqData = readString(reqBody);
 
-                // Make a LoginRequest obj
-                LoginRequest request;
+                    // Make a RegisterRequest obj
+                    LoginRequest request = gson.fromJson(reqData, LoginRequest.class);
+                    if (isValidLoginRequest(request)) {
 
-                // Write response body
-                OutputStream respBody = exchange.getResponseBody();
-                writeString(respData, respBody);
-                respBody.close();
+                        // Pass it to the LoginService
 
-                success = true;
-            }
+                        // Write response body
+                        LoginOrRegisterResponse response = new LoginOrRegisterResponse("fakeToken", request.getUserName(), "fakePersonID");
+                        respData = gson.toJson(response);
+                        responseCode = HttpURLConnection.HTTP_OK;
+                        // TODO: Log here
+                    }
+                    else {
+                        // TODO: Log here
+                        throw new NullPointerException("Missing a property");
+                    }
+                }
+                catch (NullPointerException e) {
+                    System.out.println(e.getMessage());
+                    errorResponse = new Response("Request property missing or has invalid value.");
+                    responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
+                    respData = gson.toJson(errorResponse);
+                }
+                catch (JsonParseException e) {
+                    errorResponse = new Response("Error occurred while reading JSON. Please check your syntax");
+                    responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
+                    respData = gson.toJson(errorResponse);
+                    // TODO: Log here
+                }
+                catch (IOException e) {
+                    errorResponse = new Response("An error occurred on our end. Sorry!");
+                    responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
+                    respData = gson.toJson(errorResponse);
+                    // TODO: Log here
+                }
+                break;
 
-            if (!success) {
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                exchange.getResponseBody().close();
-            }
+            default:
+                errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for this URL");
+                responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
+                respData = gson.toJson(errorResponse);
+                // TODO: Log here
+                break;
+
         }
-        catch (IOException e) {
 
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-            exchange.getResponseBody().close();
+        exchange.sendResponseHeaders(responseCode, emptyBodyCode);
+        OutputStream respBody = exchange.getResponseBody();
+        writeString(respData, respBody);
+        respBody.close();
+    }
 
-            System.out.println(e.getMessage());
+    private boolean isValidLoginRequest (LoginRequest request) throws NullPointerException {
+        boolean isValid = true;
+        if (request.getUserName() == null || request.getPassword() == null) {
+            isValid = false;
         }
+        return isValid;
     }
 }

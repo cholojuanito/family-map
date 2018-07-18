@@ -11,20 +11,17 @@ package rbdavis.shared.models.http.responses;
  * @since v0.1
  */
 
-public class LoginOrRegisterResponse extends Response {
-    String authToken;
-    String userName;
-    String personID;
+public class LoginOrRegisterResponse {
+    private String authToken;
+    private String userName;
+    private String personID;
 
-    public LoginOrRegisterResponse() {
-        super();
-    }
+    public LoginOrRegisterResponse() {}
 
-    public LoginOrRegisterResponse(String message, String authToken, String userName, String personID) {
-        super(message);
-        this.authToken = authToken;
-        this.userName = userName;
-        this.personID = personID;
+    public LoginOrRegisterResponse(String authToken, String userName, String personID) {
+        setAuthToken(authToken);
+        setUserName(userName);
+        setPersonID(personID);
     }
 
     public String getAuthToken() {
