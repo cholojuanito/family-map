@@ -39,6 +39,13 @@ public class AuthToken {
         setToken(token);
     }
 
+    public AuthToken(String token, String userId, LocalDateTime startTime, LocalDateTime endTime) {
+        setToken(token);
+        setUserId(userId);
+        setStartTime(startTime);
+        setEndTime(endTime);
+    }
+
     /**
      * Compares the {@code AuthToken}'s endTime with
      * the current time. If the current time is after
@@ -94,8 +101,11 @@ public class AuthToken {
 
     public void setEndsAt() {
         if (startTime != null) {
-            //this.endTime = this.startTime.plusMinutes(30);
-            this.endTime = this.startTime.plusSeconds(10);
+            this.endTime = this.startTime.plusMinutes(30);
         }
+    }
+
+    public void setEndTime( LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 }

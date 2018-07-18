@@ -102,7 +102,7 @@ public class UserSqlDAO implements DAO<User> {
 
                 String sql = "UPDATE Users " +
                              "SET password = ?, email = ?, first_name = ?, last_name = ?, gender = ?" +
-                             "WHERE username=?";
+                             "WHERE username = ?";
                 stmt = connection.prepareStatement(sql);
                 stmt.setString(1, user.getPassword());
                 stmt.setString(2, user.getEmail());
@@ -190,7 +190,7 @@ public class UserSqlDAO implements DAO<User> {
      */
     @Override
     public User findById(String id) throws DatabaseException {
-        User foundUser = null;
+        User foundUser;
         try {
             connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
@@ -214,7 +214,7 @@ public class UserSqlDAO implements DAO<User> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("createUser failed ", e);
+            throw new DAO.DatabaseException("findUserById failed ", e);
         }
     }
 
@@ -247,7 +247,7 @@ public class UserSqlDAO implements DAO<User> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("createUser failed ", e);
+            throw new DAO.DatabaseException("findAllUsers failed ", e);
         }
     }
 

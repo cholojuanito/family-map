@@ -1,4 +1,4 @@
-package rbdavis.server.database.dataaccess.sql;
+package rbdavis.server.database.sql.dataaccess;
 
 import org.junit.After;
 import org.junit.Before;
@@ -25,11 +25,11 @@ public class UserSqlDAOTest {
 
     @Before
     public void setUp() throws Exception {
-        final String pass = "secret_password";
-        final String email = "juls2011@hotmail.com";
-        final String first = "Julianne";
-        final String last = "Capito";
-        final Gender gender = Gender.F;
+        final String pass = "secret";
+        final String email = "tanmanryan@gmail.com";
+        final String first = "Tanner";
+        final String last = "Davis";
+        final Gender gender = Gender.M;
 
         userForTesting = new User(username1, personID1, pass, email, first, last, gender);
         daoUnderTest = new UserSqlDAO();
@@ -52,11 +52,11 @@ public class UserSqlDAOTest {
 
     @Test
     public void testUpdate() {
-        final String newPass = "newPassword!";
-        final String newEmail = "tanmanryan@gmail.com";
-        final String newFirst = "Tanner";
-        final String newLast = "Davis";
-        final Gender newGender = Gender.M;
+        final String newPass = "secret_password";
+        final String newEmail = "juls2011@hotmail.com";
+        final String newFirst = "Julianne";
+        final String newLast = "Capito";
+        final Gender newGender = Gender.F;
 
         userForTesting.setPassword(newPass);
         userForTesting.setEmail(newEmail);
