@@ -1,5 +1,6 @@
 package rbdavis.server.services;
 
+import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.responses.Response;
 
@@ -30,6 +31,8 @@ public class FillService {
      * @return A {@code Response} object that carries the message and status code
      */
     public Response fill(FillRequest request) {
+        SqlDatabase db = new SqlDatabase();
+
         return new Response("Added X people to the tree");
     }
 }

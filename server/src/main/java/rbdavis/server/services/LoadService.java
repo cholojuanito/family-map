@@ -1,5 +1,6 @@
 package rbdavis.server.services;
 
+import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.shared.models.http.requests.LoadRequest;
 import rbdavis.shared.models.http.responses.Response;
 
@@ -26,6 +27,7 @@ public class LoadService {
      * @return A {@code Response} object that carries the message and status code
      */
     public Response load(LoadRequest request) {
+        SqlDatabase db = new SqlDatabase();
         return new Response("Loaded the people");
     }
 }

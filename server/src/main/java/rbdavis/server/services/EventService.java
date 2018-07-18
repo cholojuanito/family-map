@@ -1,5 +1,6 @@
 package rbdavis.server.services;
 
+import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.shared.models.http.requests.EventRequest;
 import rbdavis.shared.models.http.requests.EventsRequest;
 import rbdavis.shared.models.http.responses.EventResponse;
@@ -28,7 +29,9 @@ public class EventService {
      * @param request A request to find all rows in the database
      * @return A response that has a {@code List} of {@code Event}s
      */
-    public EventsResponse findAll(EventsRequest request) {
+    public EventsResponse findAllEvents(EventsRequest request) {
+        SqlDatabase db = new SqlDatabase();
+
         return new EventsResponse();
     }
 
@@ -39,7 +42,9 @@ public class EventService {
      * @param request A request to find the id in the database
      * @return A response that has an {@code Event}
      */
-    public EventResponse findById(EventRequest request) {
+    public EventResponse findEvent(EventRequest request) {
+        SqlDatabase db = new SqlDatabase();
+
         return new EventResponse();
     }
 }

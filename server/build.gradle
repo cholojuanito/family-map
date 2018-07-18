@@ -2,9 +2,10 @@ apply plugin: 'java-library'
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':shared')
+    implementation project(':shared')
+    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'junit:junit:4.12'
-    implementation files('C:/Users/tanne/Documents/GitKraken Repos/GitHub/family-map/sqlite-jdbc/sqlite-jdbc-3.23.1.jar')
+    implementation files('/sqlite-jdbc/sqlite-jdbc-3.23.1.jar')
 }
 
 sourceCompatibility = "1.7"

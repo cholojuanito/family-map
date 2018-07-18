@@ -1,5 +1,6 @@
 package rbdavis.server.services;
 
+import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.shared.models.http.responses.Response;
 
 /**
@@ -22,6 +23,7 @@ public class ClearService {
      * @return A {@code Response} that carries the message and status code
      */
     public Response clear() {
+        SqlDatabase db = new SqlDatabase();
         return new Response("Everything has been cleared");
     }
 }

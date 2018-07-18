@@ -1,5 +1,6 @@
 package rbdavis.server.services;
 
+import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.requests.PersonRequest;
 import rbdavis.shared.models.http.responses.PeopleResponse;
@@ -29,7 +30,8 @@ public class PersonService {
      * @param request A request to find all rows in the database
      * @return A response that has a {@code List} of {@code Person}s
      */
-    public PeopleResponse findAll(PeopleRequest request) {
+    public PeopleResponse findAllPeople(PeopleRequest request) {
+        SqlDatabase db = new SqlDatabase();
         return new PeopleResponse();
     }
 
@@ -40,7 +42,8 @@ public class PersonService {
      * @param request A request to find the id in the database
      * @return A response that has an {@code Person}
      */
-    public PersonResponse findById(PersonRequest request) {
+    public PersonResponse findPerson(PersonRequest request) {
+        SqlDatabase db = new SqlDatabase();
         return new PersonResponse();
     }
 }

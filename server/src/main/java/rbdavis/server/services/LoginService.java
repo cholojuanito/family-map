@@ -1,5 +1,6 @@
 package rbdavis.server.services;
 
+import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.shared.models.http.requests.LoginRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 
@@ -18,7 +19,6 @@ import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
  */
 
 public class LoginService {
-
     /**
      * Logins in the user and returns an {@code AuthToken} inside the {@code LoginOrRegisterResponse}.
      *
@@ -26,6 +26,8 @@ public class LoginService {
      * @return A {@code LoginOrRegisterResponse} object that carries the username and {@code AuthToken}
      */
     public LoginOrRegisterResponse login(LoginRequest request) {
+        SqlDatabase db = new SqlDatabase();
+
         return new LoginOrRegisterResponse();
     }
 }
