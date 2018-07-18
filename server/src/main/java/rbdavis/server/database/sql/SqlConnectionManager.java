@@ -65,9 +65,15 @@ public class SqlConnectionManager {
         }
     }
 
-    public static void closeConnection(Connection connection) throws SQLException {
+    public static void closeConnection(Connection connection, boolean commit) throws SQLException {
         if (connection != null) {
-            connection.close();
+            if (commit) {
+                connection.commit();
+            }
+            else {
+                connection.rollback();
+                connection.close();
+            }
         }
     }
 }
