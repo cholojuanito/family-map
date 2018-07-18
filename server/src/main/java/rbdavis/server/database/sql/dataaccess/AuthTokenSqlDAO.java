@@ -1,6 +1,13 @@
 package rbdavis.server.database.sql.dataaccess;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import rbdavis.server.database.DAO;
@@ -21,6 +28,7 @@ import rbdavis.shared.models.data.AuthToken;
 
 public class AuthTokenSqlDAO implements DAO<AuthToken> {
     private Connection connection = null;
+    private final DateTimeFormatter TOKEN_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     /**
      * Creates a row in the AuthToken table of the database.
@@ -31,6 +39,47 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
      */
     @Override
     public AuthToken create(AuthToken token) throws DatabaseException {
+        try {
+            connection = SqlConnectionManager.openConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement stmt = null;
+            try {
+                String sql = "INSERT INTO AuthTokens" +
+                        "(token, user_id, start_time, end_time)" +
+                        "VALUES (?, ?, ?, ?)";
+                stmt = connection.prepareStatement(sql);
+                stmt.setString(1, token.getToken());
+                stmt.setString(2, token.getUserId());
+                stmt.setString(3, token.getStartTime().format(TOKEN_FORMATTER));
+                stmt.setString(4, token.getEndTime().format(TOKEN_FORMATTER));
+
+                if (stmt.executeUpdate() == 1) {
+                    connection.commit();
+                }
+                else {
+                    connection.rollback();
+                }
+            }
+            finally {
+                closeStatement(stmt);
+                SqlConnectionManager.closeConnection(connection);
+            }
+        }
+        catch (SQLException e) {
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax.";
+                    break;
+                case 19:
+                    errorMessage = "Id is already taken.";
+                    break;
+                default:
+                    errorMessage = "Create auth token failed.";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage, e);
+        }
         return token;
     }
 
@@ -44,7 +93,7 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
      */
     @Override
     public AuthToken update(String id, AuthToken token) throws DatabaseException {
-        return token;
+        return null;
     }
 
     /**
@@ -56,19 +105,71 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
      */
     @Override
     public boolean delete(String id) throws DatabaseException {
-        return false;
+        boolean worked = false;
+        try {
+            connection = SqlConnectionManager.openConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement stmt = null;
+            try {
+
+                String sql = "DELETE FROM AuthTokens WHERE id = ?";
+                stmt = connection.prepareStatement(sql);
+                stmt.setString(1, id);
+
+                if (stmt.executeUpdate() == 1) {
+                    connection.commit();
+                    worked = true;
+                }
+                else {
+                    connection.rollback();
+                }
+            }
+            finally {
+                closeStatement(stmt);
+                SqlConnectionManager.closeConnection(connection);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("deleteAuthToken failed ", e);
+        }
+        return worked;
     }
 
     /**
      * Finds a row in the AuthToken table by id.
      *
-     * @param id The id of the row to find
+     * @param user_id The id of the row to find
      * @return The {@code AuthToken} model representation that was found
      * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
-    public AuthToken findById(String id) throws DatabaseException {
-        return null;
+    public AuthToken findById(String user_id) throws DatabaseException {
+        AuthToken token;
+        try {
+            connection = SqlConnectionManager.openConnection();
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            try {
+
+                String sql = "SELECT * FROM AuthTokens WHERE id = ?";
+                stmt = connection.prepareStatement(sql);
+                stmt.setString(1, user_id);
+
+                rs = stmt.executeQuery();
+                rs.next();
+                token = extractTokenModel(rs);
+
+                return token;
+            }
+            finally {
+                closeStatement(stmt);
+                closeResultSet(rs);
+                SqlConnectionManager.closeConnection(connection);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("findAuthTokenById failed ", e);
+        }
     }
 
     /**
@@ -79,6 +180,110 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
      */
     @Override
     public List<AuthToken> all() throws DatabaseException {
+        List<AuthToken> foundTokens = null;
+        try {
+            connection = SqlConnectionManager.openConnection();
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            try {
+
+                String sql = "SELECT * FROM AuthTokens";
+                stmt = connection.prepareStatement(sql);
+
+                rs = stmt.executeQuery();
+                foundTokens = extractTokenModels(rs);
+                return foundTokens;
+            }
+            finally {
+                closeStatement(stmt);
+                closeResultSet(rs);
+                SqlConnectionManager.closeConnection(connection);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("findAllUsers failed ", e);
+        }
+    }
+
+    /**
+     * Finds all rows in the AuthToken table by userId.
+     *
+     * @param userId The foreign key used to find the rows
+     * @return The {@code AuthToken} models that were found
+     * @throws DatabaseException Any issue with the database is thrown
+     */
+    public AuthToken findByUserId(String userId) throws DatabaseException {
+        List<AuthToken> foundTokens = null;
+        try {
+            connection = SqlConnectionManager.openConnection();
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            try {
+
+                String sql = "SELECT * FROM AuthTokens WHERE user_id = ?";
+                stmt = connection.prepareStatement(sql);
+                stmt.setString(1, userId);
+
+                rs = stmt.executeQuery();
+                foundTokens = extractTokenModels(rs);
+
+                return findCurrentToken(foundTokens);
+            }
+            finally {
+                closeStatement(stmt);
+                closeResultSet(rs);
+                SqlConnectionManager.closeConnection(connection);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("findAllAuthTokens failed ", e);
+        }
+    }
+
+    private AuthToken extractTokenModel(ResultSet rs) throws SQLException {
+        AuthToken tokenModel = null;
+
+        String token = rs.getString(1);
+        String userId = rs.getString(2);
+        LocalDateTime start = LocalDateTime.parse(rs.getString(3));
+        LocalDateTime end = LocalDateTime.parse(rs.getString(4));
+
+        tokenModel = new AuthToken(token, userId, start, end);
+
+        return tokenModel;
+    }
+
+    private List<AuthToken> extractTokenModels(ResultSet rs) throws SQLException {
+        List<AuthToken> tokens = new ArrayList<>();
+
+        while (rs.next()) {
+            AuthToken token = extractTokenModel(rs);
+            if (token != null) {
+                tokens.add(token);
+            }
+        }
+
+        return tokens;
+    }
+
+    private AuthToken findCurrentToken(List<AuthToken> tokens) {
+        for (AuthToken token: tokens) {
+            if (!token.isExpired()) {
+                return token;
+            }
+        }
         return null;
+    }
+
+    private void closeStatement(Statement stmt) throws SQLException {
+        if (stmt != null) {
+            stmt.close();
+        }
+    }
+
+    private void closeResultSet(ResultSet rs) throws SQLException {
+        if (rs != null) {
+            rs.close();
+        }
     }
 }

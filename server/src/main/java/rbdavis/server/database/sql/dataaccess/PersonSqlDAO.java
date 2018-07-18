@@ -42,7 +42,7 @@ public class PersonSqlDAO implements DAO<Person> {
             connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
-                String sql = "INSERT INTO Persons" +
+                String sql = "INSERT INTO Persons " +
                         "(id, user_id, first_name, last_name, gender, father_id, mother_id, spouse_id)" +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                 stmt = connection.prepareStatement(sql);
@@ -95,7 +95,54 @@ public class PersonSqlDAO implements DAO<Person> {
      */
     @Override
     public Person update(String id, Person person) throws DatabaseException {
-        return null;
+        try {
+            connection = SqlConnectionManager.openConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement stmt = null;
+            try {
+
+                String sql = "UPDATE Persons " +
+                             "SET first_name = ?, last_name = ?, gender = ?, father_id = ?," +
+                             "mother_id = ?, spouse_id = ? " +
+                             "WHERE id = ?";
+                stmt = connection.prepareStatement(sql);
+                stmt.setString(1, person.getFirstName());
+                stmt.setString(2, person.getLastName());
+                stmt.setString(3, person.getGender().toString());
+                stmt.setString(4, person.getFatherId());
+                stmt.setString(5, person.getMotherID());
+                stmt.setString(6, person.getSpouseID());
+                stmt.setString(7, id);
+
+                if (stmt.executeUpdate() == 1) {
+                    connection.commit();
+                }
+                else {
+                    connection.rollback();
+                }
+            }
+            finally {
+                closeStatement(stmt);
+                SqlConnectionManager.closeConnection(connection);
+            }
+        }
+        catch (SQLException e) {
+            String errorMessage;
+            int errorCode = e.getErrorCode();
+            switch (errorCode) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax.";
+                    break;
+                case 19:
+                    errorMessage = "Couldn't find the row.";
+                    break;
+                default:
+                    errorMessage = "Update person failed.";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage, e);
+        }
+        return person;
     }
 
     /**
@@ -107,7 +154,34 @@ public class PersonSqlDAO implements DAO<Person> {
      */
     @Override
     public boolean delete(String id) throws DatabaseException {
-        return false;
+        boolean worked = false;
+        try {
+            connection = SqlConnectionManager.openConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement stmt = null;
+            try {
+
+                String sql = "DELETE FROM Persons WHERE id = ?";
+                stmt = connection.prepareStatement(sql);
+                stmt.setString(1, id);
+
+                if (stmt.executeUpdate() == 1) {
+                    connection.commit();
+                    worked = true;
+                }
+                else {
+                    connection.rollback();
+                }
+            }
+            finally {
+                closeStatement(stmt);
+                SqlConnectionManager.closeConnection(connection);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("deletePerson failed ", e);
+        }
+        return worked;
     }
 
     /**
@@ -119,7 +193,32 @@ public class PersonSqlDAO implements DAO<Person> {
      */
     @Override
     public Person findById(String id) throws DatabaseException {
-        return null;
+        Person foundPerson;
+        try {
+            connection = SqlConnectionManager.openConnection();
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            try {
+
+                String sql = "SELECT * FROM Persons WHERE id = ?";
+                stmt = connection.prepareStatement(sql);
+                stmt.setString(1, id);
+
+                rs = stmt.executeQuery();
+                rs.next();
+                foundPerson = extractPersonModel(rs);
+
+                return foundPerson;
+            }
+            finally {
+                closeStatement(stmt);
+                closeResultSet(rs);
+                SqlConnectionManager.closeConnection(connection);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("findPerson failed ", e);
+        }
     }
 
     /**
@@ -130,7 +229,29 @@ public class PersonSqlDAO implements DAO<Person> {
      */
     @Override
     public List<Person> all() throws DatabaseException {
-        return null;
+        List<Person> foundPersons;
+        try {
+            connection = SqlConnectionManager.openConnection();
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            try {
+
+                String sql = "SELECT * FROM Persons";
+                stmt = connection.prepareStatement(sql);
+
+                rs = stmt.executeQuery();
+                foundPersons = extractPersonModels(rs);
+                return foundPersons;
+            }
+            finally {
+                closeStatement(stmt);
+                closeResultSet(rs);
+                SqlConnectionManager.closeConnection(connection);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("findAllPersons failed ", e);
+        }
     }
 
     /**
@@ -139,8 +260,32 @@ public class PersonSqlDAO implements DAO<Person> {
      * @param username the foreign key used for finding {@code Person}s
      * @return A {@code List} of {@code Person} models
      */
-    public List<Person> findByUsername(String username) {
-        return null;
+    public List<Person> findByUsername(String username) throws DatabaseException {
+        List<Person> foundPersons;
+        try {
+            connection = SqlConnectionManager.openConnection();
+            PreparedStatement stmt = null;
+            ResultSet rs = null;
+            try {
+
+                String sql = "SELECT * FROM Persons WHERE user_id = ?";
+                stmt = connection.prepareStatement(sql);
+                stmt.setString(1, username);
+
+                rs = stmt.executeQuery();
+                foundPersons = extractPersonModels(rs);
+
+                return foundPersons;
+            }
+            finally {
+                closeStatement(stmt);
+                closeResultSet(rs);
+                SqlConnectionManager.closeConnection(connection);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("findPersonByUsername failed ", e);
+        }
     }
 
     /**
@@ -149,12 +294,38 @@ public class PersonSqlDAO implements DAO<Person> {
      * @param username the foreign key used for deleting
      * @return True if anything was deleted. False otherwise.
      */
-    public boolean deleteByUsername(String username) {
-        return false;
+    public boolean deleteByUsername(String username) throws DatabaseException {
+        boolean worked = false;
+        try {
+            connection = SqlConnectionManager.openConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement stmt = null;
+            try {
+                String sql = "DELETE FROM Persons WHERE user_id = ?";
+                stmt = connection.prepareStatement(sql);
+                stmt.setString(1, username);
+
+                if (stmt.executeUpdate() >= 1) {
+                    connection.commit();
+                    worked = true;
+                }
+                else {
+                    connection.rollback();
+                }
+            }
+            finally {
+                closeStatement(stmt);
+                SqlConnectionManager.closeConnection(connection);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("deletePersonByUsername failed ", e);
+        }
+        return worked;
     }
 
     private Person extractPersonModel(ResultSet rs) throws SQLException {
-        Person person = null;
+        Person person;
 
         String id = rs.getString(1);
         String userId = rs.getString(2);
@@ -163,7 +334,7 @@ public class PersonSqlDAO implements DAO<Person> {
         String genderStr = rs.getString(5);
         String fatherId = rs.getString(6);
         String motherId = rs.getString(7);
-        String spouseid = rs.getString(8);
+        String spouseId = rs.getString(8);
         Gender gender;
         if (genderStr.equals("m")) {
             gender = Gender.M;
@@ -172,7 +343,7 @@ public class PersonSqlDAO implements DAO<Person> {
             gender = Gender.F;
         }
 
-        person = new Person(id, userId, firstName, lastName, gender, fatherId, motherId, spouseid);
+        person = new Person(id, userId, firstName, lastName, gender, fatherId, motherId, spouseId);
 
         return person;
     }
