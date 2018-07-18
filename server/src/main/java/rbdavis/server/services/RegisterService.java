@@ -1,5 +1,6 @@
 package rbdavis.server.services;
 
+import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.shared.models.http.requests.RegisterRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 
@@ -25,6 +26,8 @@ public class RegisterService {
      * @return A {@code LoginOrRegisterResponse} object that carries the username and {@code AuthToken}
      */
     public LoginOrRegisterResponse register(RegisterRequest request) {
+        SqlDatabase db = new SqlDatabase();
+
         return new LoginOrRegisterResponse();
     }
 }
