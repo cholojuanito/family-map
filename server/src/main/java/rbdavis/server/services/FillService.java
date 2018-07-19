@@ -1,5 +1,6 @@
 package rbdavis.server.services;
 
+import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.responses.Response;
@@ -31,7 +32,17 @@ public class FillService {
      * @return A {@code Response} object that carries the message and status code
      */
     public Response fill(FillRequest request) {
-        SqlDatabase db = new SqlDatabase();
+        SqlDatabase db;
+        try {
+            db = new SqlDatabase();
+            // 1. Steps
+        }
+        catch (DAO.DatabaseException e) {
+            // TODO: Log here
+            // 3. Make an errorResponse and return it
+
+            e.printStackTrace();
+        }
 
         return new Response("Added X people to the tree");
     }

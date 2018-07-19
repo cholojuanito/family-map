@@ -59,12 +59,12 @@ public class SqlDatabase {
         this.personDao = personDao;
     }
 
-    public EventSqlDAO getEvevntDao() {
+    public EventSqlDAO getEventDao() {
         return eventDao;
     }
 
-    public void setEvevntDao(EventSqlDAO evevntDao) {
-        this.eventDao = evevntDao;
+    public void setEventDao(EventSqlDAO eventDao) {
+        this.eventDao = eventDao;
     }
 
     public AuthTokenSqlDAO getAuthTokenDao() {

@@ -1,6 +1,11 @@
 package rbdavis.server.services;
 
+import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
+import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
+import rbdavis.server.database.sql.dataaccess.EventSqlDAO;
+import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
+import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
 import rbdavis.shared.models.http.responses.Response;
 
 /**
@@ -23,7 +28,25 @@ public class ClearService {
      * @return A {@code Response} that carries the message and status code
      */
     public Response clear() {
-        SqlDatabase db = new SqlDatabase();
+        SqlDatabase db;
+        try {
+            db = new SqlDatabase();
+            // 1. Get all the dao's
+            UserSqlDAO userDao = db.getUserDao();
+            PersonSqlDAO personDao = db.getPersonDao();
+            EventSqlDAO eventSqlDao = db.getEventDao();
+            AuthTokenSqlDAO authTokenDao = db.getAuthTokenDao();
+            // 2. Call deleteAll on all of them
+
+
+            // 3. Make a Response and return it
+        }
+        catch (DAO.DatabaseException e) {
+            // TODO: Log here
+            // 3. Make an errorResponse and return it
+
+            e.printStackTrace();
+        }
         return new Response("Everything has been cleared");
     }
 }
