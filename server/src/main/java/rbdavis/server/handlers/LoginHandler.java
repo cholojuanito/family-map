@@ -19,10 +19,7 @@ import sun.rmi.runtime.Log;
 
 import static rbdavis.server.StreamCommunicator.*;
 
-public class LoginHandler implements HttpHandler {
-
-    private GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
-    private Gson gson = gsonBuilder.create();
+public class LoginHandler extends Handler implements HttpHandler {
 
     public void handle(HttpExchange exchange) throws IOException {
         String respData = null;

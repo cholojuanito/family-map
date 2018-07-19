@@ -16,17 +16,16 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.rmi.server.ExportException;
 import java.security.InvalidParameterException;
+import java.util.logging.Logger;
 
+import rbdavis.server.services.RegisterService;
 import rbdavis.shared.models.http.requests.RegisterRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 import rbdavis.shared.models.http.responses.Response;
 
 import static rbdavis.server.StreamCommunicator.*;
 
-public class RegisterHandler implements HttpHandler {
-
-    private GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
-    private Gson gson = gsonBuilder.create();
+public class RegisterHandler extends Handler implements HttpHandler {
 
     public void handle(HttpExchange exchange) throws IOException {
         String respData = null;
@@ -36,6 +35,7 @@ public class RegisterHandler implements HttpHandler {
 
             switch (exchange.getRequestMethod().toLowerCase()) {
                 case "post":
+                    logger.info("Register request began");
                     try {
                         // Read request body
                         InputStream reqBody = exchange.getRequestBody();
@@ -44,46 +44,50 @@ public class RegisterHandler implements HttpHandler {
                         // Make a RegisterRequest obj
                         RegisterRequest request = gson.fromJson(reqData, RegisterRequest.class);
                         if (isValidRegisterRequest(request)) {
-
                             // Pass it to the RegisterService
+                            LoginOrRegisterResponse response = new RegisterService().register(request);
 
                             // Write response body
-                            LoginOrRegisterResponse response = new LoginOrRegisterResponse("fakeToken", request.getUserName(), "fakePersonID");
+                            //LoginOrRegisterResponse response = new LoginOrRegisterResponse("fakeToken", request.getUserName(), "fakePersonID");
                             respData = gson.toJson(response);
                             responseCode = HttpURLConnection.HTTP_OK;
-                            // TODO: Log here
+
+                            logger.info("Register request successful");
                         }
                         else {
-                            // TODO: Log here
-                            throw new NullPointerException("Missing a property");
+                            throw new NullPointerException("Request property missing or has invalid value.");
                         }
                     }
                     catch (NullPointerException e) {
-                        System.out.println(e.getMessage());
-                        errorResponse = new Response("Request property missing or has invalid value.");
+                        logger.warning(e.getMessage());
+
+                        errorResponse = new Response(e.getMessage());
                         responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                         respData = gson.toJson(errorResponse);
                     }
                     catch (JsonParseException e) {
+                        logger.warning("Error occurred while reading JSON " + e.getMessage());
+
                         errorResponse = new Response("Error occurred while reading JSON. Please check your syntax");
                         responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                         respData = gson.toJson(errorResponse);
-                        // TODO: Log here
                     }
                     catch (IOException e) {
+                        logger.severe("Internal server error occurred " + e.getMessage());
+
                         errorResponse = new Response("An error occurred on our end. Sorry!");
                         responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
                         respData = gson.toJson(errorResponse);
-                        // TODO: Log here
                     }
 
                     break;
 
                 default:
-                    errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for this URL");
+                    logger.info(exchange.getRequestMethod() + " method is not supported for '/user/register'");
+                    
+                    errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for '/user/register'");
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(errorResponse);
-                    // TODO: Log here
                     break;
             }
 

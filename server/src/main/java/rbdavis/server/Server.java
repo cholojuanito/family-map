@@ -2,34 +2,65 @@ package rbdavis.server;
 
 import com.sun.net.httpserver.HttpServer;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
-import rbdavis.server.handlers.ClearHandler;
-import rbdavis.server.handlers.EventHandler;
-import rbdavis.server.handlers.EventsHandler;
-import rbdavis.server.handlers.FileHandler;
-import rbdavis.server.handlers.LoadHandler;
-import rbdavis.server.handlers.LoginHandler;
-import rbdavis.server.handlers.PeopleHandler;
-import rbdavis.server.handlers.PersonHandler;
-import rbdavis.server.handlers.RegisterHandler;
+import rbdavis.server.handlers.*;
 
 public class Server {
     private static final int MAX_WAITING_CONNECTIONS = 12;
     private HttpServer server;
 
+    private static Logger logger;
+
+    static {
+        try {
+            initLog();
+        }
+        catch (IOException e) {
+            System.out.println("Could not initialize log: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private static void initLog() throws IOException {
+        final String serverLogPath = "server" + File.separator + "logs" + File.separator + "server.txt";
+
+        Level logLevel = Level.ALL;
+
+        logger = Logger.getLogger("server");
+        logger.setLevel(logLevel);
+        logger.setUseParentHandlers(false);
+
+        Handler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(logLevel);
+        consoleHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(consoleHandler);
+
+        java.util.logging.FileHandler serverFileHandler = new java.util.logging.FileHandler(serverLogPath, false);
+        serverFileHandler.setLevel(logLevel);
+        serverFileHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(serverFileHandler);
+    }
+
 
     private void run(String portNumber) {
 
-        System.out.println("Initializing HTTP Server");
-
+        logger.info("Initializing HTTP Server");
         try {
-            server = HttpServer.create(new InetSocketAddress(Integer.parseInt(portNumber)),
-                                        MAX_WAITING_CONNECTIONS);
+            server = HttpServer.create(
+                    new InetSocketAddress(Integer.parseInt(portNumber)),
+                                            MAX_WAITING_CONNECTIONS);
         }
         catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage(), e);
             return;
         }
 
@@ -37,13 +68,13 @@ public class Server {
         // This line is necessary, but its function is unimportant for our purposes.
         server.setExecutor(null);
 
-        System.out.println("Creating contexts");
+        logger.info("Creating contexts");
 
         // Create and install the HTTP handlers
         server.createContext("/user/register", new RegisterHandler());
         server.createContext("/user/login", new LoginHandler());
         server.createContext("/clear", new ClearHandler());
-        server.createContext("/fill", new FileHandler());
+        server.createContext("/fill", new FillHandler());
         server.createContext("/load", new LoadHandler());
 
         server.createContext("/event/", new EventHandler());
@@ -51,18 +82,13 @@ public class Server {
         server.createContext("/person/", new PersonHandler());
         server.createContext("/person", new PeopleHandler());
 
-        server.createContext("/", new FileHandler());
+        server.createContext("/", new rbdavis.server.handlers.FileHandler());
 
-        // Log message indicating that the HttpServer is about the start accepting
-        // incoming client connections.
-        // TODO: Log here
-        System.out.println("Starting server");
+        logger.info("Starting HTTP server");
 
         server.start();
 
-        // Log message indicating that the server has successfully started.
-        // TODO: Log here
-        System.out.println("Server listening on port: " + portNumber);
+        logger.info("Server listening on port: " + portNumber);
     }
 
     public static void main(String[] args) {
