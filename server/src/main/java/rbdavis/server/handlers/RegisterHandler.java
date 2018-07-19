@@ -25,8 +25,8 @@ import static rbdavis.server.StreamCommunicator.*;
 
 public class RegisterHandler implements HttpHandler {
 
-    private GsonBuilder gsonBuild = new GsonBuilder();
-    private Gson gson = gsonBuild.create();
+    private GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
+    private Gson gson = gsonBuilder.create();
 
     public void handle(HttpExchange exchange) throws IOException {
         String respData = null;
