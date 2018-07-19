@@ -72,6 +72,14 @@ public interface DAO<T> {
      */
     List<T> all() throws DatabaseException;
 
+    /**
+     * Deletes the whole database table
+     *
+     * @return True if things were deleted. False otherwise.
+     * @throws DatabaseException Any issues with database queries
+     */
+    boolean deleteAll() throws DatabaseException;
+
 
     /**
      * An exception to help with recognizing database issues.

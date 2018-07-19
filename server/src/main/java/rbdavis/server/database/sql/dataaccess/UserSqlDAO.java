@@ -224,6 +224,36 @@ public class UserSqlDAO implements DAO<User> {
         }
     }
 
+    /**
+     * Deletes the whole Users table
+     *
+     * @return True if things were deleted. False otherwise.
+     * @throws DatabaseException Any issues with database queries
+     */
+    @Override
+    public boolean deleteAll() throws DatabaseException {
+        boolean worked = false;
+        try {
+            PreparedStatement stmt = null;
+            try {
+
+                String sql = "DELETE FROM Users";
+                stmt = connection.prepareStatement(sql);
+
+                if (stmt.executeUpdate() >= 1) {
+                    worked = true;
+                }
+            }
+            finally {
+                closeStatement(stmt);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("deleteAll failed ", e);
+        }
+        return worked;
+    }
+
     private User extractUserModel(ResultSet rs) throws SQLException {
         User user = null;
 

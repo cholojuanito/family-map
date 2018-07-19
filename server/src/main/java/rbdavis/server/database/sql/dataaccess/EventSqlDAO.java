@@ -59,13 +59,6 @@ public class EventSqlDAO implements DAO<Event> {
                 stmt.setString(7, event.getCity());
                 stmt.setString(8, event.getCountry());
                 stmt.setString(9, event.getDateHappened().format(EVENT_FORMATTER));
-
-//                if (stmt.executeUpdate() == 1) {
-//                    connection.commit();
-//                }
-//                else {
-//                    connection.rollback();
-//                }
             }
             finally {
                 closeStatement(stmt);
@@ -115,13 +108,6 @@ public class EventSqlDAO implements DAO<Event> {
                 stmt.setString(5, event.getCountry());
                 stmt.setString(6, event.getDateHappened().format(EVENT_FORMATTER));
                 stmt.setString(7, id);
-
-//                if (stmt.executeUpdate() == 1) {
-//                    connection.commit();
-//                }
-//                else {
-//                    connection.rollback();
-//                }
             }
             finally {
                 closeStatement(stmt);
@@ -165,12 +151,8 @@ public class EventSqlDAO implements DAO<Event> {
                 stmt.setString(1, id);
 
                 if (stmt.executeUpdate() == 1) {
-                   // connection.commit();
                     worked = true;
                 }
-//                else {
-//                    connection.rollback();
-//                }
             }
             finally {
                 closeStatement(stmt);
@@ -246,6 +228,36 @@ public class EventSqlDAO implements DAO<Event> {
         catch (SQLException e) {
             throw new DAO.DatabaseException("findAllEvents failed ", e);
         }
+    }
+
+    /**
+     * Deletes the whole Events table
+     *
+     * @return True if things were deleted. False otherwise.
+     * @throws DatabaseException Any issues with database queries
+     */
+    @Override
+    public boolean deleteAll() throws DatabaseException {
+        boolean worked = false;
+        try {
+            PreparedStatement stmt = null;
+            try {
+
+                String sql = "DELETE FROM Events";
+                stmt = connection.prepareStatement(sql);
+
+                if (stmt.executeUpdate() >= 1) {
+                    worked = true;
+                }
+            }
+            finally {
+                closeStatement(stmt);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("deleteAuthToken failed ", e);
+        }
+        return worked;
     }
 
     /**

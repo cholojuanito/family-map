@@ -54,13 +54,6 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
                 stmt.setString(2, token.getUserId());
                 stmt.setString(3, token.getStartTime().format(TOKEN_FORMATTER));
                 stmt.setString(4, token.getEndTime().format(TOKEN_FORMATTER));
-
-//                if (stmt.executeUpdate() == 1) {
-//                    connection.commit();
-//                }
-//                else {
-//                    connection.rollback();
-//                }
             }
             finally {
                 closeStatement(stmt);
@@ -116,12 +109,8 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
                 stmt.setString(1, id);
 
                 if (stmt.executeUpdate() == 1) {
-                    //connection.commit();
                     worked = true;
                 }
-//                else {
-//                    connection.rollback();
-//                }
             }
             finally {
                 closeStatement(stmt);
@@ -197,6 +186,36 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
         catch (SQLException e) {
             throw new DAO.DatabaseException("findAllUsers failed ", e);
         }
+    }
+
+    /**
+     * Deletes the whole AuthTokens table
+     *
+     * @return True if things were deleted. False otherwise.
+     * @throws DatabaseException Any issues with database queries
+     */
+    @Override
+    public boolean deleteAll() throws DatabaseException {
+        boolean worked = false;
+        try {
+            PreparedStatement stmt = null;
+            try {
+
+                String sql = "DELETE FROM AuthTokens";
+                stmt = connection.prepareStatement(sql);
+
+                if (stmt.executeUpdate() >= 1) {
+                    worked = true;
+                }
+            }
+            finally {
+                closeStatement(stmt);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("deleteAuthToken failed ", e);
+        }
+        return worked;
     }
 
     /**

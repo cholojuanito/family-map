@@ -228,6 +228,36 @@ public class PersonSqlDAO implements DAO<Person> {
     }
 
     /**
+     * Deletes the whole Persons table
+     *
+     * @return True if things were deleted. False otherwise.
+     * @throws DatabaseException Any issues with database queries
+     */
+    @Override
+    public boolean deleteAll() throws DatabaseException {
+        boolean worked = false;
+        try {
+            PreparedStatement stmt = null;
+            try {
+
+                String sql = "DELETE FROM Persons";
+                stmt = connection.prepareStatement(sql);
+
+                if (stmt.executeUpdate() >= 1) {
+                    worked = true;
+                }
+            }
+            finally {
+                closeStatement(stmt);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("deleteAll failed ", e);
+        }
+        return worked;
+    }
+
+    /**
      * Uses the username to find all {@code Person}s associated with that user.
      *
      * @param username the foreign key used for finding {@code Person}s
