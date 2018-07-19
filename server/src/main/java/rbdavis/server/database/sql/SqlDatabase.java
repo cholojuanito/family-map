@@ -37,7 +37,7 @@ public class SqlDatabase {
         connection = SqlConnectionManager.openConnection();
     }
 
-    public void endTransaction(boolean commit) throws SQLException {
+    public void endTransaction(boolean commit) throws DAO.DatabaseException {
         SqlConnectionManager.closeConnection(connection, commit);
     }
 

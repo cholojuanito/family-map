@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.xml.crypto.Data;
+
 import rbdavis.server.database.DAO;
 
 /**
@@ -27,9 +29,9 @@ public class SqlConnectionManager {
     }
 
     //URL to the database
-    private static final String DB_URL = "jdbc:sqlite:database" + File.separator + "family_map.db";
+    private static final String DB_URL = "jdbc:sqlite:server" + File.separator  + "database" + File.separator + "family_map.db";
     //URL to the unit test database
-    private static final String TEST_DB_URL = "jdbc:sqlite:database" + File.separator + "test.db";
+    private static final String TEST_DB_URL = "jdbc:sqlite:server" + File.separator  + "database" + File.separator + "test.db";
 
     /**
      * Creates a new {@code Connection} through the {@code DriverManager}
@@ -65,15 +67,20 @@ public class SqlConnectionManager {
         }
     }
 
-    public static void closeConnection(Connection connection, boolean commit) throws SQLException {
-        if (connection != null) {
-            if (commit) {
-                connection.commit();
+    public static void closeConnection(Connection connection, boolean commit) throws DAO.DatabaseException {
+        try {
+            if (connection != null) {
+                if (commit) {
+                    connection.commit();
+                }
+                else {
+                    connection.rollback();
+                    connection.close();
+                }
             }
-            else {
-                connection.rollback();
-                connection.close();
-            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("Unable to close connection", e);
         }
     }
 }
