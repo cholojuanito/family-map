@@ -1,6 +1,13 @@
 package rbdavis.server.services;
 
+import java.sql.SQLException;
+
+import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
+import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
+import rbdavis.server.database.sql.dataaccess.EventSqlDAO;
+import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
+import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
 import rbdavis.shared.models.http.responses.Response;
 
 /**
@@ -23,7 +30,38 @@ public class ClearService {
      * @return A {@code Response} that carries the message and status code
      */
     public Response clear() {
-        SqlDatabase db = new SqlDatabase();
-        return new Response("Everything has been cleared");
+        Response response = new Response();
+        try {
+            SqlDatabase db = new SqlDatabase();
+            try {
+                // 1. Get all the dao's
+                UserSqlDAO userDao = db.getUserDao();
+                PersonSqlDAO personDao = db.getPersonDao();
+                EventSqlDAO eventDao = db.getEventDao();
+                AuthTokenSqlDAO authTokenDao = db.getAuthTokenDao();
+
+                // 2. Call deleteAll on all of them
+                userDao.deleteAll();
+                personDao.deleteAll();
+                eventDao.deleteAll();
+                authTokenDao.deleteAll();
+
+                // 3. Make a Response and return it
+                db.endTransaction(true);
+                response.setMessage("Clear succeeded");
+            }
+            catch (DAO.DatabaseException e) {
+                // TODO: Log here
+                db.endTransaction(false);
+                // 3. Make an errorResponse and return it
+                response.setMessage("Error happened");
+                e.printStackTrace();
+            }
+            return response;
+        }
+        catch (DAO.DatabaseException e) {
+            response.setMessage("Unable to open connection to db");
+        }
+        return response;
     }
 }

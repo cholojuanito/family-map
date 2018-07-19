@@ -1,6 +1,11 @@
 package rbdavis.server.services;
 
+import java.util.List;
+
+import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
+import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
+import rbdavis.shared.models.data.Person;
 import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.requests.PersonRequest;
 import rbdavis.shared.models.http.responses.PeopleResponse;
@@ -31,7 +36,22 @@ public class PersonService {
      * @return A response that has a {@code List} of {@code Person}s
      */
     public PeopleResponse findAllPeople(PeopleRequest request) {
-        SqlDatabase db = new SqlDatabase();
+        SqlDatabase db;
+        try {
+            db = new SqlDatabase();
+            // 1. Get needed Dao's
+            PersonSqlDAO eventDao = db.getPersonDao();
+            // 2. Call all on dao
+            List<Person> people;
+
+            // 3. Make a Response and return it
+        }
+        catch (DAO.DatabaseException e) {
+            // TODO: Log here
+            // 3. Make an errorResponse and return it
+
+            e.printStackTrace();
+        }
         return new PeopleResponse();
     }
 
@@ -43,7 +63,22 @@ public class PersonService {
      * @return A response that has an {@code Person}
      */
     public PersonResponse findPerson(PersonRequest request) {
-        SqlDatabase db = new SqlDatabase();
+        SqlDatabase db;
+        try {
+            db = new SqlDatabase();
+            // 1. Get needed Dao's
+            PersonSqlDAO eventDao = db.getPersonDao();
+            // 2. Call all on dao
+            Person person;
+
+            // 3. Make a Response and return it
+        }
+        catch (DAO.DatabaseException e) {
+            // TODO: Log here
+            // 3. Make an errorResponse and return it
+
+            e.printStackTrace();
+        }
         return new PersonResponse();
     }
 }

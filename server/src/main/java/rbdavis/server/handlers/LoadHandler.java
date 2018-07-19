@@ -8,13 +8,15 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
+import rbdavis.shared.models.http.requests.LoadRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-public class FillHandler implements HttpHandler{
+public class LoadHandler implements HttpHandler {
 
     private GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
     private Gson gson = gsonBuilder.create();
 
+    @Override
     public void handle(HttpExchange exchange) throws IOException {
         String respData = null;
         int responseCode = 0;
@@ -31,5 +33,10 @@ public class FillHandler implements HttpHandler{
                 respData = gson.toJson(errorResponse);
                 break;
         }
+    }
+
+    private boolean isValidLoadRequest(LoadRequest request) throws NullPointerException {
+
+        return false;
     }
 }

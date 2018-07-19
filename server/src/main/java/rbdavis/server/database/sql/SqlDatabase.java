@@ -18,12 +18,18 @@ public class SqlDatabase {
     // Connection
     private Connection connection;
 
-    public SqlDatabase() {
-        //connection = SqlConnectionManager.openConnection();
-        userDao = new UserSqlDAO();
-        personDao = new PersonSqlDAO();
-        eventDao = new EventSqlDAO();
-        authTokenDao = new AuthTokenSqlDAO();
+    public SqlDatabase() throws DAO.DatabaseException {
+        try {
+            connection = SqlConnectionManager.openConnection();
+            connection.setAutoCommit(false);
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("SQL database object creation failed", e);
+        }
+        userDao = new UserSqlDAO(connection);
+        personDao = new PersonSqlDAO(connection);
+        eventDao = new EventSqlDAO(connection);
+        authTokenDao = new AuthTokenSqlDAO(connection);
     }
 
 
@@ -31,7 +37,7 @@ public class SqlDatabase {
         connection = SqlConnectionManager.openConnection();
     }
 
-    public void endTransaction(boolean commit) throws SQLException {
+    public void endTransaction(boolean commit) throws DAO.DatabaseException {
         SqlConnectionManager.closeConnection(connection, commit);
     }
 
@@ -53,12 +59,12 @@ public class SqlDatabase {
         this.personDao = personDao;
     }
 
-    public EventSqlDAO getEvevntDao() {
+    public EventSqlDAO getEventDao() {
         return eventDao;
     }
 
-    public void setEvevntDao(EventSqlDAO evevntDao) {
-        this.eventDao = evevntDao;
+    public void setEventDao(EventSqlDAO eventDao) {
+        this.eventDao = eventDao;
     }
 
     public AuthTokenSqlDAO getAuthTokenDao() {

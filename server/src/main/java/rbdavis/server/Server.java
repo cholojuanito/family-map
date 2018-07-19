@@ -5,8 +5,14 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
+import rbdavis.server.handlers.ClearHandler;
+import rbdavis.server.handlers.EventHandler;
+import rbdavis.server.handlers.EventsHandler;
 import rbdavis.server.handlers.FileHandler;
+import rbdavis.server.handlers.LoadHandler;
 import rbdavis.server.handlers.LoginHandler;
+import rbdavis.server.handlers.PeopleHandler;
+import rbdavis.server.handlers.PersonHandler;
 import rbdavis.server.handlers.RegisterHandler;
 
 public class Server {
@@ -34,9 +40,18 @@ public class Server {
         System.out.println("Creating contexts");
 
         // Create and install the HTTP handlers
-        server.createContext("/", new FileHandler());
         server.createContext("/user/register", new RegisterHandler());
         server.createContext("/user/login", new LoginHandler());
+        server.createContext("/clear", new ClearHandler());
+        server.createContext("/fill", new FileHandler());
+        server.createContext("/load", new LoadHandler());
+
+        server.createContext("/event/", new EventHandler());
+        server.createContext("/event", new EventsHandler());
+        server.createContext("/person/", new PersonHandler());
+        server.createContext("/person", new PeopleHandler());
+
+        server.createContext("/", new FileHandler());
 
         // Log message indicating that the HttpServer is about the start accepting
         // incoming client connections.

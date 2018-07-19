@@ -27,8 +27,13 @@ import rbdavis.shared.models.data.Event;
  */
 
 public class EventSqlDAO implements DAO<Event> {
-    private Connection connection = null;
+    private Connection connection;
     private final DateTimeFormatter EVENT_FORMATTER = DateTimeFormatter.ofPattern("dd MMM yyyy");
+
+    public EventSqlDAO(Connection connection) {
+        this.connection = connection;
+    }
+
     /**
      * Creates a row in the Event table of the database.
      *
@@ -39,8 +44,6 @@ public class EventSqlDAO implements DAO<Event> {
     @Override
     public Event create(Event event) throws DatabaseException {
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
                 String sql = "INSERT INTO Events " +
@@ -56,17 +59,9 @@ public class EventSqlDAO implements DAO<Event> {
                 stmt.setString(7, event.getCity());
                 stmt.setString(8, event.getCountry());
                 stmt.setString(9, event.getDateHappened().format(EVENT_FORMATTER));
-
-                if (stmt.executeUpdate() == 1) {
-                    connection.commit();
-                }
-                else {
-                    connection.rollback();
-                }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -98,8 +93,6 @@ public class EventSqlDAO implements DAO<Event> {
     @Override
     public Event update(String id, Event event) throws DatabaseException {
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
 
@@ -115,17 +108,9 @@ public class EventSqlDAO implements DAO<Event> {
                 stmt.setString(5, event.getCountry());
                 stmt.setString(6, event.getDateHappened().format(EVENT_FORMATTER));
                 stmt.setString(7, id);
-
-                if (stmt.executeUpdate() == 1) {
-                    connection.commit();
-                }
-                else {
-                    connection.rollback();
-                }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -158,8 +143,6 @@ public class EventSqlDAO implements DAO<Event> {
     public boolean delete(String id) throws DatabaseException {
         boolean worked = false;
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
 
@@ -168,16 +151,11 @@ public class EventSqlDAO implements DAO<Event> {
                 stmt.setString(1, id);
 
                 if (stmt.executeUpdate() == 1) {
-                    connection.commit();
                     worked = true;
-                }
-                else {
-                    connection.rollback();
                 }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -197,7 +175,6 @@ public class EventSqlDAO implements DAO<Event> {
     public Event findById(String id) throws DatabaseException {
         Event foundEvent;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -215,7 +192,6 @@ public class EventSqlDAO implements DAO<Event> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -233,7 +209,6 @@ public class EventSqlDAO implements DAO<Event> {
     public List<Event> all() throws DatabaseException {
         List<Event> foundEvents;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -248,12 +223,41 @@ public class EventSqlDAO implements DAO<Event> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
             throw new DAO.DatabaseException("findAllEvents failed ", e);
         }
+    }
+
+    /**
+     * Deletes the whole Events table
+     *
+     * @return True if things were deleted. False otherwise.
+     * @throws DatabaseException Any issues with database queries
+     */
+    @Override
+    public boolean deleteAll() throws DatabaseException {
+        boolean worked = false;
+        try {
+            PreparedStatement stmt = null;
+            try {
+
+                String sql = "DELETE FROM Events";
+                stmt = connection.prepareStatement(sql);
+
+                if (stmt.executeUpdate() >= 1) {
+                    worked = true;
+                }
+            }
+            finally {
+                closeStatement(stmt);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("deleteAuthToken failed ", e);
+        }
+        return worked;
     }
 
     /**
@@ -265,7 +269,6 @@ public class EventSqlDAO implements DAO<Event> {
     public List<Event> findByUsername(String username) throws DatabaseException {
         List<Event> foundEvents;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -282,7 +285,6 @@ public class EventSqlDAO implements DAO<Event> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -300,8 +302,6 @@ public class EventSqlDAO implements DAO<Event> {
     public boolean deleteByUsername(String username) throws DatabaseException {
         boolean worked = false;
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
                 String sql = "DELETE FROM Events WHERE user_id = ?";
@@ -309,16 +309,11 @@ public class EventSqlDAO implements DAO<Event> {
                 stmt.setString(1, username);
 
                 if (stmt.executeUpdate() >= 1) {
-                    connection.commit();
                     worked = true;
-                }
-                else {
-                    connection.rollback();
                 }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -336,7 +331,6 @@ public class EventSqlDAO implements DAO<Event> {
     public List<Event> findByPersonId(String personId) throws DatabaseException {
         List<Event> foundEvents;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -353,7 +347,6 @@ public class EventSqlDAO implements DAO<Event> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {

@@ -1,5 +1,6 @@
 package rbdavis.server.services;
 
+import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.shared.models.http.requests.RegisterRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
@@ -26,7 +27,17 @@ public class RegisterService {
      * @return A {@code LoginOrRegisterResponse} object that carries the username and {@code AuthToken}
      */
     public LoginOrRegisterResponse register(RegisterRequest request) {
-        SqlDatabase db = new SqlDatabase();
+        SqlDatabase db;
+        try {
+            db = new SqlDatabase();
+            // 1. Steps
+        }
+        catch (DAO.DatabaseException e) {
+            // TODO: Log here
+            // 3. Make an errorResponse and return it
+
+            e.printStackTrace();
+        }
 
         return new LoginOrRegisterResponse();
     }

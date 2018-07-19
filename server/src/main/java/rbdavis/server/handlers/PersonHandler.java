@@ -3,7 +3,6 @@ package rbdavis.server.handlers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -12,18 +11,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
-import rbdavis.shared.models.http.requests.LoginRequest;
-import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
+import rbdavis.shared.models.http.requests.PersonRequest;
+import rbdavis.shared.models.http.responses.PersonResponse;
 import rbdavis.shared.models.http.responses.Response;
-import sun.rmi.runtime.Log;
 
-import static rbdavis.server.StreamCommunicator.*;
+import static rbdavis.server.StreamCommunicator.readString;
+import static rbdavis.server.StreamCommunicator.writeString;
 
-public class LoginHandler implements HttpHandler {
+public class PersonHandler implements HttpHandler {
 
     private GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
     private Gson gson = gsonBuilder.create();
 
+    @Override
     public void handle(HttpExchange exchange) throws IOException {
         String respData = null;
         int responseCode = 0;
@@ -31,20 +31,20 @@ public class LoginHandler implements HttpHandler {
         Response errorResponse;
 
         switch (exchange.getRequestMethod().toLowerCase()) {
-            case "post":
+            case "get":
                 try {
                     // Read request body
                     InputStream reqBody = exchange.getRequestBody();
                     String reqData = readString(reqBody);
 
                     // Make a RegisterRequest obj
-                    LoginRequest request = gson.fromJson(reqData, LoginRequest.class);
-                    if (isValidLoginRequest(request)) {
+                    PersonRequest request = gson.fromJson(reqData, PersonRequest.class);
+                    if (isValidPersonRequest(request)) {
 
-                        // Pass it to the LoginService
+                        // Pass it to the EventService.findbyId
 
                         // Write response body
-                        LoginOrRegisterResponse response = new LoginOrRegisterResponse("fakeToken", request.getUserName(), "fakePersonID");
+                        PersonResponse response = new PersonResponse();
                         respData = gson.toJson(response);
                         responseCode = HttpURLConnection.HTTP_OK;
                         // TODO: Log here
@@ -73,14 +73,12 @@ public class LoginHandler implements HttpHandler {
                     // TODO: Log here
                 }
                 break;
-
             default:
                 errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for this URL");
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                 respData = gson.toJson(errorResponse);
                 // TODO: Log here
                 break;
-
         }
 
         exchange.sendResponseHeaders(responseCode, emptyBodyCode);
@@ -89,11 +87,8 @@ public class LoginHandler implements HttpHandler {
         respBody.close();
     }
 
-    private boolean isValidLoginRequest (LoginRequest request) throws NullPointerException {
-        boolean isValid = true;
-        if (request.getUserName() == null || request.getPassword() == null) {
-            isValid = false;
-        }
-        return isValid;
+    private boolean isValidPersonRequest(PersonRequest request) throws NullPointerException {
+
+        return false;
     }
 }

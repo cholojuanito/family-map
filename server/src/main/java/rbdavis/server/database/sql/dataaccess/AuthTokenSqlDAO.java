@@ -27,8 +27,12 @@ import rbdavis.shared.models.data.AuthToken;
  */
 
 public class AuthTokenSqlDAO implements DAO<AuthToken> {
-    private Connection connection = null;
+    private Connection connection;
     private final DateTimeFormatter TOKEN_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+    public AuthTokenSqlDAO(Connection connection) {
+        this.connection = connection;
+    }
 
     /**
      * Creates a row in the AuthToken table of the database.
@@ -40,8 +44,6 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
     @Override
     public AuthToken create(AuthToken token) throws DatabaseException {
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
                 String sql = "INSERT INTO AuthTokens" +
@@ -52,17 +54,9 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
                 stmt.setString(2, token.getUserId());
                 stmt.setString(3, token.getStartTime().format(TOKEN_FORMATTER));
                 stmt.setString(4, token.getEndTime().format(TOKEN_FORMATTER));
-
-                if (stmt.executeUpdate() == 1) {
-                    connection.commit();
-                }
-                else {
-                    connection.rollback();
-                }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -107,8 +101,6 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
     public boolean delete(String id) throws DatabaseException {
         boolean worked = false;
         try {
-            connection = SqlConnectionManager.openConnection();
-            connection.setAutoCommit(false);
             PreparedStatement stmt = null;
             try {
 
@@ -117,16 +109,11 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
                 stmt.setString(1, id);
 
                 if (stmt.executeUpdate() == 1) {
-                    connection.commit();
                     worked = true;
-                }
-                else {
-                    connection.rollback();
                 }
             }
             finally {
                 closeStatement(stmt);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -146,7 +133,6 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
     public AuthToken findById(String user_id) throws DatabaseException {
         AuthToken token;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -164,7 +150,6 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
@@ -182,7 +167,6 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
     public List<AuthToken> all() throws DatabaseException {
         List<AuthToken> foundTokens = null;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -197,12 +181,41 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
             throw new DAO.DatabaseException("findAllUsers failed ", e);
         }
+    }
+
+    /**
+     * Deletes the whole AuthTokens table
+     *
+     * @return True if things were deleted. False otherwise.
+     * @throws DatabaseException Any issues with database queries
+     */
+    @Override
+    public boolean deleteAll() throws DatabaseException {
+        boolean worked = false;
+        try {
+            PreparedStatement stmt = null;
+            try {
+
+                String sql = "DELETE FROM AuthTokens";
+                stmt = connection.prepareStatement(sql);
+
+                if (stmt.executeUpdate() >= 1) {
+                    worked = true;
+                }
+            }
+            finally {
+                closeStatement(stmt);
+            }
+        }
+        catch (SQLException e) {
+            throw new DAO.DatabaseException("deleteAuthToken failed ", e);
+        }
+        return worked;
     }
 
     /**
@@ -215,7 +228,6 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
     public AuthToken findByUserId(String userId) throws DatabaseException {
         List<AuthToken> foundTokens = null;
         try {
-            connection = SqlConnectionManager.openConnection();
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
@@ -232,7 +244,6 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
             finally {
                 closeStatement(stmt);
                 closeResultSet(rs);
-                SqlConnectionManager.closeConnection(connection);
             }
         }
         catch (SQLException e) {
