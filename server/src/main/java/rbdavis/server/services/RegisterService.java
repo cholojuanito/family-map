@@ -1,6 +1,5 @@
 package rbdavis.server.services;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import rbdavis.server.database.DAO;
@@ -58,11 +57,9 @@ public class RegisterService {
             User userFromDB = userDao.findById(userName);
             if (userFromDB != null) {
 
-                //TODO: Take this code and put it in the LoginService and just call that.
+                //TODO: Make into a function in LoginService
                 // 4. Create an AuthToken for the new User
-                LocalDateTime startTime = LocalDateTime.now();
-                String tokenUUID = UUID.randomUUID().toString();
-                AuthToken tokenModel = new AuthToken(tokenUUID, userName, startTime);
+                AuthToken tokenModel = LoginService.createNewAuthToken(userFromDB.getUsername());
                 authTokenDao.create(tokenModel);
                 AuthToken tokenFromDB = authTokenDao.findById(tokenModel.getToken());
                 //TODO: Til here
@@ -71,6 +68,7 @@ public class RegisterService {
 
 
 
+                // Send successful response back
                 response.setAuthToken(tokenFromDB.getToken());
                 response.setUserName(userModel.getUsername());
                 response.setPersonID(userModel.getPersonId());

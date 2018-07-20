@@ -13,7 +13,6 @@ import java.security.InvalidParameterException;
  * @since v0.1
  */
 public class User {
-    public final String TABLE = "Users";
     private String username;
     private String personId;
     private String password;

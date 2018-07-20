@@ -206,7 +206,9 @@ public class UserSqlDAO implements DAO<User> {
                 stmt.setString(1, id);
 
                 rs = stmt.executeQuery();
-                rs.next();
+                if (!rs.next()) {
+                    return null;
+                }
                 foundUser = extractUserModel(rs);
 
                 return foundUser;
@@ -242,7 +244,7 @@ public class UserSqlDAO implements DAO<User> {
      */
     @Override
     public List<User> all() throws DatabaseException {
-        List<User> foundUsers = null;
+        List<User> foundUsers;
         try {
             PreparedStatement stmt = null;
             ResultSet rs = null;
@@ -316,7 +318,7 @@ public class UserSqlDAO implements DAO<User> {
     }
 
     private User extractUserModel(ResultSet rs) throws SQLException {
-        User user = null;
+        User user;
 
         String userName = rs.getString(1);
         String personId = rs.getString(2);

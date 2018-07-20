@@ -24,7 +24,6 @@ import java.time.LocalDate;
  */
 
 public class Event {
-    public final String TABLE = "Events";
     private String id;
     private String personId;
     private String userId;

@@ -113,7 +113,7 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
             PreparedStatement stmt = null;
             try {
 
-                String sql = "DELETE FROM AuthTokens WHERE id = ?";
+                String sql = "DELETE FROM AuthTokens WHERE token = ?";
                 stmt = connection.prepareStatement(sql);
                 stmt.setString(1, id);
 
@@ -164,7 +164,9 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
                 stmt.setString(1, id);
 
                 rs = stmt.executeQuery();
-                rs.next();
+                if (!rs.next()) {
+                    return null;
+                }
                 token = extractTokenModel(rs);
 
                 return token;
@@ -200,7 +202,7 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
      */
     @Override
     public List<AuthToken> all() throws DatabaseException {
-        List<AuthToken> foundTokens = null;
+        List<AuthToken> foundTokens;
         try {
             PreparedStatement stmt = null;
             ResultSet rs = null;
@@ -281,7 +283,7 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
      * @throws DatabaseException Any issue with the database is thrown
      */
     public AuthToken findByUserId(String userId) throws DatabaseException {
-        List<AuthToken> foundTokens = null;
+        List<AuthToken> foundTokens;
         try {
             PreparedStatement stmt = null;
             ResultSet rs = null;
@@ -320,7 +322,7 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
     }
 
     private AuthToken extractTokenModel(ResultSet rs) throws SQLException {
-        AuthToken tokenModel = null;
+        AuthToken tokenModel;
 
         String token = rs.getString(1);
         String userId = rs.getString(2);
@@ -346,12 +348,16 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
     }
 
     private AuthToken findCurrentToken(List<AuthToken> tokens) {
+        AuthToken mostRecentValidToken = null;
+        LocalDateTime mostRecentStartTime = LocalDateTime.MIN;
         for (AuthToken token: tokens) {
             if (!token.isExpired()) {
-                return token;
+                if (token.getStartTime().isAfter(mostRecentStartTime)) {
+                    mostRecentValidToken = token;
+                }
             }
         }
-        return null;
+        return mostRecentValidToken;
     }
 
     private void closeStatement(Statement stmt) throws SQLException {
