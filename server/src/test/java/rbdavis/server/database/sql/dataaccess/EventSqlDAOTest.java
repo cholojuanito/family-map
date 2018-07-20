@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -18,7 +17,12 @@ import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.Person;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class EventSqlDAOTest {
     private Connection connection;

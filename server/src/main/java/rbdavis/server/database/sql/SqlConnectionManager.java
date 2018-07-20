@@ -6,8 +6,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import javax.xml.crypto.Data;
-
 import rbdavis.server.database.DAO;
 
 /**

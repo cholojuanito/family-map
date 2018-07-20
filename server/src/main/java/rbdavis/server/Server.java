@@ -6,13 +6,20 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import rbdavis.server.handlers.*;
+import rbdavis.server.handlers.ClearHandler;
+import rbdavis.server.handlers.EventHandler;
+import rbdavis.server.handlers.EventsHandler;
+import rbdavis.server.handlers.FillHandler;
+import rbdavis.server.handlers.LoadHandler;
+import rbdavis.server.handlers.LoginHandler;
+import rbdavis.server.handlers.PeopleHandler;
+import rbdavis.server.handlers.PersonHandler;
+import rbdavis.server.handlers.RegisterHandler;
 
 public class Server {
     private static final int MAX_WAITING_CONNECTIONS = 12;

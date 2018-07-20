@@ -348,12 +348,16 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
     }
 
     private AuthToken findCurrentToken(List<AuthToken> tokens) {
+        AuthToken mostRecentValidToken = null;
+        LocalDateTime mostRecentStartTime = LocalDateTime.MIN;
         for (AuthToken token: tokens) {
             if (!token.isExpired()) {
-                return token;
+                if (token.getStartTime().isAfter(mostRecentStartTime)) {
+                    mostRecentValidToken = token;
+                }
             }
         }
-        return null;
+        return mostRecentValidToken;
     }
 
     private void closeStatement(Statement stmt) throws SQLException {

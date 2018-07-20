@@ -10,11 +10,13 @@ import java.util.List;
 
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
-import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.User;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class UserSqlDAOTest {
     private Connection connection;

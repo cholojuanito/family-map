@@ -12,9 +12,11 @@ import java.util.List;
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
 import rbdavis.shared.models.data.AuthToken;
-import rbdavis.shared.models.data.Event;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class AuthTokenSqlDAOTest {
     private Connection connection;
