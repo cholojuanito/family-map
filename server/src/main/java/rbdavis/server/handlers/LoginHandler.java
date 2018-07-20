@@ -1,9 +1,6 @@
 package rbdavis.server.handlers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -12,12 +9,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
+import rbdavis.server.services.LoginService;
 import rbdavis.shared.models.http.requests.LoginRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 import rbdavis.shared.models.http.responses.Response;
-import sun.rmi.runtime.Log;
 
-import static rbdavis.server.StreamCommunicator.*;
+import static rbdavis.server.StreamCommunicator.readString;
+import static rbdavis.server.StreamCommunicator.writeString;
 
 public class LoginHandler extends Handler implements HttpHandler {
 
@@ -30,52 +28,48 @@ public class LoginHandler extends Handler implements HttpHandler {
         switch (exchange.getRequestMethod().toLowerCase()) {
             case "post":
                 try {
-                    // Read request body
+                    logger.info("Login request began");
                     InputStream reqBody = exchange.getRequestBody();
                     String reqData = readString(reqBody);
 
-                    // Make a RegisterRequest obj
                     LoginRequest request = gson.fromJson(reqData, LoginRequest.class);
                     if (isValidLoginRequest(request)) {
+                        LoginOrRegisterResponse response = new LoginService().login(request);
 
-                        // Pass it to the LoginService
-
-                        // Write response body
-                        LoginOrRegisterResponse response = new LoginOrRegisterResponse("fakeToken", request.getUserName(), "fakePersonID");
                         respData = gson.toJson(response);
                         responseCode = HttpURLConnection.HTTP_OK;
-                        // TODO: Log here
+
+                        logger.info("Login successful");
                     }
                     else {
-                        // TODO: Log here
-                        throw new NullPointerException("Missing a property");
+                        throw new NullPointerException("Request property missing or has invalid value.");
                     }
                 }
                 catch (NullPointerException e) {
-                    System.out.println(e.getMessage());
-                    errorResponse = new Response("Request property missing or has invalid value.");
+                    logger.warning(e.getMessage());
+                    errorResponse = new Response(e.getMessage());
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(errorResponse);
                 }
                 catch (JsonParseException e) {
+                    logger.warning("JSON syntax error in request");
                     errorResponse = new Response("Error occurred while reading JSON. Please check your syntax");
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(errorResponse);
-                    // TODO: Log here
                 }
                 catch (IOException e) {
+                    logger.severe("Internal server error occurred " + e.getMessage());
                     errorResponse = new Response("An error occurred on our end. Sorry!");
                     responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
                     respData = gson.toJson(errorResponse);
-                    // TODO: Log here
                 }
                 break;
 
             default:
-                errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for this URL");
+                logger.info(exchange.getRequestMethod() + " method is not supported for '/user/login'");
+                errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for '/user/login'");
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                 respData = gson.toJson(errorResponse);
-                // TODO: Log here
                 break;
 
         }
