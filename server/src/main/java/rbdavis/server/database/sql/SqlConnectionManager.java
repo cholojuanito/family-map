@@ -63,7 +63,7 @@ public class SqlConnectionManager {
             return DriverManager.getConnection(TEST_DB_URL);
 
         } catch (SQLException e) {
-            throw new DAO.DatabaseException("openConnection failed", e);
+            throw new DAO.DatabaseException("openTestConnection failed", e);
         }
     }
 
@@ -75,8 +75,8 @@ public class SqlConnectionManager {
                 }
                 else {
                     connection.rollback();
-                    connection.close();
                 }
+                connection.close();
             }
         }
         catch (SQLException e) {

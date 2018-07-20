@@ -84,7 +84,7 @@ public class RegisterHandler extends Handler implements HttpHandler {
 
                 default:
                     logger.info(exchange.getRequestMethod() + " method is not supported for '/user/register'");
-                    
+
                     errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for '/user/register'");
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(errorResponse);
@@ -101,7 +101,9 @@ public class RegisterHandler extends Handler implements HttpHandler {
     private boolean isValidRegisterRequest (RegisterRequest request) throws NullPointerException {
         boolean isValid = true;
         if (request.getUserName() == null || request.getPassword() == null || request.getEmail() == null ||
-            request.getFirstName() == null || request.getLastName() == null || request.getGender() == null) {
+            request.getFirstName() == null || request.getLastName() == null ||
+            (!request.getGender().equals("m") && !request.getGender().equals("f"))) {
+
             isValid = false;
         }
         return isValid;
