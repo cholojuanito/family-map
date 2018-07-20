@@ -11,10 +11,7 @@ import java.net.HttpURLConnection;
 import rbdavis.shared.models.http.requests.LoadRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-public class LoadHandler implements HttpHandler {
-
-    private GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
-    private Gson gson = gsonBuilder.create();
+public class LoadHandler extends Handler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {

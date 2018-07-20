@@ -32,11 +32,6 @@ public class SqlDatabase {
         authTokenDao = new AuthTokenSqlDAO(connection);
     }
 
-
-    public void startTransaction() throws DAO.DatabaseException {
-        connection = SqlConnectionManager.openConnection();
-    }
-
     public void endTransaction(boolean commit) throws DAO.DatabaseException {
         SqlConnectionManager.closeConnection(connection, commit);
     }

@@ -18,10 +18,7 @@ import rbdavis.shared.models.http.responses.Response;
 import static rbdavis.server.StreamCommunicator.readString;
 import static rbdavis.server.StreamCommunicator.writeString;
 
-public class EventHandler implements HttpHandler {
-
-    private GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
-    private Gson gson = gsonBuilder.create();
+public class EventHandler extends Handler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {

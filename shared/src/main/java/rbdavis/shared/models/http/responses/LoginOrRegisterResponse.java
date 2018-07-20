@@ -11,7 +11,7 @@ package rbdavis.shared.models.http.responses;
  * @since v0.1
  */
 
-public class LoginOrRegisterResponse {
+public class LoginOrRegisterResponse extends Response {
     private String authToken;
     private String userName;
     private String personID;

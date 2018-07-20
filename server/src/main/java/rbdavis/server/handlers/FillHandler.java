@@ -10,11 +10,9 @@ import java.net.HttpURLConnection;
 
 import rbdavis.shared.models.http.responses.Response;
 
-public class FillHandler implements HttpHandler{
+public class FillHandler extends Handler implements HttpHandler{
 
-    private GsonBuilder gsonBuilder = new GsonBuilder().setPrettyPrinting();
-    private Gson gson = gsonBuilder.create();
-
+    @Override
     public void handle(HttpExchange exchange) throws IOException {
         String respData = null;
         int responseCode = 0;
@@ -24,6 +22,11 @@ public class FillHandler implements HttpHandler{
 
         switch (exchange.getRequestMethod().toLowerCase()) {
             case "post":
+                String username;
+                int numGenerations;
+                String url = exchange.getRequestURI().getPath();
+
+
                 break;
             default:
                 errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for this URL");

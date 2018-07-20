@@ -11,13 +11,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class FileHandler implements HttpHandler {
+public class FileHandler extends Handler implements HttpHandler {
 
     private String WEB_ROOT_DIR = "server" + File.separator + "web" + File.separator;
     private String ROOT_INDEX = WEB_ROOT_DIR + "index.html";
     private String FOUR_OH_FOUR = WEB_ROOT_DIR + "HTML" + File.separator + "404.html";
     private String FIVE_HUNDRED = WEB_ROOT_DIR + "HTML" + File.separator + "500.html";
 
+    @Override
     public void handle(HttpExchange exchange) throws IOException {
 
         int responseCode = 0;
@@ -33,30 +34,30 @@ public class FileHandler implements HttpHandler {
 
                 Path path = Paths.get(url);
                 try {
+                    logger.info(url + " file was sent");
                     result = Files.readAllBytes(path);
                     responseCode = HttpURLConnection.HTTP_OK;
-                    // TODO: Log here
                 }
                 catch (IOException error404) {
                     try {
+                        logger.warning("Unable to find file at " + url);
                         path = Paths.get(FOUR_OH_FOUR);
                         result = Files.readAllBytes(path);
                         responseCode = HttpURLConnection.HTTP_NOT_FOUND;
-                        // TODO: Log here
                     }
                     catch (IOException error500) {
+                        logger.severe("Internal server error occurred. " + error500.getMessage());
                         path = Paths.get(FIVE_HUNDRED);
                         result = Files.readAllBytes(path);
                         responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
-                        // TODO: Log here
                     }
                 }
                 break;
             default:
+                logger.info("Method other than GET was used on FileHandler");
                 path = Paths.get(FOUR_OH_FOUR);
                 result = Files.readAllBytes(path);
                 responseCode = HttpURLConnection.HTTP_NOT_FOUND;
-                // TODO: Log here
                 break;
         }
         exchange.sendResponseHeaders(responseCode, emptyBodyCode);
