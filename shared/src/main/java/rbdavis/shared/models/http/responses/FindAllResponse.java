@@ -12,7 +12,7 @@ import java.util.List;
  * @since v0.1
  */
 
-public class FindAllResponse<T> {
+public class FindAllResponse<T> extends Response {
 
     private List<T> data;
 

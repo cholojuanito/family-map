@@ -9,7 +9,7 @@ package rbdavis.shared.models.http.responses;
  * @since v0.1
  */
 
-public class FindByIdResponse<T> {
+public class FindByIdResponse<T> extends Response {
 
     private T type;
 
