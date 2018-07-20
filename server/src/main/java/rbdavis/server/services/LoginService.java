@@ -1,10 +1,13 @@
 package rbdavis.server.services;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
-import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
+import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
 import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
-import rbdavis.shared.models.data.Person;
+import rbdavis.shared.models.data.AuthToken;
 import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.LoginRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
@@ -31,28 +34,61 @@ public class LoginService {
      * @return A {@code LoginOrRegisterResponse} object that carries the username and {@code AuthToken}
      */
     public LoginOrRegisterResponse login(LoginRequest request) {
-        SqlDatabase db;
+        SqlDatabase db = null;
+        LoginOrRegisterResponse response = new LoginOrRegisterResponse();
+
         try {
+            boolean commit = false;
             db = new SqlDatabase();
-            // 1. Create the User model from request
-            User userModel;
-            // 2. Attempt to create a row in the Users table
+
+            // 1. Get needed DAO's
             UserSqlDAO userDao = db.getUserDao();
+            AuthTokenSqlDAO authTokenDao = db.getAuthTokenDao();
+            String userName = request.getUserName();
 
-            // 3. Make a Person model from the User model/request
-            Person personModel;
-            PersonSqlDAO personDao = db.getPersonDao();
+            // 2. Find username in DB... or don't
+            User userFromDB = userDao.findById(request.getUserName());
+            if (userFromDB == null) {
+                // TODO: Log here
+                response.setMessage("That username does not match our records. Please sign up first");
+                commit = false;
+            }
+            else {
+                // 3. Create a new auth token for the user
+                AuthToken tokenModel = createNewAuthToken(userFromDB.getUsername());
+                authTokenDao.create(tokenModel);
+                AuthToken tokenFromDB = authTokenDao.findById(tokenModel.getToken());
 
+                // 4. Send a successful response back
+                response.setUserName(userFromDB.getUsername());
+                response.setAuthToken(tokenFromDB.getToken());
+                response.setPersonID(userFromDB.getPersonId());
+                commit = true;
+                // TODO: Log here
+            }
 
-            // 4. Make a Response and return it
+            db.endTransaction(commit);
         }
         catch (DAO.DatabaseException e) {
+            if (db != null) {
+                try {
+                    db.endTransaction(false);
+                }
+                catch (DAO.DatabaseException worthLessException) {
+                    //TODO: Log here
+                    System.out.println("Issue closing db connection");
+                }
+            }
             // TODO: Log here
-            // 4. Make an errorResponse and return it
-
-            e.printStackTrace();
+            response.setMessage(e.getMessage());
         }
 
-        return new LoginOrRegisterResponse();
+        return response;
+    }
+
+    public static AuthToken createNewAuthToken(String userName) {
+        LocalDateTime startTime = LocalDateTime.now();
+        String tokenUUID = UUID.randomUUID().toString();
+        return new AuthToken(tokenUUID, userName, startTime);
     }
 }

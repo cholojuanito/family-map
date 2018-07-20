@@ -1,29 +1,21 @@
 package rbdavis.server.handlers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
-import java.rmi.server.ExportException;
-import java.security.InvalidParameterException;
-import java.util.logging.Logger;
 
 import rbdavis.server.services.RegisterService;
 import rbdavis.shared.models.http.requests.RegisterRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 import rbdavis.shared.models.http.responses.Response;
 
-import static rbdavis.server.StreamCommunicator.*;
+import static rbdavis.server.StreamCommunicator.readString;
+import static rbdavis.server.StreamCommunicator.writeString;
 
 public class RegisterHandler extends Handler implements HttpHandler {
 
@@ -37,22 +29,17 @@ public class RegisterHandler extends Handler implements HttpHandler {
                 case "post":
                     logger.info("Register request began");
                     try {
-                        // Read request body
                         InputStream reqBody = exchange.getRequestBody();
                         String reqData = readString(reqBody);
 
-                        // Make a RegisterRequest obj
                         RegisterRequest request = gson.fromJson(reqData, RegisterRequest.class);
                         if (isValidRegisterRequest(request)) {
-                            // Pass it to the RegisterService
                             LoginOrRegisterResponse response = new RegisterService().register(request);
 
-                            // Write response body
-                            //LoginOrRegisterResponse response = new LoginOrRegisterResponse("fakeToken", request.getUserName(), "fakePersonID");
                             respData = gson.toJson(response);
                             responseCode = HttpURLConnection.HTTP_OK;
 
-                            logger.info("Register request successful");
+                            logger.info("Register successful");
                         }
                         else {
                             throw new NullPointerException("Request property missing or has invalid value.");
@@ -66,7 +53,7 @@ public class RegisterHandler extends Handler implements HttpHandler {
                         respData = gson.toJson(errorResponse);
                     }
                     catch (JsonParseException e) {
-                        logger.warning("Error occurred while reading JSON " + e.getMessage());
+                        logger.warning("JSON syntax error in request");
 
                         errorResponse = new Response("Error occurred while reading JSON. Please check your syntax");
                         responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
@@ -79,7 +66,6 @@ public class RegisterHandler extends Handler implements HttpHandler {
                         responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
                         respData = gson.toJson(errorResponse);
                     }
-
                     break;
 
                 default:

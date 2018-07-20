@@ -6,8 +6,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import javax.xml.crypto.Data;
-
 import rbdavis.server.database.DAO;
 
 /**
@@ -35,7 +33,7 @@ public class SqlConnectionManager {
     //URL to the database
     private static final String DB_URL = "jdbc:sqlite:server" + File.separator  + "database" + File.separator + "family_map.db";
     //URL to the unit test database
-    private static final String TEST_DB_URL = "jdbc:sqlite:server" + File.separator  + "database" + File.separator + "test.db";
+    private static final String TEST_DB_URL = "jdbc:sqlite:database" + File.separator + "test.db";
 
     /**
      * Creates a new {@code Connection} through the {@code DriverManager}

@@ -1,7 +1,5 @@
 package rbdavis.server.services;
 
-import java.sql.SQLException;
-
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;

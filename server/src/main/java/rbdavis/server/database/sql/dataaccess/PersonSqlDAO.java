@@ -63,6 +63,7 @@ public class PersonSqlDAO implements DAO<Person> {
                 stmt.setString(6, person.getFatherId());
                 stmt.setString(7, person.getMotherID());
                 stmt.setString(8, person.getSpouseID());
+                stmt.executeUpdate();
             }
             finally {
                 closeStatement(stmt);
@@ -113,6 +114,7 @@ public class PersonSqlDAO implements DAO<Person> {
                 stmt.setString(5, person.getMotherID());
                 stmt.setString(6, person.getSpouseID());
                 stmt.setString(7, id);
+                stmt.executeUpdate();
             }
             finally {
                 closeStatement(stmt);
@@ -203,7 +205,9 @@ public class PersonSqlDAO implements DAO<Person> {
                 stmt.setString(1, id);
 
                 rs = stmt.executeQuery();
-                rs.next();
+                if (!rs.next()) {
+                    return null;
+                }
                 foundPerson = extractPersonModel(rs);
 
                 return foundPerson;
