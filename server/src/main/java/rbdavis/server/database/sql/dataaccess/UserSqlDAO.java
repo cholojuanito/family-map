@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
@@ -26,6 +27,13 @@ import rbdavis.shared.models.data.User;
  */
 
 public class UserSqlDAO implements DAO<User> {
+
+    private static Logger logger;
+
+    static {
+        logger = Logger.getLogger("database");
+    }
+
     private Connection connection;
 
     public UserSqlDAO(Connection connection) {
@@ -55,6 +63,7 @@ public class UserSqlDAO implements DAO<User> {
                 stmt.setString(5, user.getFirstName());
                 stmt.setString(6, user.getLastName());
                 stmt.setString(7, user.getGender().toString());
+                stmt.executeUpdate();
             }
             finally {
                 closeStatement(stmt);
@@ -64,16 +73,20 @@ public class UserSqlDAO implements DAO<User> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = "Invalid SQL syntax";
+                    break;
+                case 5:
+                    errorMessage = "Database is locked";
                     break;
                 case 19:
-                    errorMessage = "Username is already taken.";
+                    errorMessage = "Username is already taken";
                     break;
                 default:
-                    errorMessage = "Create user failed.";
+                    logger.severe("User: create user failed " + e.getMessage());
+                    errorMessage = "Create user failed";
                     break;
             }
-            throw new DAO.DatabaseException(errorMessage, e);
+            throw new DAO.DatabaseException(errorMessage);
         }
         return user;
     }
@@ -102,6 +115,7 @@ public class UserSqlDAO implements DAO<User> {
                 stmt.setString(4, user.getLastName());
                 stmt.setString(5, user.getGender().toString());
                 stmt.setString(6, id);
+                stmt.executeUpdate();
             }
             finally {
                 closeStatement(stmt);
@@ -112,16 +126,17 @@ public class UserSqlDAO implements DAO<User> {
             int errorCode = e.getErrorCode();
             switch (errorCode) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = "Invalid SQL syntax";
                     break;
                 case 19:
-                    errorMessage = "Couldn't find the row.";
+                    errorMessage = "Username '" + user.getUsername() + "' doesn't exist";
                     break;
                 default:
-                    errorMessage = "Update user failed.";
+                    logger.severe("User: update user failed " + e.getMessage());
+                    errorMessage = "Update user failed";
                     break;
             }
-            throw new DAO.DatabaseException(errorMessage, e);
+            throw new DAO.DatabaseException(errorMessage);
         }
         return user;
     }
@@ -153,7 +168,20 @@ public class UserSqlDAO implements DAO<User> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("deleteUser failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax";
+                    break;
+                case 19:
+                    errorMessage = "Username '" + id + "' doesn't exist";
+                    break;
+                default:
+                    logger.severe("User: delete user failed " + e.getMessage());
+                    errorMessage = "Delete user failed";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
         return worked;
     }
@@ -189,7 +217,20 @@ public class UserSqlDAO implements DAO<User> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("findUserById failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax";
+                    break;
+                case 19:
+                    errorMessage = "Username '" + id + "' doesn't exist";
+                    break;
+                default:
+                    logger.severe("User: find user by id failed " + e.getMessage());
+                    errorMessage = "Find user by id failed";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
     }
 
@@ -220,7 +261,17 @@ public class UserSqlDAO implements DAO<User> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("findAllUsers failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax";
+                    break;
+                default:
+                    logger.severe("User: find all users failed " + e.getMessage());
+                    errorMessage = "Find all users failed";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
     }
 
@@ -249,7 +300,17 @@ public class UserSqlDAO implements DAO<User> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("deleteAll failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax";
+                    break;
+                default:
+                    logger.severe("User: delete all users failed " + e.getMessage());
+                    errorMessage = "Delete all users failed";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
         return worked;
     }
