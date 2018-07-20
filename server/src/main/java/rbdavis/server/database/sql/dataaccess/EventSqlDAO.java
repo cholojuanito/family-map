@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
@@ -27,6 +28,12 @@ import rbdavis.shared.models.data.Event;
  */
 
 public class EventSqlDAO implements DAO<Event> {
+    private static Logger logger;
+
+    static {
+        logger = Logger.getLogger("database");
+    }
+
     private Connection connection;
     private final DateTimeFormatter EVENT_FORMATTER = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
@@ -59,6 +66,7 @@ public class EventSqlDAO implements DAO<Event> {
                 stmt.setString(7, event.getCity());
                 stmt.setString(8, event.getCountry());
                 stmt.setString(9, event.getDateHappened().format(EVENT_FORMATTER));
+                stmt.executeUpdate();
             }
             finally {
                 closeStatement(stmt);
@@ -74,10 +82,11 @@ public class EventSqlDAO implements DAO<Event> {
                     errorMessage = "ID is already taken.";
                     break;
                 default:
+                    logger.severe("Event: create event failed " + e.getMessage());
                     errorMessage = "Create event failed.";
                     break;
             }
-            throw new DAO.DatabaseException(errorMessage, e);
+            throw new DAO.DatabaseException(errorMessage);
         }
         return event;
     }
@@ -108,6 +117,7 @@ public class EventSqlDAO implements DAO<Event> {
                 stmt.setString(5, event.getCountry());
                 stmt.setString(6, event.getDateHappened().format(EVENT_FORMATTER));
                 stmt.setString(7, id);
+                stmt.executeUpdate();
             }
             finally {
                 closeStatement(stmt);
@@ -124,10 +134,11 @@ public class EventSqlDAO implements DAO<Event> {
                     errorMessage = "Couldn't find the row.";
                     break;
                 default:
+                    logger.severe("Event: update event failed " + e.getMessage());
                     errorMessage = "Update event failed.";
                     break;
             }
-            throw new DAO.DatabaseException(errorMessage, e);
+            throw new DAO.DatabaseException(errorMessage);
         }
         return event;
     }
@@ -159,7 +170,20 @@ public class EventSqlDAO implements DAO<Event> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("deleteEvent failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax.";
+                    break;
+                case 19:
+                    errorMessage = "ID '" + id + "' does not exist.";
+                    break;
+                default:
+                    logger.severe("Event: delete event failed " + e.getMessage());
+                    errorMessage = "Delete event failed.";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
         return worked;
     }
@@ -195,7 +219,20 @@ public class EventSqlDAO implements DAO<Event> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("findEvent failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax.";
+                    break;
+                case 19:
+                    errorMessage = "ID '" + id + "' does not exist.";
+                    break;
+                default:
+                    logger.severe("Event: find event by id failed " + e.getMessage());
+                    errorMessage = "Find event by id failed.";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
     }
 
@@ -226,38 +263,18 @@ public class EventSqlDAO implements DAO<Event> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("findAllEvents failed ", e);
-        }
-    }
-
-    /**
-     * Deletes the whole Events table
-     *
-     * @return True if things were deleted. False otherwise.
-     * @throws DatabaseException Any issues with database queries
-     */
-    @Override
-    public boolean deleteAll() throws DatabaseException {
-        boolean worked = false;
-        try {
-            PreparedStatement stmt = null;
-            try {
-
-                String sql = "DELETE FROM Events";
-                stmt = connection.prepareStatement(sql);
-
-                if (stmt.executeUpdate() >= 1) {
-                    worked = true;
-                }
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax.";
+                    break;
+                default:
+                    logger.severe("Event: find all events failed " + e.getMessage());
+                    errorMessage = "Find all events failed.";
+                    break;
             }
-            finally {
-                closeStatement(stmt);
-            }
+            throw new DAO.DatabaseException(errorMessage);
         }
-        catch (SQLException e) {
-            throw new DAO.DatabaseException("deleteAuthToken failed ", e);
-        }
-        return worked;
     }
 
     /**
@@ -288,8 +305,61 @@ public class EventSqlDAO implements DAO<Event> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("findEventByUsername failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax.";
+                    break;
+                case 19:
+                    errorMessage = "UserId '" + username + "' does not exist.";
+                    break;
+                default:
+                    logger.severe("Event: find event by userId failed " + e.getMessage());
+                    errorMessage = "Find event by userId failed.";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
+    }
+
+    /**
+     * Deletes the whole Events table
+     *
+     * @return True if things were deleted. False otherwise.
+     * @throws DatabaseException Any issues with database queries
+     */
+    @Override
+    public boolean deleteAll() throws DatabaseException {
+        boolean worked = false;
+        try {
+            PreparedStatement stmt = null;
+            try {
+
+                String sql = "DELETE FROM Events";
+                stmt = connection.prepareStatement(sql);
+
+                if (stmt.executeUpdate() >= 1) {
+                    worked = true;
+                }
+            }
+            finally {
+                closeStatement(stmt);
+            }
+        }
+        catch (SQLException e) {
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax.";
+                    break;
+                default:
+                    logger.severe("Event: delete all events failed " + e.getMessage());
+                    errorMessage = "Delete all events failed.";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
+        }
+        return worked;
     }
 
 
@@ -317,7 +387,20 @@ public class EventSqlDAO implements DAO<Event> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("deleteEventByUsername failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax.";
+                    break;
+                case 19:
+                    errorMessage = "UserId '" + username + "' does not exist.";
+                    break;
+                default:
+                    logger.severe("Event: delete events by userId failed " + e.getMessage());
+                    errorMessage = "Delete events by userId failed.";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
         return worked;
     }
@@ -350,7 +433,20 @@ public class EventSqlDAO implements DAO<Event> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("findEventByPersonId failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax.";
+                    break;
+                case 19:
+                    errorMessage = "PersonId '" + personId + "' does not exist.";
+                    break;
+                default:
+                    logger.severe("Event: find events by personId failed " + e.getMessage());
+                    errorMessage = "Find events by personId failed.";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
     }
 
@@ -365,7 +461,7 @@ public class EventSqlDAO implements DAO<Event> {
         String longitude = rs.getString(6);
         String city = rs.getString(7);
         String country = rs.getString(8);
-        LocalDate date = LocalDate.parse(rs.getString(9));
+        LocalDate date = LocalDate.parse(rs.getString(9), EVENT_FORMATTER);
 
         Event.EventType type;
         switch (typeStr) {

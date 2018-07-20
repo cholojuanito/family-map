@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
@@ -27,8 +28,14 @@ import rbdavis.shared.models.data.AuthToken;
  */
 
 public class AuthTokenSqlDAO implements DAO<AuthToken> {
+    private static Logger logger;
+
+    static {
+        logger = Logger.getLogger("database");
+    }
+
     private Connection connection;
-    private final DateTimeFormatter TOKEN_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private final DateTimeFormatter TOKEN_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS ");
 
     public AuthTokenSqlDAO(Connection connection) {
         this.connection = connection;
@@ -54,6 +61,7 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
                 stmt.setString(2, token.getUserId());
                 stmt.setString(3, token.getStartTime().format(TOKEN_FORMATTER));
                 stmt.setString(4, token.getEndTime().format(TOKEN_FORMATTER));
+                stmt.executeUpdate();
             }
             finally {
                 closeStatement(stmt);
@@ -66,13 +74,14 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
                     errorMessage = "Invalid SQL syntax.";
                     break;
                 case 19:
-                    errorMessage = "Id is already taken.";
+                    errorMessage = "Token is already taken.";
                     break;
                 default:
+                    logger.severe("Create auth token failed " + e.getMessage());
                     errorMessage = "Create auth token failed.";
                     break;
             }
-            throw new DAO.DatabaseException(errorMessage, e);
+            throw new DAO.DatabaseException(errorMessage);
         }
         return token;
     }
@@ -117,7 +126,20 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("deleteAuthToken failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax";
+                    break;
+                case 19:
+                    errorMessage = "Token '" + id + "' doesn't exist";
+                    break;
+                default:
+                    logger.severe("AuthToken: delete token failed " + e.getMessage());
+                    errorMessage = "Delete token failed";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
         return worked;
     }
@@ -125,21 +147,21 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
     /**
      * Finds a row in the AuthToken table by id.
      *
-     * @param user_id The id of the row to find
+     * @param id The id of the row to find
      * @return The {@code AuthToken} model representation that was found
      * @throws DatabaseException Any issue with the database is thrown
      */
     @Override
-    public AuthToken findById(String user_id) throws DatabaseException {
+    public AuthToken findById(String id) throws DatabaseException {
         AuthToken token;
         try {
             PreparedStatement stmt = null;
             ResultSet rs = null;
             try {
 
-                String sql = "SELECT * FROM AuthTokens WHERE id = ?";
+                String sql = "SELECT * FROM AuthTokens WHERE token = ?";
                 stmt = connection.prepareStatement(sql);
-                stmt.setString(1, user_id);
+                stmt.setString(1, id);
 
                 rs = stmt.executeQuery();
                 rs.next();
@@ -153,7 +175,20 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("findAuthTokenById failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax";
+                    break;
+                case 19:
+                    errorMessage = "Token '" + id + "' doesn't exist";
+                    break;
+                default:
+                    logger.severe("AuthToken: find token by id failed " + e.getMessage());
+                    errorMessage = "Find token by id failed";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
     }
 
@@ -184,7 +219,17 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("findAllUsers failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax";
+                    break;
+                default:
+                    logger.severe("AuthToken: find all tokens failed " + e.getMessage());
+                    errorMessage = "Find all tokens failed";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
     }
 
@@ -213,7 +258,17 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("deleteAuthToken failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax";
+                    break;
+                default:
+                    logger.severe("AuthToken: delete all tokens failed " + e.getMessage());
+                    errorMessage = "Delete all tokens failed";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
         return worked;
     }
@@ -247,7 +302,20 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
             }
         }
         catch (SQLException e) {
-            throw new DAO.DatabaseException("findAllAuthTokens failed ", e);
+            String errorMessage;
+            switch (e.getErrorCode()) {
+                case 1:
+                    errorMessage = "Invalid SQL syntax";
+                    break;
+                case 19:
+                    errorMessage = "No tokens with userId '" + userId + "' exist";
+                    break;
+                default:
+                    logger.severe("AuthToken: find token by userId failed " + e.getMessage());
+                    errorMessage = "Find token by userId failed";
+                    break;
+            }
+            throw new DAO.DatabaseException(errorMessage);
         }
     }
 
@@ -256,8 +324,8 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
 
         String token = rs.getString(1);
         String userId = rs.getString(2);
-        LocalDateTime start = LocalDateTime.parse(rs.getString(3));
-        LocalDateTime end = LocalDateTime.parse(rs.getString(4));
+        LocalDateTime start = LocalDateTime.parse(rs.getString(3), TOKEN_FORMATTER);
+        LocalDateTime end = LocalDateTime.parse(rs.getString(4), TOKEN_FORMATTER);
 
         tokenModel = new AuthToken(token, userId, start, end);
 
