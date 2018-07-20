@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 import javax.xml.crypto.Data;
 
@@ -19,7 +20,9 @@ import rbdavis.server.database.DAO;
  */
 
 public class SqlConnectionManager {
+    private static Logger logger;
     static {
+        logger = Logger.getLogger("database");
         try {
             final String driver = "org.sqlite.JDBC";
             Class.forName(driver);
@@ -27,6 +30,7 @@ public class SqlConnectionManager {
             e.printStackTrace();
         }
     }
+
 
     //URL to the database
     private static final String DB_URL = "jdbc:sqlite:server" + File.separator  + "database" + File.separator + "family_map.db";
@@ -46,6 +50,7 @@ public class SqlConnectionManager {
             return DriverManager.getConnection(DB_URL);
 
         } catch (SQLException e) {
+            logger.severe("Failed to open database connection " + e.getMessage());
             throw new DAO.DatabaseException("openConnection failed", e);
         }
     }
@@ -63,6 +68,7 @@ public class SqlConnectionManager {
             return DriverManager.getConnection(TEST_DB_URL);
 
         } catch (SQLException e) {
+            logger.severe("Failed to open test database connection " + e.getMessage());
             throw new DAO.DatabaseException("openTestConnection failed", e);
         }
     }
@@ -80,6 +86,7 @@ public class SqlConnectionManager {
             }
         }
         catch (SQLException e) {
+            logger.severe("Failed to close database connection " + e.getMessage());
             throw new DAO.DatabaseException("Unable to close connection", e);
         }
     }
