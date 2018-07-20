@@ -205,7 +205,9 @@ public class PersonSqlDAO implements DAO<Person> {
                 stmt.setString(1, id);
 
                 rs = stmt.executeQuery();
-                rs.next();
+                if (!rs.next()) {
+                    return null;
+                }
                 foundPerson = extractPersonModel(rs);
 
                 return foundPerson;

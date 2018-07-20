@@ -208,7 +208,9 @@ public class EventSqlDAO implements DAO<Event> {
                 stmt.setString(1, id);
 
                 rs = stmt.executeQuery();
-                rs.next();
+                if (!rs.next()) {
+                    return null;
+                }
                 foundEvent = extractEventModel(rs);
 
                 return foundEvent;
