@@ -28,7 +28,6 @@ import rbdavis.shared.models.http.responses.PersonResponse;
 
 public class PersonService extends Service {
     SqlDatabase db = null;
-    PersonResponse response = new PersonResponse();
 
     /**
      * Uses the {@code PersonSqlDAO} to find
@@ -38,24 +37,37 @@ public class PersonService extends Service {
      * @return A response that has a {@code List} of {@code Person}s
      */
     public PeopleResponse findAllPeople(PeopleRequest request) {
-
+        PeopleResponse response = new PeopleResponse();
         try {
             boolean commit = false;
             db = new SqlDatabase();
-            // 1. Get needed Dao's
             PersonSqlDAO personDao = db.getPersonDao();
-            // 2. Call all on dao
-            List<Person> people;
 
-            // 3. Make a Response and return it
+            List<Person> peopleFromDB = personDao.all();
+            if (peopleFromDB == null) {
+                logger.warning("Query for all Person's unsuccessful");
+                response.setMessage("Unable to find any records");
+            }
+            else {
+                logger.info("Query for all Person's successful");
+                response.setData(peopleFromDB);
+                commit = true;
+            }
+            db.endTransaction(commit);
         }
         catch (DAO.DatabaseException e) {
-            // TODO: Log here
-            // 3. Make an errorResponse and return it
-
-            e.printStackTrace();
+            if (db != null) {
+                try {
+                    db.endTransaction(false);
+                }
+                catch (DAO.DatabaseException worthLessException) {
+                    logger.severe("Issue closing db connection");
+                }
+            }
+            logger.warning(e.getMessage());
+            response.setMessage(e.getMessage());
         }
-        return new PeopleResponse();
+        return response;
     }
 
     /**
@@ -66,6 +78,7 @@ public class PersonService extends Service {
      * @return A response that has an {@code Person}
      */
     public PersonResponse findPerson(PersonRequest request) {
+        PersonResponse response = new PersonResponse();
         try {
             boolean commit = false;
             db = new SqlDatabase();

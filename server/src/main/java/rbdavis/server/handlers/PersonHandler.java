@@ -79,12 +79,6 @@ public class PersonHandler extends Handler implements HttpHandler {
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(response);
                 }
-                catch (JsonParseException e) {
-                    logger.warning("JSON syntax error in request");
-                    response.setMessage("Error occurred while reading JSON. Please check your syntax");
-                    responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                    respData = gson.toJson(response);
-                }
                 break;
             default:
                 logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
