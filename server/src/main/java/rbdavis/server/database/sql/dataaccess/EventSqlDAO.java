@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -463,7 +464,13 @@ public class EventSqlDAO implements DAO<Event> {
         String longitude = rs.getString(6);
         String city = rs.getString(7);
         String country = rs.getString(8);
-        LocalDate date = LocalDate.parse(rs.getString(9), EVENT_FORMATTER);
+        LocalDate date;
+        try {
+            date = LocalDate.parse(rs.getString(9), EVENT_FORMATTER);
+        }
+        catch (NullPointerException | DateTimeParseException e) {
+            date = null;
+        }
 
         Event.EventType type;
         switch (typeStr) {

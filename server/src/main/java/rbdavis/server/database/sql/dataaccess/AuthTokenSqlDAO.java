@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -326,8 +327,16 @@ public class AuthTokenSqlDAO implements DAO<AuthToken> {
 
         String token = rs.getString(1);
         String userId = rs.getString(2);
-        LocalDateTime start = LocalDateTime.parse(rs.getString(3), TOKEN_FORMATTER);
-        LocalDateTime end = LocalDateTime.parse(rs.getString(4), TOKEN_FORMATTER);
+        LocalDateTime start;
+        LocalDateTime end;
+        try {
+            start = LocalDateTime.parse(rs.getString(3), TOKEN_FORMATTER);
+            end = LocalDateTime.parse(rs.getString(4), TOKEN_FORMATTER);
+        }
+        catch (NullPointerException | DateTimeParseException e) {
+            start = null;
+            end = null;
+        }
 
         tokenModel = new AuthToken(token, userId, start, end);
 
