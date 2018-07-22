@@ -10,6 +10,7 @@ import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
 import rbdavis.shared.models.data.AuthToken;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.User;
+import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.requests.RegisterRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 
@@ -27,7 +28,10 @@ import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
  * @since v0.1
  */
 
-public class RegisterService {
+public class RegisterService extends Service {
+    SqlDatabase db = null;
+    LoginOrRegisterResponse response = new LoginOrRegisterResponse();
+
     /**
      * Registers the user and returns an {@code AuthToken} inside the {@code LoginOrRegisterResponse}.
      *
@@ -35,11 +39,10 @@ public class RegisterService {
      * @return A {@code LoginOrRegisterResponse} object that carries the username and {@code AuthToken}
      */
     public LoginOrRegisterResponse register(RegisterRequest request) {
-        SqlDatabase db = null;
-        LoginOrRegisterResponse response = new LoginOrRegisterResponse();
         try {
             boolean commit = false;
             db = new SqlDatabase();
+
             // 1. Get needed DAOS
             UserSqlDAO userDao = db.getUserDao();
             AuthTokenSqlDAO authTokenDao = db.getAuthTokenDao();
@@ -56,16 +59,15 @@ public class RegisterService {
             userDao.create(userModel);
             User userFromDB = userDao.findById(userName);
             if (userFromDB != null) {
-
-                //TODO: Make into a function in LoginService
-                // 4. Create an AuthToken for the new User
+                logger.info("Registration successful");
+                logger.info("Creating new family tree");
                 AuthToken tokenModel = LoginService.createNewAuthToken(userFromDB.getUsername());
                 authTokenDao.create(tokenModel);
                 AuthToken tokenFromDB = authTokenDao.findById(tokenModel.getToken());
-                //TODO: Til here
-                        //***************************************************************************
-                // 4. Creating the family tree for the new user
 
+                //***************************************************************************
+                // 4. Use the fill service to make a new family tree
+                FillRequest fillRequest = new FillRequest(userName);
 
 
                 // Send successful response back
@@ -73,6 +75,10 @@ public class RegisterService {
                 response.setUserName(userModel.getUsername());
                 response.setPersonID(userModel.getPersonId());
                 commit = true;
+            }
+            else {
+                logger.severe("Registration unsuccessful");
+                response.setMessage("Registration unsuccessful");
             }
 
             db.endTransaction(commit);
@@ -83,11 +89,10 @@ public class RegisterService {
                     db.endTransaction(false);
                 }
                 catch (DAO.DatabaseException worthLessException) {
-                    //TODO: Log here
-                    System.out.println("Issue closing db connection");
+                    logger.severe("Issue closing db connection");
                 }
             }
-            // TODO: Log here
+            logger.warning(e.getMessage());
             response.setMessage(e.getMessage());
         }
 

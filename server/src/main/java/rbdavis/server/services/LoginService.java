@@ -26,45 +26,53 @@ import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
  * @since v0.1
  */
 
-public class LoginService {
+public class LoginService extends Service {
+    SqlDatabase db = null;
+    LoginOrRegisterResponse response = new LoginOrRegisterResponse();
+
     /**
      * Logins in the user and returns an {@code AuthToken} inside the {@code LoginOrRegisterResponse}.
      *
-     * @param request - A {@code LoadRequest} that has the username and password
+     * @param request - A {@code LoginRequest} that has the username and password
      * @return A {@code LoginOrRegisterResponse} object that carries the username and {@code AuthToken}
      */
     public LoginOrRegisterResponse login(LoginRequest request) {
-        SqlDatabase db = null;
-        LoginOrRegisterResponse response = new LoginOrRegisterResponse();
 
         try {
             boolean commit = false;
             db = new SqlDatabase();
+            String reqUserName = request.getUserName();
+            String reqPassword = request.getPassword();
 
             // 1. Get needed DAO's
             UserSqlDAO userDao = db.getUserDao();
             AuthTokenSqlDAO authTokenDao = db.getAuthTokenDao();
-            String userName = request.getUserName();
+
 
             // 2. Find username in DB... or don't
-            User userFromDB = userDao.findById(request.getUserName());
+            User userFromDB = userDao.findById(reqUserName);
             if (userFromDB == null) {
-                // TODO: Log here
+                logger.warning("Incorrect username given at login");
                 response.setMessage("That username does not match our records. Please sign up first");
-                commit = false;
             }
             else {
-                // 3. Create a new auth token for the user
-                AuthToken tokenModel = createNewAuthToken(userFromDB.getUsername());
-                authTokenDao.create(tokenModel);
-                AuthToken tokenFromDB = authTokenDao.findById(tokenModel.getToken());
+                if (reqPassword.equals(userFromDB.getPassword())) {
+                    logger.info("Login successful");
+                    // 3. Create a new auth token for the user
+                    AuthToken tokenModel = createNewAuthToken(userFromDB.getUsername());
+                    authTokenDao.create(tokenModel);
+                    AuthToken tokenFromDB = authTokenDao.findById(tokenModel.getToken());
 
-                // 4. Send a successful response back
-                response.setUserName(userFromDB.getUsername());
-                response.setAuthToken(tokenFromDB.getToken());
-                response.setPersonID(userFromDB.getPersonId());
-                commit = true;
-                // TODO: Log here
+                    // 4. Send a successful response back
+                    response.setUserName(userFromDB.getUsername());
+                    response.setAuthToken(tokenFromDB.getToken());
+                    response.setPersonID(userFromDB.getPersonId());
+                    commit = true;
+                }
+                else {
+                    logger.warning("Incorrect password given at login");
+                    response.setMessage("Incorrect password");
+                }
             }
 
             db.endTransaction(commit);
@@ -75,11 +83,10 @@ public class LoginService {
                     db.endTransaction(false);
                 }
                 catch (DAO.DatabaseException worthLessException) {
-                    //TODO: Log here
-                    System.out.println("Issue closing db connection");
+                    logger.severe("Issue closing db connection");
                 }
             }
-            // TODO: Log here
+            logger.warning(e.getMessage());
             response.setMessage(e.getMessage());
         }
 
