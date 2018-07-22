@@ -1,6 +1,7 @@
 package rbdavis.server.handlers;
 
 import com.google.gson.JsonParseException;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -9,6 +10,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
+import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
+import rbdavis.server.services.PersonService;
+import rbdavis.shared.models.data.AuthToken;
+import rbdavis.shared.models.data.Person;
 import rbdavis.shared.models.http.requests.PersonRequest;
 import rbdavis.shared.models.http.responses.PersonResponse;
 import rbdavis.shared.models.http.responses.Response;
@@ -23,56 +28,69 @@ public class PersonHandler extends Handler implements HttpHandler {
         String respData = null;
         int responseCode = 0;
         int emptyBodyCode = 0;
-        Response errorResponse;
+        Response response = new PersonResponse();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
             case "get":
                 try {
-                    // Read request body
-                    InputStream reqBody = exchange.getRequestBody();
-                    String reqData = readString(reqBody);
+                    logger.info("One person request began");
 
-                    // Make a RegisterRequest obj
-                    PersonRequest request = gson.fromJson(reqData, PersonRequest.class);
-                    if (isValidPersonRequest(request)) {
+                    // Get the "id" portion of the URI
+                    String uri = exchange.getRequestURI().getPath();
+                    int endURL = uri.length();
+                    int afterLastBackSlash = uri.lastIndexOf("/") + 1;
+                    String id = uri.substring(afterLastBackSlash, endURL);
+                    if (id.length() == 0) {
+                        throw new NullPointerException("Request property missing or has invalid value.");
+                    }
+                    Headers reqHeaders = exchange.getRequestHeaders();
+                    PersonService service = new PersonService();
+                    PersonRequest request;
 
-                        // Pass it to the EventService.findbyId
-
-                        // Write response body
-                        PersonResponse response = new PersonResponse();
-                        respData = gson.toJson(response);
-                        responseCode = HttpURLConnection.HTTP_OK;
-                        // TODO: Log here
+                    // Verify the auth token
+                    if (reqHeaders.containsKey("Authorization")) {
+                        String clientTokenStr = reqHeaders.getFirst("Authorization");
+                        if (service.isVaildAuthToken(clientTokenStr)) {
+                            // Create a request obj from the token
+                            request = new PersonRequest(id, clientTokenStr);
+                            // Call the service
+                            response = new PersonService().findPerson(request);
+                            respData = gson.toJson(response);
+                            responseCode = HttpURLConnection.HTTP_OK;
+                            logger.info("One person request successful");
+                        }
+                        else {
+                            logger.warning("Unauthorized request to person/[id]");
+                            response.setMessage("You are not authorized to access this URL");
+                            responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
+                            respData = gson.toJson(response);
+                        }
                     }
                     else {
-                        // TODO: Log here
-                        throw new NullPointerException("Missing a property");
+                        logger.warning("Unauthorized request to person/[id]");
+                        response.setMessage("You are not authorized to access this URL");
+                        responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
+                        respData = gson.toJson(response);
                     }
                 }
                 catch (NullPointerException e) {
-                    System.out.println(e.getMessage());
-                    errorResponse = new Response("Request property missing or has invalid value.");
+                    logger.warning(e.getMessage());
+                    response.setMessage(e.getMessage());
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                    respData = gson.toJson(errorResponse);
+                    respData = gson.toJson(response);
                 }
                 catch (JsonParseException e) {
-                    errorResponse = new Response("Error occurred while reading JSON. Please check your syntax");
+                    logger.warning("JSON syntax error in request");
+                    response.setMessage("Error occurred while reading JSON. Please check your syntax");
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                    respData = gson.toJson(errorResponse);
-                    // TODO: Log here
-                }
-                catch (IOException e) {
-                    errorResponse = new Response("An error occurred on our end. Sorry!");
-                    responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
-                    respData = gson.toJson(errorResponse);
-                    // TODO: Log here
+                    respData = gson.toJson(response);
                 }
                 break;
             default:
-                errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for this URL");
+                logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage(exchange.getRequestMethod() + " method is not supported for this URL");
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                respData = gson.toJson(errorResponse);
-                // TODO: Log here
+                respData = gson.toJson(response);
                 break;
         }
 
@@ -80,10 +98,5 @@ public class PersonHandler extends Handler implements HttpHandler {
         OutputStream respBody = exchange.getResponseBody();
         writeString(respData, respBody);
         respBody.close();
-    }
-
-    private boolean isValidPersonRequest(PersonRequest request) throws NullPointerException {
-
-        return false;
     }
 }

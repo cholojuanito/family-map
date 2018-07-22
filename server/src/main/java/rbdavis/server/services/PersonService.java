@@ -26,7 +26,9 @@ import rbdavis.shared.models.http.responses.PersonResponse;
  * @since v0.1
  */
 
-public class PersonService {
+public class PersonService extends Service {
+    SqlDatabase db = null;
+    PersonResponse response = new PersonResponse();
 
     /**
      * Uses the {@code PersonSqlDAO} to find
@@ -36,11 +38,12 @@ public class PersonService {
      * @return A response that has a {@code List} of {@code Person}s
      */
     public PeopleResponse findAllPeople(PeopleRequest request) {
-        SqlDatabase db;
+
         try {
+            boolean commit = false;
             db = new SqlDatabase();
             // 1. Get needed Dao's
-            PersonSqlDAO eventDao = db.getPersonDao();
+            PersonSqlDAO personDao = db.getPersonDao();
             // 2. Call all on dao
             List<Person> people;
 
@@ -63,22 +66,35 @@ public class PersonService {
      * @return A response that has an {@code Person}
      */
     public PersonResponse findPerson(PersonRequest request) {
-        SqlDatabase db;
         try {
+            boolean commit = false;
             db = new SqlDatabase();
-            // 1. Get needed Dao's
-            PersonSqlDAO eventDao = db.getPersonDao();
-            // 2. Call all on dao
-            Person person;
+            PersonSqlDAO personDao = db.getPersonDao();
 
-            // 3. Make a Response and return it
+            Person personFromDB = personDao.findById(request.getId());
+            if (personFromDB == null) {
+                logger.warning("Query for Person with id " + request.getId() + " unsuccessful");
+                response.setMessage("The id " + request.getId() + " does not match our records");
+            }
+            else {
+                logger.info("Query for Person with id " + request.getId() + " successful");
+                response.setData(personFromDB);
+                commit = true;
+            }
+            db.endTransaction(commit);
         }
         catch (DAO.DatabaseException e) {
-            // TODO: Log here
-            // 3. Make an errorResponse and return it
-
-            e.printStackTrace();
+            if (db != null) {
+                try {
+                    db.endTransaction(false);
+                }
+                catch (DAO.DatabaseException worthLessException) {
+                    logger.severe("Issue closing db connection");
+                }
+            }
+            logger.warning(e.getMessage());
+            response.setMessage(e.getMessage());
         }
-        return new PersonResponse();
+        return response;
     }
 }
