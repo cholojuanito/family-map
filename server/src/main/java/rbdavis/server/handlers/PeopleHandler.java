@@ -22,6 +22,7 @@ import static rbdavis.server.StreamCommunicator.writeString;
 
 public class PeopleHandler extends Handler implements HttpHandler {
 
+    @Override
     public void handle(HttpExchange exchange) throws IOException {
         String respData = null;
         int responseCode = 0;
@@ -43,7 +44,7 @@ public class PeopleHandler extends Handler implements HttpHandler {
                         // Create a request obj from the token
                         request = new PeopleRequest(clientTokenStr);
                         // Call the service
-                        response = new PersonService().findAllPeople(request);
+                        response = service.findAllPeople(request);
                         respData = gson.toJson(response);
                         responseCode = HttpURLConnection.HTTP_OK;
                         logger.info("All people request successful");

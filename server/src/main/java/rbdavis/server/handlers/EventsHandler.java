@@ -1,6 +1,7 @@
 package rbdavis.server.handlers;
 
 import com.google.gson.JsonParseException;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -9,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
+import rbdavis.server.services.EventService;
 import rbdavis.shared.models.http.requests.EventsRequest;
 import rbdavis.shared.models.http.responses.EventsResponse;
 import rbdavis.shared.models.http.responses.Response;
@@ -18,62 +20,52 @@ import static rbdavis.server.StreamCommunicator.writeString;
 
 public class EventsHandler extends Handler implements HttpHandler {
 
-    @Override
     public void handle(HttpExchange exchange) throws IOException {
-
         String respData = null;
         int responseCode = 0;
         int emptyBodyCode = 0;
-        Response errorResponse;
+        Response response = new EventsResponse();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
             case "get":
-                try {
-                    // Read request body
-                    InputStream reqBody = exchange.getRequestBody();
-                    String reqData = readString(reqBody);
+                logger.info("All events request began");
 
-                    // Make a RegisterRequest obj
-                    EventsRequest request = gson.fromJson(reqData, EventsRequest.class);
-                    if (isValidEventsRequest(request)) {
+                Headers reqHeaders = exchange.getRequestHeaders();
+                EventService service = new EventService();
+                EventsRequest request;
 
-                        // Pass it to the EventService.findbyId
-
-                        // Write response body
-                        EventsResponse response = new EventsResponse();
+                // Verify the auth token
+                if (reqHeaders.containsKey("Authorization")) {
+                    String clientTokenStr = reqHeaders.getFirst("Authorization");
+                    if (service.isVaildAuthToken(clientTokenStr)) {
+                        // Create a request obj from the token
+                        request = new EventsRequest(clientTokenStr);
+                        // Call the service
+                        response = service.findAllEvents(request);
                         respData = gson.toJson(response);
                         responseCode = HttpURLConnection.HTTP_OK;
-                        // TODO: Log here
+                        logger.info("All events request successful");
                     }
                     else {
-                        // TODO: Log here
-                        throw new NullPointerException("Missing a property");
+                        logger.warning("Unauthorized request to /event");
+                        response.setMessage("You are not authorized to access this URL");
+                        responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
+                        respData = gson.toJson(response);
                     }
                 }
-                catch (NullPointerException e) {
-                    System.out.println(e.getMessage());
-                    errorResponse = new Response("Request property missing or has invalid value.");
+                else {
+                    logger.warning("Unauthorized request to /event");
+                    response.setMessage("You are not authorized to access this URL");
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                    respData = gson.toJson(errorResponse);
+                    respData = gson.toJson(response);
                 }
-                catch (JsonParseException e) {
-                    errorResponse = new Response("Error occurred while reading JSON. Please check your syntax");
-                    responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                    respData = gson.toJson(errorResponse);
-                    // TODO: Log here
-                }
-                catch (IOException e) {
-                    errorResponse = new Response("An error occurred on our end. Sorry!");
-                    responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
-                    respData = gson.toJson(errorResponse);
-                    // TODO: Log here
-                }
+
                 break;
             default:
-                errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for this URL");
+                logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage(exchange.getRequestMethod() + " method is not supported for this URL");
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                respData = gson.toJson(errorResponse);
-                // TODO: Log here
+                respData = gson.toJson(response);
                 break;
         }
 
@@ -81,11 +73,5 @@ public class EventsHandler extends Handler implements HttpHandler {
         OutputStream respBody = exchange.getResponseBody();
         writeString(respData, respBody);
         respBody.close();
-
-    }
-
-    private boolean isValidEventsRequest(EventsRequest request) throws NullPointerException {
-
-        return false;
     }
 }

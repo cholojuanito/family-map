@@ -54,20 +54,20 @@ public class PersonHandler extends Handler implements HttpHandler {
                             // Create a request obj from the token
                             request = new PersonRequest(id, clientTokenStr);
                             // Call the service
-                            response = new PersonService().findPerson(request);
+                            response = service.findPerson(request);
                             respData = gson.toJson(response);
                             responseCode = HttpURLConnection.HTTP_OK;
                             logger.info("One person request successful");
                         }
                         else {
-                            logger.warning("Unauthorized request to person/[id]");
+                            logger.warning("Unauthorized request to /person/[id]");
                             response.setMessage("You are not authorized to access this URL");
                             responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                             respData = gson.toJson(response);
                         }
                     }
                     else {
-                        logger.warning("Unauthorized request to person/[id]");
+                        logger.warning("Unauthorized request to /person/[id]");
                         response.setMessage("You are not authorized to access this URL");
                         responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                         respData = gson.toJson(response);

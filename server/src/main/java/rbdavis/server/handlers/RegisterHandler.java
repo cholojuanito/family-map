@@ -23,7 +23,7 @@ public class RegisterHandler extends Handler implements HttpHandler {
         String respData = null;
         int responseCode = 0;
         int emptyBodyCode = 0;
-        LoginOrRegisterResponse response = new LoginOrRegisterResponse();
+        Response response = new LoginOrRegisterResponse();
 
             switch (exchange.getRequestMethod().toLowerCase()) {
                 case "post":
