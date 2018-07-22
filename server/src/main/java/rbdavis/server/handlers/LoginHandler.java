@@ -23,7 +23,7 @@ public class LoginHandler extends Handler implements HttpHandler {
         String respData = null;
         int responseCode = 0;
         int emptyBodyCode = 0;
-        Response response = new LoginOrRegisterResponse();
+        Response response = new Response();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
             case "post":
@@ -35,14 +35,14 @@ public class LoginHandler extends Handler implements HttpHandler {
                     LoginRequest request = gson.fromJson(reqData, LoginRequest.class);
                     if (isValidLoginRequest(request)) {
                         response = new LoginService().login(request);
-
+                        response.setMessage("Success!");
                         responseCode = HttpURLConnection.HTTP_OK;
                         respData = gson.toJson(response);
 
                         logger.info("Login successful");
                     }
                     else {
-                        throw new NullPointerException("Request property missing or has invalid value.");
+                        throw new NullPointerException("Error: Request property missing or has invalid value.");
                     }
                 }
                 catch (NullPointerException e) {
@@ -53,13 +53,13 @@ public class LoginHandler extends Handler implements HttpHandler {
                 }
                 catch (JsonParseException e) {
                     logger.warning("JSON syntax error in request");
-                    response.setMessage("Error occurred while reading JSON. Please check your syntax");
+                    response.setMessage("Error: Invalid JSON syntax. Please check your syntax");
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(response);
                 }
                 catch (IOException e) {
                     logger.severe("Internal server error occurred " + e.getMessage());
-                    response.setMessage("An error occurred on our end. Sorry!");
+                    response.setMessage("Error: An error occurred on our end. Sorry!");
                     responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
                     respData = gson.toJson(response);
                 }
@@ -67,7 +67,7 @@ public class LoginHandler extends Handler implements HttpHandler {
 
             default:
                 logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
-                response.setMessage(exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage("Error:" + exchange.getRequestMethod() + " method is not supported for this URL");
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                 respData = gson.toJson(response);
                 break;

@@ -16,16 +16,15 @@ public class LoadHandler extends Handler implements HttpHandler {
         String respData = null;
         int responseCode = 0;
         int emptyBodyCode = 0;
-        Response errorResponse;
-        Response successResponse;
+        Response response = new Response();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
             case "post":
                 break;
             default:
-                errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage("Error:" + exchange.getRequestMethod() + " method is not supported for this URL");
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                respData = gson.toJson(errorResponse);
+                respData = gson.toJson(response);
                 break;
         }
     }

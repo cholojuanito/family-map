@@ -1,6 +1,7 @@
 package rbdavis.server.handlers;
 
 import com.google.gson.JsonParseException;
+import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -27,7 +28,7 @@ public class PeopleHandler extends Handler implements HttpHandler {
         String respData = null;
         int responseCode = 0;
         int emptyBodyCode = 0;
-        Response response = new PersonResponse();
+        Response response = new Response();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
             case "get":
@@ -45,20 +46,21 @@ public class PeopleHandler extends Handler implements HttpHandler {
                         request = new PeopleRequest(clientTokenStr);
                         // Call the service
                         response = service.findAllPeople(request);
+                        response.setMessage("Success!");
                         respData = gson.toJson(response);
                         responseCode = HttpURLConnection.HTTP_OK;
                         logger.info("All people request successful");
                     }
                     else {
                         logger.warning("Unauthorized request to /person");
-                        response.setMessage("You are not authorized to access this URL");
+                        response.setMessage("Error: You are not authorized to access this URL");
                         responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                         respData = gson.toJson(response);
                     }
                 }
                 else {
                     logger.warning("Unauthorized request to /person");
-                    response.setMessage("You are not authorized to access this URL");
+                    response.setMessage("Error: You are not authorized to access this URL");
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(response);
                 }
@@ -66,7 +68,7 @@ public class PeopleHandler extends Handler implements HttpHandler {
                 break;
             default:
                 logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
-                response.setMessage(exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage("Error:" + exchange.getRequestMethod() + " method is not supported for this URL");
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                 respData = gson.toJson(response);
                 break;

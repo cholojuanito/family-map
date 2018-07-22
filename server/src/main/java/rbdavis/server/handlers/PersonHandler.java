@@ -28,7 +28,7 @@ public class PersonHandler extends Handler implements HttpHandler {
         String respData = null;
         int responseCode = 0;
         int emptyBodyCode = 0;
-        Response response = new PersonResponse();
+        Response response = new Response();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
             case "get":
@@ -55,6 +55,7 @@ public class PersonHandler extends Handler implements HttpHandler {
                             request = new PersonRequest(id, clientTokenStr);
                             // Call the service
                             response = service.findPerson(request);
+                            response.setMessage("Success!");
                             respData = gson.toJson(response);
                             responseCode = HttpURLConnection.HTTP_OK;
                             logger.info("One person request successful");

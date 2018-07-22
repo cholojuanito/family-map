@@ -25,7 +25,7 @@ public class EventHandler extends Handler implements HttpHandler {
         String respData = null;
         int responseCode = 0;
         int emptyBodyCode = 0;
-        Response response = new EventResponse();
+        Response response = new Response();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
             case "get":
@@ -52,20 +52,21 @@ public class EventHandler extends Handler implements HttpHandler {
                             request = new EventRequest(id, clientTokenStr);
                             // Call the service
                             response = service.findEvent(request);
+                            response.setMessage("Success!");
                             respData = gson.toJson(response);
                             responseCode = HttpURLConnection.HTTP_OK;
                             logger.info("One event request successful");
                         }
                         else {
                             logger.warning("Unauthorized request to /event/[id]");
-                            response.setMessage("You are not authorized to access this URL");
+                            response.setMessage("Error: You are not authorized to access this URL");
                             responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                             respData = gson.toJson(response);
                         }
                     }
                     else {
                         logger.warning("Unauthorized request to /event/[id]");
-                        response.setMessage("You are not authorized to access this URL");
+                        response.setMessage("Error: You are not authorized to access this URL");
                         responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                         respData = gson.toJson(response);
                     }
@@ -79,7 +80,7 @@ public class EventHandler extends Handler implements HttpHandler {
                 break;
             default:
                 logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
-                response.setMessage(exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage("Error:" + exchange.getRequestMethod() + " method is not supported for this URL");
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                 respData = gson.toJson(response);
                 break;
