@@ -4,8 +4,12 @@ import java.util.List;
 
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
+import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
 import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
+import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
+import rbdavis.shared.models.data.AuthToken;
 import rbdavis.shared.models.data.Person;
+import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.requests.PersonRequest;
 import rbdavis.shared.models.http.responses.PeopleResponse;
@@ -42,8 +46,10 @@ public class PersonService extends Service {
             boolean commit = false;
             db = new SqlDatabase();
             PersonSqlDAO personDao = db.getPersonDao();
+            AuthTokenSqlDAO authDao = db.getAuthTokenDao();
 
-            List<Person> peopleFromDB = personDao.all();
+            AuthToken currUserToken =  authDao.findById(request.getToken());
+            List<Person> peopleFromDB = personDao.findByUsername(currUserToken.getUserId());
             if (peopleFromDB == null) {
                 logger.warning("Query for all Person's unsuccessful");
                 response.setMessage("Unable to find any records");

@@ -4,7 +4,9 @@ import java.util.List;
 
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
+import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
 import rbdavis.server.database.sql.dataaccess.EventSqlDAO;
+import rbdavis.shared.models.data.AuthToken;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.http.requests.EventRequest;
 import rbdavis.shared.models.http.requests.EventsRequest;
@@ -41,8 +43,10 @@ public class EventService extends Service {
             boolean commit = false;
             db = new SqlDatabase();
             EventSqlDAO eventDao = db.getEventDao();
+            AuthTokenSqlDAO authDao = db.getAuthTokenDao();
 
-            List<Event> eventsFromDB = eventDao.all();
+            AuthToken currUserToken =  authDao.findById(request.getToken());
+            List<Event> eventsFromDB = eventDao.findByUsername(currUserToken.getUserId());
             if (eventsFromDB == null) {
                 logger.warning("Query for all Event's unsuccessful");
                 response.setMessage("Unable to find any records");
