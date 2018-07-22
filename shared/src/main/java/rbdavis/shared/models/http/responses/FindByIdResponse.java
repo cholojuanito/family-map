@@ -11,20 +11,20 @@ package rbdavis.shared.models.http.responses;
 
 public class FindByIdResponse<T> extends Response {
 
-    private T type;
+    private T data;
 
     public FindByIdResponse() {
     }
 
-    public FindByIdResponse(T type) {
-        this.type = type;
+    public FindByIdResponse(T data) {
+        this.data = data;
     }
 
-    public T getType() {
-        return type;
+    public T getData() {
+        return data;
     }
 
-    public void setType(T type) {
-        this.type = type;
+    public void setData(T data) {
+        this.data = data;
     }
 }
