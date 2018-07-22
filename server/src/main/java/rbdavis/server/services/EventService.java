@@ -25,7 +25,8 @@ import rbdavis.shared.models.http.responses.EventsResponse;
  * @see rbdavis.shared.models.http.responses.FindByIdResponse
  * @since v0.1
  */
-public class EventService {
+public class EventService extends Service {
+    SqlDatabase db = null;
 
     /**
      * Uses the {@code EventSqlDAO} to find
@@ -35,24 +36,40 @@ public class EventService {
      * @return A response that has a {@code List} of {@code Event}s
      */
     public EventsResponse findAllEvents(EventsRequest request) {
-        SqlDatabase db;
+        EventsResponse response = new EventsResponse();
         try {
+            boolean commit = false;
             db = new SqlDatabase();
-            // 1. Get needed Dao's
             EventSqlDAO eventDao = db.getEventDao();
-            // 2. Call all on dao
-            List<Event> events;
 
-            // 3. Make a Response and return it
+            List<Event> eventsFromDB = eventDao.all();
+            if (eventsFromDB == null) {
+                logger.warning("Query for all Event's unsuccessful");
+                response.setMessage("Unable to find any records");
+            }
+            else if (eventsFromDB.size() == 0) {
+                response.setMessage("You have no events saved in the database");
+            }
+            else {
+                logger.info("Query for all Event's successful");
+                response.setData(eventsFromDB);
+                commit = true;
+            }
+            db.endTransaction(commit);
         }
         catch (DAO.DatabaseException e) {
-            // TODO: Log here
-            // 3. Make an errorResponse and return it
-
-            e.printStackTrace();
+            if (db != null) {
+                try {
+                    db.endTransaction(false);
+                }
+                catch (DAO.DatabaseException worthLessException) {
+                    logger.severe("Issue closing db connection");
+                }
+            }
+            logger.warning(e.getMessage());
+            response.setMessage(e.getMessage());
         }
-
-        return new EventsResponse();
+        return response;
     }
 
     /**
@@ -63,23 +80,36 @@ public class EventService {
      * @return A response that has an {@code Event}
      */
     public EventResponse findEvent(EventRequest request) {
-        SqlDatabase db;
+        EventResponse response = new EventResponse();
         try {
+            boolean commit = false;
             db = new SqlDatabase();
-            // 1. Get needed Dao's
             EventSqlDAO eventDao = db.getEventDao();
-            // 2. Call getById on dao
-            Event event;
 
-            // 3. Make a Response and return it
+            Event eventFromDB = eventDao.findById(request.getId());
+            if (eventFromDB == null) {
+                logger.warning("Query for Event with id " + request.getId() + " unsuccessful");
+                response.setMessage("An Event with id " + request.getId() + " does not exist");
+            }
+            else {
+                logger.info("Query for Event with id " + request.getId() + " unsuccessful");
+                response.setData(eventFromDB);
+                commit = true;
+            }
+            db.endTransaction(commit);
         }
         catch (DAO.DatabaseException e) {
-            // TODO: Log here
-            // 4. Make an errorResponse and return it
-
-            e.printStackTrace();
+            if (db != null) {
+                try {
+                    db.endTransaction(false);
+                }
+                catch (DAO.DatabaseException worthLessException) {
+                    logger.severe("Issue closing db connection");
+                }
+            }
+            logger.warning(e.getMessage());
+            response.setMessage(e.getMessage());
         }
-
-        return new EventResponse();
+        return response;
     }
 }

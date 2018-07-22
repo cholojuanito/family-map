@@ -48,6 +48,9 @@ public class PersonService extends Service {
                 logger.warning("Query for all Person's unsuccessful");
                 response.setMessage("Unable to find any records");
             }
+            else if (peopleFromDB.size() == 0) {
+                response.setMessage("You have no people saved in the database");
+            }
             else {
                 logger.info("Query for all Person's successful");
                 response.setData(peopleFromDB);
@@ -87,7 +90,7 @@ public class PersonService extends Service {
             Person personFromDB = personDao.findById(request.getId());
             if (personFromDB == null) {
                 logger.warning("Query for Person with id " + request.getId() + " unsuccessful");
-                response.setMessage("The id " + request.getId() + " does not match our records");
+                response.setMessage("A Person with id " + request.getId() + " does not exist");
             }
             else {
                 logger.info("Query for Person with id " + request.getId() + " successful");
