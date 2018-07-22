@@ -35,7 +35,6 @@ public class LoginHandler extends Handler implements HttpHandler {
                     LoginRequest request = gson.fromJson(reqData, LoginRequest.class);
                     if (isValidLoginRequest(request)) {
                         response = new LoginService().login(request);
-                        response.setMessage("Success!");
                         responseCode = HttpURLConnection.HTTP_OK;
                         respData = gson.toJson(response);
 

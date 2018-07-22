@@ -60,6 +60,7 @@ public class PersonService extends Service {
             else {
                 logger.info("Query for all Person's successful");
                 response.setData(peopleFromDB);
+                response.setMessage("Success!");
                 commit = true;
             }
             db.endTransaction(commit);
@@ -101,6 +102,7 @@ public class PersonService extends Service {
             else {
                 logger.info("Query for Person with id " + request.getId() + " successful");
                 response.setData(personFromDB);
+                response.setMessage("Success!");
                 commit = true;
             }
             db.endTransaction(commit);

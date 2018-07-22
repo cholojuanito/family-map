@@ -67,6 +67,7 @@ public class LoginService extends Service {
                     response.setUserName(userFromDB.getUsername());
                     response.setAuthToken(tokenFromDB.getToken());
                     response.setPersonID(userFromDB.getPersonId());
+                    response.setMessage("Success!");
                     commit = true;
                 }
                 else {

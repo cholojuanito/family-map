@@ -74,6 +74,7 @@ public class RegisterService extends Service {
                 response.setAuthToken(tokenFromDB.getToken());
                 response.setUserName(userModel.getUsername());
                 response.setPersonID(userModel.getPersonId());
+                response.setMessage("Success!");
                 commit = true;
             }
             else {

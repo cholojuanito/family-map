@@ -57,6 +57,7 @@ public class EventService extends Service {
             else {
                 logger.info("Query for all Event's successful");
                 response.setData(eventsFromDB);
+                response.setMessage("Success!");
                 commit = true;
             }
             db.endTransaction(commit);
@@ -98,6 +99,7 @@ public class EventService extends Service {
             else {
                 logger.info("Query for Event with id " + request.getId() + " unsuccessful");
                 response.setData(eventFromDB);
+                response.setMessage("Success!");
                 commit = true;
             }
             db.endTransaction(commit);

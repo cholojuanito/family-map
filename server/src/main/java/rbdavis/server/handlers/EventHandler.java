@@ -52,7 +52,6 @@ public class EventHandler extends Handler implements HttpHandler {
                             request = new EventRequest(id, clientTokenStr);
                             // Call the service
                             response = service.findEvent(request);
-                            response.setMessage("Success!");
                             respData = gson.toJson(response);
                             responseCode = HttpURLConnection.HTTP_OK;
                             logger.info("One event request successful");

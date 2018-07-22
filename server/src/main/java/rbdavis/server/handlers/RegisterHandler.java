@@ -35,7 +35,6 @@ public class RegisterHandler extends Handler implements HttpHandler {
                         RegisterRequest request = gson.fromJson(reqData, RegisterRequest.class);
                         if (isValidRegisterRequest(request)) {
                             response = new RegisterService().register(request);
-                            response.setMessage("Success!");
                             respData = gson.toJson(response);
                             responseCode = HttpURLConnection.HTTP_OK;
 

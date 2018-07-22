@@ -46,7 +46,6 @@ public class PeopleHandler extends Handler implements HttpHandler {
                         request = new PeopleRequest(clientTokenStr);
                         // Call the service
                         response = service.findAllPeople(request);
-                        response.setMessage("Success!");
                         respData = gson.toJson(response);
                         responseCode = HttpURLConnection.HTTP_OK;
                         logger.info("All people request successful");
