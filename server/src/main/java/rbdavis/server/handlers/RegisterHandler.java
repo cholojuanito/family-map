@@ -23,7 +23,7 @@ public class RegisterHandler extends Handler implements HttpHandler {
         String respData = null;
         int responseCode = 0;
         int emptyBodyCode = 0;
-        Response errorResponse;
+        LoginOrRegisterResponse response = new LoginOrRegisterResponse();
 
             switch (exchange.getRequestMethod().toLowerCase()) {
                 case "post":
@@ -34,7 +34,7 @@ public class RegisterHandler extends Handler implements HttpHandler {
 
                         RegisterRequest request = gson.fromJson(reqData, RegisterRequest.class);
                         if (isValidRegisterRequest(request)) {
-                            LoginOrRegisterResponse response = new RegisterService().register(request);
+                            response = new RegisterService().register(request);
 
                             respData = gson.toJson(response);
                             responseCode = HttpURLConnection.HTTP_OK;
@@ -47,33 +47,29 @@ public class RegisterHandler extends Handler implements HttpHandler {
                     }
                     catch (NullPointerException e) {
                         logger.warning(e.getMessage());
-
-                        errorResponse = new Response(e.getMessage());
+                        response.setMessage(e.getMessage());
                         responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                        respData = gson.toJson(errorResponse);
+                        respData = gson.toJson(response);
                     }
                     catch (JsonParseException e) {
                         logger.warning("JSON syntax error in request");
-
-                        errorResponse = new Response("Error occurred while reading JSON. Please check your syntax");
+                        response.setMessage("Error occurred while reading JSON. Please check your syntax");
                         responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                        respData = gson.toJson(errorResponse);
+                        respData = gson.toJson(response);
                     }
                     catch (IOException e) {
                         logger.severe("Internal server error occurred " + e.getMessage());
-
-                        errorResponse = new Response("An error occurred on our end. Sorry!");
+                        response.setMessage("An error occurred on our end. Sorry!");
                         responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
-                        respData = gson.toJson(errorResponse);
+                        respData = gson.toJson(response);
                     }
                     break;
 
                 default:
-                    logger.info(exchange.getRequestMethod() + " method is not supported for '/user/register'");
-
-                    errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for '/user/register'");
+                    logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
+                    response.setMessage(exchange.getRequestMethod() + " method is not supported for this URL");
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                    respData = gson.toJson(errorResponse);
+                    respData = gson.toJson(response);
                     break;
             }
 

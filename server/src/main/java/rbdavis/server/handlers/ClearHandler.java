@@ -18,25 +18,24 @@ public class ClearHandler extends Handler implements HttpHandler {
         String respData = null;
         int responseCode = 0;
         int emptyBodyCode = 0;
-        Response errorResponse;
-        Response successResponse;
+        Response response = new Response();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
             case "post":
                 try {
                     ClearService clearService = new ClearService();
-                    successResponse = clearService.clear();
+                    response = clearService.clear();
                     responseCode = HttpURLConnection.HTTP_OK;
-                    respData = gson.toJson(successResponse);
+                    respData = gson.toJson(response);
                 }
                 catch (Exception e) {
                     logger.warning("Something happened while trying to clear database\n" + e.getMessage());
                 }
                 break;
             default:
-                errorResponse = new Response(exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage(exchange.getRequestMethod() + " method is not supported for this URL");
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                respData = gson.toJson(errorResponse);
+                respData = gson.toJson(response);
                 break;
         }
 
