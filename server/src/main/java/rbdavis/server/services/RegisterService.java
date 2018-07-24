@@ -13,6 +13,7 @@ import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.requests.RegisterRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
+import rbdavis.shared.models.http.responses.Response;
 
 /**
  * The service that performs the registration action for the "/user/register" endpoint.
@@ -68,7 +69,9 @@ public class RegisterService extends Service {
                 //***************************************************************************
                 // 4. Use the fill service to make a new family tree
                 FillRequest fillRequest = new FillRequest(userName);
+                Response fillResponse = new FillService(db).fill(fillRequest);
 
+                logger.info(fillResponse.getMessage());
 
                 // Send successful response back
                 response.setAuthToken(tokenFromDB.getToken());
@@ -82,7 +85,8 @@ public class RegisterService extends Service {
                 response.setMessage("Registration unsuccessful");
             }
 
-            db.endTransaction(commit);
+            // Uncommented because the Fill Service will end the transaction
+            //db.endTransaction(commit);
         }
         catch (DAO.DatabaseException e) {
             if (db != null) {
