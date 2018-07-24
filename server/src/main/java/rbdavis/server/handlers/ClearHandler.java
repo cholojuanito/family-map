@@ -23,8 +23,7 @@ public class ClearHandler extends Handler implements HttpHandler {
         switch (exchange.getRequestMethod().toLowerCase()) {
             case "post":
                 try {
-                    ClearService clearService = new ClearService();
-                    response = clearService.clear();
+                    response = ClearService.clear();
                     responseCode = HttpURLConnection.HTTP_OK;
                     respData = gson.toJson(response);
                 }

@@ -52,6 +52,17 @@ public class Event {
         setId(id);
     }
 
+    public Event(Event other) {
+        this.personId       = other.personId;
+        this.userId         = other.userId;
+        this.type           = other.type;
+        this.latitude       = other.latitude;
+        this.longitude      = other.longitude;
+        this.city           = other.city;
+        this.country        = other.country;
+        this.dateHappened   = other.dateHappened;
+    }
+
     public String getId() {
         return id;
     }

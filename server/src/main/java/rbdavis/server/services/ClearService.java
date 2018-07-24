@@ -21,13 +21,13 @@ import rbdavis.shared.models.http.responses.Response;
  * @since v0.1
  */
 
-public class ClearService {
+public class ClearService extends Service {
     /**
      * Deletes everything that is in the database at that moment
      *
      * @return A {@code Response} that carries the message and status code
      */
-    public Response clear() {
+    public static Response clear() {
         Response response = new Response();
         try {
             SqlDatabase db = new SqlDatabase();
@@ -49,16 +49,14 @@ public class ClearService {
                 response.setMessage("Clear succeeded");
             }
             catch (DAO.DatabaseException e) {
-                // TODO: Log here
+                logger.warning(e.getMessage());
+                response.setMessage(e.getMessage());
                 db.endTransaction(false);
-                // 3. Make an errorResponse and return it
-                response.setMessage("Error happened");
-                e.printStackTrace();
             }
             return response;
         }
         catch (DAO.DatabaseException e) {
-            response.setMessage("Unable to open connection to db");
+            response.setMessage("Unable to clear database");
         }
         return response;
     }
