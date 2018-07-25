@@ -1,5 +1,7 @@
 package rbdavis.shared.models.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.security.InvalidParameterException;
 
 /**
@@ -22,29 +24,54 @@ import java.security.InvalidParameterException;
  */
 
 public class Person {
+    @SerializedName("id")
     private String id;
+    @SerializedName(value = "userId", alternate = {"descendant", "userName", "userID"})
     private String userId;
+    @SerializedName("firstName")
     private String firstName;
+    @SerializedName("lastName")
     private String lastName;
+    @SerializedName("gender")
     private Gender gender;
+    @SerializedName(value = "fatherId", alternate = "fatherID")
     private String fatherId = null;
-    private String motherID = null;
-    private String spouseID = null;
+    @SerializedName(value = "motherId", alternate = "motherID")
+    private String motherId = null;
+    @SerializedName(value = "spouseId", alternate = "spouseID")
+    private String spouseId = null;
 
     public Person(String userId, String firstName, String lastName, Gender gender,
-                  String fatherId, String motherID, String spouseID) {
+                  String fatherId, String motherId, String spouseId) {
         setUserId(userId);
         setFirstName(firstName);
         setLastName(lastName);
         setGender(gender);
         setFatherId(fatherId);
-        setMotherID(motherID);
-        setSpouseID(spouseID);
+        setMotherId(motherId);
+        setSpouseId(spouseId);
+    }
+
+    public Person(String userId, String firstName, String lastName, String genderStr,
+                  String fatherId, String motherId, String spouseId) {
+        setUserId(userId);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setGender(genderStr);
+        setFatherId(fatherId);
+        setMotherId(motherId);
+        setSpouseId(spouseId);
     }
 
     public Person(String id, String userId, String firstName, String lastName, Gender gender,
-                  String fatherId, String motherID, String spouseID) {
-        this(userId, firstName, lastName, gender, fatherId, motherID, spouseID);
+                  String fatherId, String motherId, String spouseId) {
+        this(userId, firstName, lastName, gender, fatherId, motherId, spouseId);
+        setId(id);
+    }
+
+    public Person(String id, String userId, String firstName, String lastName, String genderStr,
+                  String fatherId, String motherId, String spouseId) {
+        this(userId, firstName, lastName, genderStr, fatherId, motherId, spouseId);
         setId(id);
     }
 
@@ -96,6 +123,22 @@ public class Person {
         return gender;
     }
 
+    public void setGender(String genderStr) {
+        switch (genderStr) {
+            case "M":
+            case "m":
+                this.gender = Gender.M;
+                break;
+            case "F":
+            case "f":
+                this.gender = Gender.F;
+                break;
+            default:
+                this.gender = null;
+                break;
+        }
+    }
+
     public void setGender(Gender gender) {
         this.gender = gender;
     }
@@ -108,19 +151,19 @@ public class Person {
         this.fatherId = fatherId;
     }
 
-    public String getMotherID() {
-        return motherID;
+    public String getMotherId() {
+        return motherId;
     }
 
-    public void setMotherID(String motherID) {
-        this.motherID = motherID;
+    public void setMotherId(String motherId) {
+        this.motherId = motherId;
     }
 
-    public String getSpouseID() {
-        return spouseID;
+    public String getSpouseId() {
+        return spouseId;
     }
 
-    public void setSpouseID(String spouseID) {
-        this.spouseID = spouseID;
+    public void setSpouseId(String spouseId) {
+        this.spouseId = spouseId;
     }
 }

@@ -1,5 +1,7 @@
 package rbdavis.shared.models.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.security.InvalidParameterException;
 
 /**
@@ -13,12 +15,19 @@ import java.security.InvalidParameterException;
  * @since v0.1
  */
 public class User {
+    @SerializedName(value = "username", alternate = "userName")
     private String username;
+    @SerializedName("personId")
     private String personId;
+    @SerializedName("password")
     private String password;
+    @SerializedName("email")
     private String email;
+    @SerializedName("firstName")
     private String firstName;
+    @SerializedName("lastName")
     private String lastName;
+    @SerializedName("gender")
     private Gender gender;
 
     public User(String personId, String password, String email, String firstName,
@@ -31,9 +40,25 @@ public class User {
         setGender(gender);
     }
 
+    public User(String personId, String password, String email, String firstName,
+                String lastName, String genderStr) {
+        setPersonId(personId);
+        setPassword(password);
+        setEmail(email);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setGender(genderStr);
+    }
+
     public User(String username, String personId, String password, String email,
                 String firstName, String lastName, Gender gender) {
         this(personId, password, email, firstName, lastName, gender);
+        setUsername(username);
+    }
+
+    public User(String username, String personId, String password, String email,
+                String firstName, String lastName, String genderStr) {
+        this(personId, password, email, firstName, lastName, genderStr);
         setUsername(username);
     }
 
@@ -105,6 +130,22 @@ public class User {
 
     public Gender getGender() {
         return gender;
+    }
+
+    public void setGender(String genderStr) {
+        switch (genderStr) {
+            case "M":
+            case "m":
+                this.gender = Gender.M;
+                break;
+            case "F":
+            case "f":
+                this.gender = Gender.F;
+                break;
+            default:
+                this.gender = null;
+                break;
+        }
     }
 
     public void setGender(Gender gender) {

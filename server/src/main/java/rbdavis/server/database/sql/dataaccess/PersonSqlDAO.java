@@ -61,8 +61,8 @@ public class PersonSqlDAO implements DAO<Person> {
                 stmt.setString(4, person.getLastName());
                 stmt.setString(5, person.getGender().toString());
                 stmt.setString(6, person.getFatherId());
-                stmt.setString(7, person.getMotherID());
-                stmt.setString(8, person.getSpouseID());
+                stmt.setString(7, person.getMotherId());
+                stmt.setString(8, person.getSpouseId());
                 stmt.executeUpdate();
             }
             finally {
@@ -111,8 +111,8 @@ public class PersonSqlDAO implements DAO<Person> {
                 stmt.setString(2, person.getLastName());
                 stmt.setString(3, person.getGender().toString());
                 stmt.setString(4, person.getFatherId());
-                stmt.setString(5, person.getMotherID());
-                stmt.setString(6, person.getSpouseID());
+                stmt.setString(5, person.getMotherId());
+                stmt.setString(6, person.getSpouseId());
                 stmt.setString(7, id);
                 stmt.executeUpdate();
             }

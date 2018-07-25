@@ -1,5 +1,7 @@
 package rbdavis.shared.models.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 
@@ -24,14 +26,23 @@ import java.time.LocalDate;
  */
 
 public class Event {
+    @SerializedName("id")
     private String id;
+    @SerializedName("personId")
     private String personId;
+    @SerializedName(value = "userId", alternate = {"descendant", "userName"})
     private String userId;
+    @SerializedName(value = "type", alternate = "eventType")
     private EventType type;
+    @SerializedName("latitude")
     private String latitude;
+    @SerializedName("longitude")
     private String longitude;
+    @SerializedName("city")
     private String city;
+    @SerializedName("country")
     private String country;
+    @SerializedName(value = "dateHappened", alternate = "year, date")
     private LocalDate dateHappened;
 
     public Event(String personId, String userId, EventType type, String latitude, String longitude,
@@ -46,9 +57,27 @@ public class Event {
         setDateHappened(dateHappened);
     }
 
+    public Event(String personId, String userId, String typeStr, String latitude, String longitude,
+                 String city, String country, LocalDate dateHappened) {
+        setPersonId(personId);
+        setUserId(userId);
+        setType(typeStr);
+        setLatitude(latitude);
+        setLongitude(longitude);
+        setCity(city);
+        setCountry(country);
+        setDateHappened(dateHappened);
+    }
+
     public Event(String id, String personId, String userId, EventType type, String latitude,
                  String longitude, String city, String country, LocalDate dateHappened) {
         this(personId, userId, type, latitude, longitude, city, country, dateHappened);
+        setId(id);
+    }
+
+    public Event(String id, String personId, String userId, String typeStr, String latitude,
+                 String longitude, String city, String country, LocalDate dateHappened) {
+        this(personId, userId, typeStr, latitude, longitude, city, country, dateHappened);
         setId(id);
     }
 
@@ -98,6 +127,30 @@ public class Event {
 
     public EventType getType() {
         return type;
+    }
+
+    public void setType(String typeStr) {
+        switch (typeStr) {
+            case "BIRTH":
+            case "Birth":
+                this.type = EventType.BIRTH;
+                break;
+            case "BAPTISM":
+            case "Baptism":
+                this.type = EventType.BAPTISM;
+                break;
+            case "MARRIAGE":
+            case "Marriage":
+                this.type = EventType.MARRIAGE;
+                break;
+            case "DEATH":
+            case "Death":
+                this.type = EventType.DEATH;
+                break;
+            default:
+                this.type = null;
+                break;
+        }
     }
 
     public void setType(EventType type) {

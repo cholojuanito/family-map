@@ -98,13 +98,13 @@ public class PersonSqlDAOTest {
 
             assertNotNull(foundHusband);
             assertNotNull(foundWife);
-            assertEquals(husband.getMotherID(), foundHusband.getMotherID());
+            assertEquals(husband.getMotherId(), foundHusband.getMotherId());
             assertEquals(husband.getFatherId(), foundHusband.getFatherId());
-            assertEquals(wife.getMotherID(), foundWife.getMotherID());
+            assertEquals(wife.getMotherId(), foundWife.getMotherId());
             assertEquals(wife.getFatherId(), foundWife.getFatherId());
 
-            assertEquals(wifeID, foundHusband.getSpouseID());
-            assertEquals(husbandID, foundWife.getSpouseID());
+            assertEquals(wifeID, foundHusband.getSpouseId());
+            assertEquals(husbandID, foundWife.getSpouseId());
         }
         catch (DAO.DatabaseException e) {
             System.out.println(e.getMessage());
@@ -130,8 +130,8 @@ public class PersonSqlDAOTest {
 
             assertNotNull(foundNewHusbandDad);
             assertNotNull(foundNewWifeDad);
-            assertEquals(motherID2, foundNewHusbandDad.getSpouseID());
-            assertEquals(motherID1, foundNewWifeDad.getSpouseID());
+            assertEquals(motherID2, foundNewHusbandDad.getSpouseId());
+            assertEquals(motherID1, foundNewWifeDad.getSpouseId());
 
         }
         catch (DAO.DatabaseException e) {
