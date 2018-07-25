@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 
 import rbdavis.server.services.ClearService;
 import rbdavis.shared.models.http.responses.Response;
+import static rbdavis.shared.utils.Constants.*;
 
 import static rbdavis.server.StreamCommunicator.writeString;
 
@@ -21,18 +22,19 @@ public class ClearHandler extends Handler implements HttpHandler {
         Response response = new Response();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
-            case "post":
+            case POST:
                 try {
                     response = ClearService.clear();
+                    logger.info(CLEAR_SUCCESS);
                     responseCode = HttpURLConnection.HTTP_OK;
                     respData = gson.toJson(response);
                 }
                 catch (Exception e) {
-                    logger.warning("Something happened while trying to clear database\n" + e.getMessage());
+                    logger.warning(CLEAR_ERR + e.getMessage());
                 }
                 break;
             default:
-                response.setMessage(exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage(exchange.getRequestMethod() + METHOD_NOT_SUPPORTED);
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                 respData = gson.toJson(response);
                 break;

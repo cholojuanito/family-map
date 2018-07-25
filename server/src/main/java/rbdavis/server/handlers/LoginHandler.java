@@ -8,11 +8,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.security.InvalidParameterException;
 
 import rbdavis.server.services.LoginService;
 import rbdavis.shared.models.http.requests.LoginRequest;
-import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 import rbdavis.shared.models.http.responses.Response;
+import static rbdavis.shared.utils.Constants.*;
 
 import static rbdavis.server.StreamCommunicator.readString;
 import static rbdavis.server.StreamCommunicator.writeString;
@@ -27,9 +28,9 @@ public class LoginHandler extends Handler implements HttpHandler {
         Response response = new Response();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
-            case "post":
+            case POST:
                 try {
-                    logger.info("Login request began");
+                    logger.info(LOGIN_REQ_START);
                     InputStream reqBody = exchange.getRequestBody();
                     String reqData = readString(reqBody);
 
@@ -39,35 +40,33 @@ public class LoginHandler extends Handler implements HttpHandler {
                         responseCode = HttpURLConnection.HTTP_OK;
                         respData = gson.toJson(response);
 
-                        logger.info("Login successful");
+                        logger.info(LOGIN_REQ_SUCCESS);
                     }
                     else {
-                        throw new NullPointerException("Error: Request property missing or has invalid value.");
+                        throw new InvalidParameterException(INVALID_PROP_ERR);
                     }
                 }
-                catch (NullPointerException e) {
+                catch (InvalidParameterException e) {
                     logger.warning(e.getMessage());
                     response.setMessage(e.getMessage());
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(response);
                 }
                 catch (JsonParseException e) {
-                    logger.warning("JSON syntax error in request");
-                    response.setMessage("Error: Invalid JSON syntax. Please check your syntax");
+                    response.setMessage(JSON_SYNTAX_ERR);
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(response);
                 }
                 catch (IOException e) {
-                    logger.severe("Internal server error occurred " + e.getMessage());
-                    response.setMessage("Error: An error occurred on our end. Sorry!");
+                    logger.severe(INTERNAL_SERVER_ERR_LOG + e.getMessage());
+                    response.setMessage(INTERNAL_SERVER_ERR);
                     responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
                     respData = gson.toJson(response);
                 }
                 break;
 
             default:
-                logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
-                response.setMessage("Error:" + exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage(exchange.getRequestMethod() + METHOD_NOT_SUPPORTED);
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                 respData = gson.toJson(response);
                 break;
@@ -80,10 +79,15 @@ public class LoginHandler extends Handler implements HttpHandler {
         respBody.close();
     }
 
-    private boolean isValidLoginRequest (LoginRequest request) throws NullPointerException {
+    private boolean isValidLoginRequest (LoginRequest request) throws InvalidParameterException {
         boolean isValid = true;
-        if (request.getUserName() == null || request.getPassword() == null) {
-            isValid = false;
+        try {
+            if (request.getUserName() == null || request.getPassword() == null) {
+                isValid = false;
+            }
+        }
+        catch (NullPointerException e) {
+            throw new InvalidParameterException(INVALID_PROP_ERR);
         }
         return isValid;
     }
