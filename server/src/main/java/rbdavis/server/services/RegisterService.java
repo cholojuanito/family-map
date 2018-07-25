@@ -52,7 +52,7 @@ public class RegisterService extends Service {
             // 2. Make model from request
             String userName = request.getUserName();
             String newUserUUID = UUID.randomUUID().toString();
-            Gender gender = (request.getGender().equals("m")) ? Gender.M : Gender.F ;
+            Gender gender = (request.getGender().equals("m")) ? Gender.M : Gender.F;
             User userModel = new User(userName, newUserUUID, request.getPassword(), request.getEmail(),
                                       request.getFirstName(), request.getLastName(), gender);
 
