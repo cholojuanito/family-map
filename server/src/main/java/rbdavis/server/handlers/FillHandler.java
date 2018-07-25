@@ -1,6 +1,5 @@
 package rbdavis.server.handlers;
 
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -12,6 +11,7 @@ import java.security.InvalidParameterException;
 import rbdavis.server.services.FillService;
 import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.responses.Response;
+import static rbdavis.shared.utils.Constants.*;
 
 import static rbdavis.server.StreamCommunicator.writeString;
 
@@ -27,9 +27,9 @@ public class FillHandler extends Handler implements HttpHandler{
         final int NUM_GENS_INDEX = 3;
 
         switch (exchange.getRequestMethod().toLowerCase()) {
-            case "post":
+            case POST:
                 try {
-                    logger.info("Fill request began");
+                    logger.info(FILL_REQ_START);
 
                     // Get the "username" and "numGenerations" portions of the uri
                     String uri = exchange.getRequestURI().getPath();
@@ -44,11 +44,11 @@ public class FillHandler extends Handler implements HttpHandler{
                             userName = uriSections[UN_INDEX];
                             numGens = Integer.parseInt(uriSections[NUM_GENS_INDEX]);
                             if (numGens < 0) {
-                                throw new InvalidParameterException("Error: Cannot generate a negative number of generations");
+                                throw new InvalidParameterException(FILL_NEG_ERR);
                             }
                             break;
                         default:
-                        throw new InvalidParameterException("Error: Request property missing or has invalid value.");
+                        throw new InvalidParameterException(INVALID_PROP_ERR);
                     }
 
                     FillRequest request = new FillRequest(userName, numGens);
@@ -56,7 +56,7 @@ public class FillHandler extends Handler implements HttpHandler{
 
                     responseCode = HttpURLConnection.HTTP_OK;
                     respData = gson.toJson(response);
-                    logger.info("Fill request successful");
+                    logger.info(FILL_REQ_SUCCESS);
                 }
                 catch (InvalidParameterException e) {
                     logger.warning(e.getMessage());
@@ -66,8 +66,7 @@ public class FillHandler extends Handler implements HttpHandler{
                 }
                 break;
             default:
-                logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
-                response.setMessage(exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage(exchange.getRequestMethod() + METHOD_NOT_SUPPORTED);
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                 respData = gson.toJson(response);
                 break;

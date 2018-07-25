@@ -9,15 +9,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 
 import rbdavis.server.services.LoadService;
-import rbdavis.shared.models.data.Event;
-import rbdavis.shared.models.data.Gender;
-import rbdavis.shared.models.data.Person;
-import rbdavis.shared.models.data.User;
+import rbdavis.shared.models.data.*;
 import rbdavis.shared.models.http.requests.LoadRequest;
 import rbdavis.shared.models.http.responses.Response;
+import static rbdavis.shared.utils.Constants.*;
 
 import static rbdavis.server.StreamCommunicator.readString;
 import static rbdavis.server.StreamCommunicator.writeString;
@@ -32,11 +29,12 @@ public class LoadHandler extends Handler implements HttpHandler {
         Response response = new Response();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
-            case "post":
-                logger.info("Load request began");
+            case POST:
+                logger.info(LOAD_REQ_START);
                 try {
                     InputStream reqBody = exchange.getRequestBody();
                     String reqData = readString(reqBody);
+
 
                     LoadRequest request = gson.fromJson(reqData, LoadRequest.class);
                     if (isValidLoadRequest(request)) {
@@ -44,7 +42,7 @@ public class LoadHandler extends Handler implements HttpHandler {
                         respData = gson.toJson(response);
                         responseCode = HttpURLConnection.HTTP_OK;
 
-                        logger.info("Load successful");
+                        logger.info(LOAD_REQ_SUCCESS);
                     }
                 }
                 catch (InvalidParameterException e) {
@@ -54,22 +52,20 @@ public class LoadHandler extends Handler implements HttpHandler {
                     respData = gson.toJson(response);
                 }
                 catch (JsonParseException e) {
-                    logger.warning("JSON syntax error in request");
-                    response.setMessage("Error: Invalid JSON syntax. Please check your syntax");
+                    response.setMessage(JSON_SYNTAX_ERR);
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(response);
                 }
                 catch (IOException e) {
-                    logger.severe("Internal server error occurred " + e.getMessage());
-                    response.setMessage("Error: An error occurred on our end. Sorry!");
+                    logger.severe(INTERNAL_SERVER_ERR_LOG + e.getMessage());
+                    response.setMessage(INTERNAL_SERVER_ERR);
                     responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
                     respData = gson.toJson(response);
                 }
                 break;
 
             default:
-                logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
-                response.setMessage("Error:" + exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage(exchange.getRequestMethod() + METHOD_NOT_SUPPORTED);
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                 respData = gson.toJson(response);
                 break;
@@ -114,7 +110,7 @@ public class LoadHandler extends Handler implements HttpHandler {
             }
         }
         catch (NullPointerException e) {
-            throw new InvalidParameterException("Error: Request is missing a property or has invalid value.");
+            throw new InvalidParameterException(INVALID_PROP_ERR);
         }
 
         return isValid;

@@ -1,21 +1,18 @@
 package rbdavis.server.handlers;
 
-import com.google.gson.JsonParseException;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
 import rbdavis.server.services.EventService;
 import rbdavis.shared.models.http.requests.EventsRequest;
-import rbdavis.shared.models.http.responses.EventsResponse;
 import rbdavis.shared.models.http.responses.Response;
+import static rbdavis.shared.utils.Constants.*;
 
-import static rbdavis.server.StreamCommunicator.readString;
 import static rbdavis.server.StreamCommunicator.writeString;
 
 public class EventsHandler extends Handler implements HttpHandler {
@@ -28,16 +25,16 @@ public class EventsHandler extends Handler implements HttpHandler {
         Response response = new Response();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
-            case "get":
-                logger.info("All events request began");
+            case GET:
+                logger.info(EVENTS_REQ_START);
 
                 Headers reqHeaders = exchange.getRequestHeaders();
                 EventService service = new EventService();
                 EventsRequest request;
 
                 // Verify the auth token
-                if (reqHeaders.containsKey("Authorization")) {
-                    String clientTokenStr = reqHeaders.getFirst("Authorization");
+                if (reqHeaders.containsKey(AUTH)) {
+                    String clientTokenStr = reqHeaders.getFirst(AUTH);
                     if (service.isVaildAuthToken(clientTokenStr)) {
                         // Create a request obj from the token
                         request = new EventsRequest(clientTokenStr);
@@ -45,26 +42,25 @@ public class EventsHandler extends Handler implements HttpHandler {
                         response = service.findAllEvents(request);
                         respData = gson.toJson(response);
                         responseCode = HttpURLConnection.HTTP_OK;
-                        logger.info("All events request successful");
+                        logger.info(EVENTS_REQ_SUCCESS);
                     }
                     else {
-                        logger.warning("Unauthorized request to /event");
-                        response.setMessage("Error: You are not authorized to access this URL");
+                        logger.warning(UNAUTHORIZED_REQ_LOG + "/event");
+                        response.setMessage(UNAUTHORIZED_REQ_ERR);
                         responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                         respData = gson.toJson(response);
                     }
                 }
                 else {
-                    logger.warning("Unauthorized request to /event");
-                    response.setMessage("Error :You are not authorized to access this URL");
+                    logger.warning(UNAUTHORIZED_REQ_LOG + "/event");
+                    response.setMessage(UNAUTHORIZED_REQ_ERR);
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(response);
                 }
 
                 break;
             default:
-                logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
-                response.setMessage("Error:" + exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage(exchange.getRequestMethod() + METHOD_NOT_SUPPORTED);
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                 respData = gson.toJson(response);
                 break;

@@ -1,24 +1,18 @@
 package rbdavis.server.handlers;
 
-import com.google.gson.JsonParseException;
-import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
 import rbdavis.server.services.PersonService;
 import rbdavis.shared.models.http.requests.PeopleRequest;
-import rbdavis.shared.models.http.requests.PersonRequest;
-import rbdavis.shared.models.http.responses.PeopleResponse;
-import rbdavis.shared.models.http.responses.PersonResponse;
 import rbdavis.shared.models.http.responses.Response;
+import static rbdavis.shared.utils.Constants.*;
 
-import static rbdavis.server.StreamCommunicator.readString;
 import static rbdavis.server.StreamCommunicator.writeString;
 
 public class PeopleHandler extends Handler implements HttpHandler {
@@ -31,16 +25,16 @@ public class PeopleHandler extends Handler implements HttpHandler {
         Response response = new Response();
 
         switch (exchange.getRequestMethod().toLowerCase()) {
-            case "get":
-                logger.info("All people request began");
+            case GET:
+                logger.info(PEOPLE_REQ_START);
 
                 Headers reqHeaders = exchange.getRequestHeaders();
                 PersonService service = new PersonService();
                 PeopleRequest request;
 
                 // Verify the auth token
-                if (reqHeaders.containsKey("Authorization")) {
-                    String clientTokenStr = reqHeaders.getFirst("Authorization");
+                if (reqHeaders.containsKey(AUTH)) {
+                    String clientTokenStr = reqHeaders.getFirst(AUTH);
                     if (service.isVaildAuthToken(clientTokenStr)) {
                         // Create a request obj from the token
                         request = new PeopleRequest(clientTokenStr);
@@ -48,26 +42,25 @@ public class PeopleHandler extends Handler implements HttpHandler {
                         response = service.findAllPeople(request);
                         respData = gson.toJson(response);
                         responseCode = HttpURLConnection.HTTP_OK;
-                        logger.info("All people request successful");
+                        logger.info(PEOPLE_REQ_SUCCESS);
                     }
                     else {
-                        logger.warning("Unauthorized request to /person");
-                        response.setMessage("Error: You are not authorized to access this URL");
+                        logger.warning(UNAUTHORIZED_REQ_LOG + "/person");
+                        response.setMessage(UNAUTHORIZED_REQ_ERR);
                         responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                         respData = gson.toJson(response);
                     }
                 }
                 else {
-                    logger.warning("Unauthorized request to /person");
-                    response.setMessage("Error: You are not authorized to access this URL");
+                    logger.warning(UNAUTHORIZED_REQ_LOG + "/person");
+                    response.setMessage(UNAUTHORIZED_REQ_ERR);
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(response);
                 }
 
                 break;
             default:
-                logger.info(exchange.getRequestMethod() + " method is not supported for this URL");
-                response.setMessage("Error:" + exchange.getRequestMethod() + " method is not supported for this URL");
+                response.setMessage(exchange.getRequestMethod() + METHOD_NOT_SUPPORTED);
                 responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                 respData = gson.toJson(response);
                 break;
