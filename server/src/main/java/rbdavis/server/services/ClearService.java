@@ -6,6 +6,7 @@ import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
 import rbdavis.server.database.sql.dataaccess.EventSqlDAO;
 import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
 import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
+import rbdavis.shared.models.data.AuthToken;
 import rbdavis.shared.models.http.responses.Response;
 
 /**
@@ -38,11 +39,7 @@ public class ClearService extends Service {
                 EventSqlDAO eventDao = db.getEventDao();
                 AuthTokenSqlDAO authTokenDao = db.getAuthTokenDao();
 
-                // 2. Call deleteAll on all of them
-                userDao.deleteAll();
-                personDao.deleteAll();
-                eventDao.deleteAll();
-                authTokenDao.deleteAll();
+                clearDatabase(userDao, personDao, eventDao, authTokenDao);
 
                 // 3. Make a Response and return it
                 db.endTransaction(true);
@@ -59,5 +56,12 @@ public class ClearService extends Service {
             response.setMessage("Unable to clear database");
         }
         return response;
+    }
+
+    public static void clearDatabase(UserSqlDAO userDao, PersonSqlDAO personDao, EventSqlDAO eventDao, AuthTokenSqlDAO authDao) throws DAO.DatabaseException {
+        userDao.deleteAll();
+        personDao.deleteAll();
+        eventDao.deleteAll();
+        authDao.deleteAll();
     }
 }
