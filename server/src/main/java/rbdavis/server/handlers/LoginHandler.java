@@ -19,6 +19,7 @@ import static rbdavis.server.StreamCommunicator.writeString;
 
 public class LoginHandler extends Handler implements HttpHandler {
 
+    @Override
     public void handle(HttpExchange exchange) throws IOException {
         String respData = null;
         int responseCode = 0;
