@@ -1,11 +1,17 @@
 package rbdavis.server.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
 import rbdavis.server.database.sql.dataaccess.EventSqlDAO;
 import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
 import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
+import rbdavis.shared.models.data.Event;
+import rbdavis.shared.models.data.Person;
+import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.LoadRequest;
 import rbdavis.shared.models.http.responses.Response;
 
@@ -23,7 +29,9 @@ import rbdavis.shared.models.http.responses.Response;
  * @since v0.1
  */
 
-public class LoadService {
+public class LoadService extends Service {
+    private SqlDatabase db = null;
+
     /**
      * Clears all data from the database and then creates rows for the
      * {@code User}, {@code Person}, and {@code Event} data from the {@code LoadRequest}.
@@ -32,24 +40,59 @@ public class LoadService {
      * @return A {@code Response} object that carries the message and status code
      */
     public Response load(LoadRequest request) {
-        SqlDatabase db;
+        boolean commit = false;
+        Response response = new Response();
+        int numUsersAdded = request.getUsers().size();
+        int numPeopleAdded = request.getPeople().size();
+        int numEventsAdded = request.getEvents().size();
+
         try {
             db = new SqlDatabase();
-            // 1. Get needed Dao's
             UserSqlDAO userDao = db.getUserDao();
             PersonSqlDAO personDao = db.getPersonDao();
             EventSqlDAO eventDao = db.getEventDao();
             AuthTokenSqlDAO authTokenDao = db.getAuthTokenDao();
 
+            ClearService.clearDatabase(userDao, personDao, eventDao, authTokenDao);
+            createUsers(userDao, request.getUsers());
+            createPeople(personDao, request.getPeople());
+            createEvents(eventDao, request.getEvents());
 
-            // 3. Make a Response and return it
+            commit = true;
+            db.endTransaction(commit);
+            logger.info("Successfully loaded data to database");
+            response.setMessage("Successfully added " + numUsersAdded + " users, " + numPeopleAdded + " people, " + numEventsAdded + " events to the database");
         }
         catch (DAO.DatabaseException e) {
-            // TODO: Log here
-            // 3. Make an errorResponse and return it
-
-            e.printStackTrace();
+            if (db != null) {
+                try {
+                    db.endTransaction(commit);
+                }
+                catch (DAO.DatabaseException worthLessException) {
+                    logger.severe("Issue closing db connection");
+                }
+            }
+            logger.warning(e.getMessage());
+            response.setMessage(e.getMessage());
         }
-        return new Response("Loaded the people");
+        return response;
+    }
+
+    private void createUsers(UserSqlDAO userDao, List<User> users) throws DAO.DatabaseException {
+        for (User u : users) {
+            userDao.create(u);
+        }
+    }
+
+    private void createPeople(PersonSqlDAO personDao, List<Person> people) throws DAO.DatabaseException {
+        for (Person p : people) {
+            personDao.create(p);
+        }
+    }
+
+    private void createEvents(EventSqlDAO eventDao, List<Event> events) throws DAO.DatabaseException {
+        for (Event e : events) {
+            eventDao.create(e);
+        }
     }
 }
