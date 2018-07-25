@@ -11,7 +11,7 @@ import java.util.logging.SimpleFormatter;
 
 public class Handler {
     private GsonBuilder gsonBuilder = new GsonBuilder();
-    Gson gson = gsonBuilder.serializeNulls().create();
+    Gson gson = gsonBuilder.create();
 
     static Logger logger;
 
