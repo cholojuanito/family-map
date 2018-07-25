@@ -1,5 +1,8 @@
 package rbdavis.shared.models.http.requests;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import rbdavis.shared.models.data.Event;
@@ -13,9 +16,9 @@ import rbdavis.shared.models.data.User;
  * <p>
  * It contains:
  * <ul>
- * <li>{@code List} of {@code User}s</li>
- * <li>{@code List} of {@code Person}s</li>
- * <li>{@code List} of {@code Event}s</li>
+ * <li>{@code ArrayList} of {@code User}s</li>
+ * <li>{@code ArrayList} of {@code Person}s</li>
+ * <li>{@code ArrayList} of {@code Event}s</li>
  * </ul>
  *
  * @author Tanner Davis
@@ -24,37 +27,38 @@ import rbdavis.shared.models.data.User;
  */
 
 public class LoadRequest {
-    private List<User> users;
-    private List<Person> people;
-    private List<Event> events;
+    private ArrayList<User> users;
+    @SerializedName("persons")
+    private ArrayList<Person> people;
+    private ArrayList<Event> events;
 
-    public LoadRequest(List<User> users, List<Person> people, List<Event> events) {
+    public LoadRequest(ArrayList<User> users, ArrayList<Person> people, ArrayList<Event> events) {
         this.users = users;
         this.people = people;
         this.events = events;
     }
 
-    public List<User> getUsers() {
+    public ArrayList<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(ArrayList<User> users) {
         this.users = users;
     }
 
-    public List<Person> getPeople() {
+    public ArrayList<Person> getPeople() {
         return people;
     }
 
-    public void setPeople(List<Person> people) {
+    public void setPeople(ArrayList<Person> people) {
         this.people = people;
     }
 
-    public List<Event> getEvents() {
+    public ArrayList<Event> getEvents() {
         return events;
     }
 
-    public void setEvents(List<Event> events) {
+    public void setEvents(ArrayList<Event> events) {
         this.events = events;
     }
 }
