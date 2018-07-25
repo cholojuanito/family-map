@@ -3,7 +3,6 @@ package rbdavis.server.services;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -151,11 +150,11 @@ public class FillService extends Service {
 
         if (baseFather != null & baseMother != null) {
             createParentsMarriageEvent(baseFather.getId(), baseMother.getId());
-            baseFather.setSpouseID(baseMother.getId());
-            baseMother.setSpouseID(baseFather.getId());
+            baseFather.setSpouseId(baseMother.getId());
+            baseMother.setSpouseId(baseFather.getId());
 
             rootPerson.setFatherId(baseFather.getId());
-            rootPerson.setMotherID(baseMother.getId());
+            rootPerson.setMotherId(baseMother.getId());
         }
 
         addNewFamilyMember(rootPerson);
@@ -194,8 +193,8 @@ public class FillService extends Service {
 
         if (father != null && mother != null) {
             createParentsMarriageEvent(fatherId, motherId);
-            father.setSpouseID(motherId);
-            mother.setSpouseID(fatherId);
+            father.setSpouseId(motherId);
+            mother.setSpouseId(fatherId);
         }
 
         Person newFamilyMember = new Person(id, userName, firstName, lastName, gender, fatherId, motherId, null);
