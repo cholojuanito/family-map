@@ -97,7 +97,7 @@ public class FillService extends Service {
                 eventDao.deleteByUsername(userName);
 
                 // Create family tree data
-                Person rootPerson = new Person(gen.generateUUID(), userName, userFromDB.getFirstName(),
+                Person rootPerson = new Person(userFromDB.getPersonId(), userName, userFromDB.getFirstName(),
                                                userFromDB.getLastName(), userFromDB.getGender(), null, null, null);
                 createFamilyTree(rootPerson);
 
