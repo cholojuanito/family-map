@@ -35,7 +35,7 @@ public class PeopleHandler extends Handler implements HttpHandler {
                 // Verify the auth token
                 if (reqHeaders.containsKey(AUTH)) {
                     String clientTokenStr = reqHeaders.getFirst(AUTH);
-                    if (service.isVaildAuthToken(clientTokenStr)) {
+                    if (service.isValidAuthToken(clientTokenStr)) {
                         // Create a request obj from the token
                         request = new PeopleRequest(clientTokenStr);
                         // Call the service

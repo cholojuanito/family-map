@@ -2,12 +2,10 @@ package rbdavis.shared.utils;
 
 import java.io.File;
 
-import javax.print.DocFlavor;
-
 public class Constants {
     // Basic Strings
     public static final String ERR = "Error: ";
-    public static final String SUCCESS = "Success! ";
+    public static final String SUCCESS = "Success!";
     public static final String AUTH = "Authorization";
 
     // File Paths
@@ -31,7 +29,7 @@ public class Constants {
     public static final String PATCH = "patch";
     public static final String DELETE = "delete";
 
-    // Error Messages
+    //  Handler Error Messages
     public static final String METHOD_NOT_SUPPORTED = " method is not supported for this URL";
     public static final String INVALID_PROP_ERR = ERR + "Request property missing or has invalid value ";
     public static final String UNAUTHORIZED_REQ_ERR = ERR + "You are not authorized to access this URL";
@@ -39,10 +37,17 @@ public class Constants {
     public static final String JSON_SYNTAX_ERR = ERR + "Invalid JSON syntax. Please check your syntax";
     public static final String INTERNAL_SERVER_ERR = ERR + "Whoops! Looks like something broke on our end. Sorry!";
 
-    // API Specific Messages
-    public static final String CLEAR_ERR = ERR + "Something happened while trying to clear database ";
+    // Service Messages
+    public static final String CLEAR_ERR = ERR + "Unable to clear database";
     public static final String CLEAR_SUCCESS = "Clear succeeded";
     public static final String FILL_NEG_ERR = ERR + "Cannot generate a negative number of generations";
+    public static final String INVALID_USERNAME_ERR = ERR + "Username unrecognized";
+    public static final String INCORRECT_USERNAME = "That username does not match our records. Please sign up first";
+    public static final String INCORRECT_PASS = "Incorrect password";
+    public static final String DB_CLOSE_ERR = "Issue closing db connection";
+    public static final String NO_RECORDS_ERR = ERR + "Unable to find any records";
+    public static final String NOT_THEIRS = " does not belong to your family tree";
+
 
 
     // Logger Messages
@@ -51,6 +56,7 @@ public class Constants {
     public static final String INTERNAL_SERVER_ERR_LOG = "Internal server error occurred ";
     public static final String FOUR_OH_FOUR_ERR = "Unable to find file at ";
     public static final String UNAUTHORIZED_REQ_LOG = "Unauthorized request to: ";
+    public static final String VALID_TOKEN = "Valid token found";
 
     //Log Messages for Database API's
     public static final String FILL_REQ_START = "Fill request began";
@@ -71,9 +77,5 @@ public class Constants {
     public static final String LOGIN_REQ_SUCCESS = "Login request successful";
     public static final String REG_REQ_START = "Register request began";
     public static final String REG_REQ_SUCCESS = "Register request successful";
-
-
-
-
-
+    public static final String REG_REQ_UNSUCESS = "Registration unsuccessful";
 }
