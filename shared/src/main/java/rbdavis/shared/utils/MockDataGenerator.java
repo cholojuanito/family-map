@@ -13,17 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import static rbdavis.shared.utils.Constants.*;
 
 import rbdavis.shared.models.data.Location;
 
 import static java.util.Calendar.*;
 
 public class MockDataGenerator {
-    private static final String MOCK_DATA_PATH = "shared/src/mockdata/";
-    private static final String M_NAMES_PATH =  MOCK_DATA_PATH + "mnames.json";
-    private static final String F_NAMES_PATH = MOCK_DATA_PATH + "fnames.json";
-    private static final String LAST_NAMES_PATH = MOCK_DATA_PATH + "snames.json";
-    private static final String LOCATIONS_PATH = MOCK_DATA_PATH + "locations.json";
     // Constants
     private static final Type LIST_NAMES_TYPE = new TypeToken<ArrayList<String>>() {}.getType();
     private static final Type LIST_LOCATIONS_TYPE = new TypeToken<ArrayList<Location>>() {}.getType();
@@ -90,14 +86,14 @@ public class MockDataGenerator {
         return createRandomDate(birthYear + MIN_AGE_DEATH, birthYear + MAX_AGE_DEATH);
     }
 
-    private LocalDate createRandomDate(int year) {
+    public static LocalDate createRandomDate(int year) {
         int month = randomIntBetween(JANUARY, DECEMBER);
         int day = createRandomDayBasedOnMonth(month);
         month = month + 1;
         return LocalDate.of(year, month, day);
     }
 
-    private LocalDate createRandomDate(int startYear, int endYear) {
+    public static LocalDate createRandomDate(int startYear, int endYear) {
         int month = randomIntBetween(JANUARY, DECEMBER);
         int day = createRandomDayBasedOnMonth(month);
         int year = randomIntBetween(startYear, endYear);
@@ -106,7 +102,7 @@ public class MockDataGenerator {
         return LocalDate.of(year, month, day);
     }
 
-    private int createRandomDayBasedOnMonth(int month) {
+    private static int createRandomDayBasedOnMonth(int month) {
         switch (month) {
             case APRIL:
             case JUNE:
@@ -126,12 +122,12 @@ public class MockDataGenerator {
         }
     }
 
-    private int randomIntBetween(int start, int end) {
+    private static int randomIntBetween(int start, int end) {
         Random random = new Random();
         return random.nextInt(end + 1 - start) + start;
     }
 
-    private int randomIndex(int arrayLength) {
+    private static int randomIndex(int arrayLength) {
         Random random = new Random();
         return random.nextInt(arrayLength);
     }

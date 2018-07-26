@@ -12,6 +12,7 @@ import rbdavis.shared.models.http.requests.EventRequest;
 import rbdavis.shared.models.http.requests.EventsRequest;
 import rbdavis.shared.models.http.responses.EventResponse;
 import rbdavis.shared.models.http.responses.EventsResponse;
+import static rbdavis.shared.utils.Constants.*;
 
 /**
  * The service that performs the actions for the "/event"
@@ -47,17 +48,12 @@ public class EventService extends Service {
 
             AuthToken currUserToken =  authDao.findById(request.getToken());
             List<Event> eventsFromDB = eventDao.findByUsername(currUserToken.getUserId());
-            if (eventsFromDB == null) {
-                logger.warning("Query for all Event's unsuccessful");
-                response.setMessage("Unable to find any records");
-            }
-            else if (eventsFromDB.size() == 0) {
-                response.setMessage("You have no events saved in the database");
+            if (eventsFromDB == null || eventsFromDB.size() == 0) {
+                response.setMessage(NO_RECORDS_ERR);
             }
             else {
-                logger.info("Query for all Event's successful");
                 response.setData(eventsFromDB);
-                response.setMessage("Success!");
+                response.setMessage(SUCCESS);
                 commit = true;
             }
             db.endTransaction(commit);
@@ -68,7 +64,7 @@ public class EventService extends Service {
                     db.endTransaction(false);
                 }
                 catch (DAO.DatabaseException worthLessException) {
-                    logger.severe("Issue closing db connection");
+                    logger.severe(DB_CLOSE_ERR);
                 }
             }
             logger.warning(e.getMessage());
@@ -90,16 +86,20 @@ public class EventService extends Service {
             boolean commit = false;
             db = new SqlDatabase();
             EventSqlDAO eventDao = db.getEventDao();
+            AuthTokenSqlDAO authDao = db.getAuthTokenDao();
 
+            AuthToken currUserToken =  authDao.findById(request.getToken());
             Event eventFromDB = eventDao.findById(request.getId());
             if (eventFromDB == null) {
-                logger.warning("Query for Event with id " + request.getId() + " unsuccessful");
-                response.setMessage("An Event with id " + request.getId() + " does not exist");
+                String noSuchEvent = "No event with id " + request.getId() + " exists";
+                response.setMessage(noSuchEvent);
+            }
+            else if (!eventFromDB.getUserId().equals(currUserToken.getUserId())) {
+                response.setMessage("This event " + NOT_THEIRS);
             }
             else {
-                logger.info("Query for Event with id " + request.getId() + " unsuccessful");
                 response.setData(eventFromDB);
-                response.setMessage("Success!");
+                response.setMessage(SUCCESS);
                 commit = true;
             }
             db.endTransaction(commit);
@@ -110,7 +110,7 @@ public class EventService extends Service {
                     db.endTransaction(false);
                 }
                 catch (DAO.DatabaseException worthLessException) {
-                    logger.severe("Issue closing db connection");
+                    logger.severe(DB_CLOSE_ERR);
                 }
             }
             logger.warning(e.getMessage());

@@ -1,26 +1,19 @@
 package rbdavis.server.handlers;
 
-import com.google.gson.JsonParseException;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.security.InvalidParameterException;
 
-import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
 import rbdavis.server.services.PersonService;
-import rbdavis.shared.models.data.AuthToken;
-import rbdavis.shared.models.data.Person;
 import rbdavis.shared.models.http.requests.PersonRequest;
-import rbdavis.shared.models.http.responses.PersonResponse;
 import rbdavis.shared.models.http.responses.Response;
 import static rbdavis.shared.utils.Constants.*;
 
-import static rbdavis.server.StreamCommunicator.readString;
 import static rbdavis.server.StreamCommunicator.writeString;
 
 public class PersonHandler extends Handler implements HttpHandler {
@@ -51,7 +44,7 @@ public class PersonHandler extends Handler implements HttpHandler {
                     // Verify the auth token
                     if (reqHeaders.containsKey(AUTH)) {
                         String clientTokenStr = reqHeaders.getFirst(AUTH);
-                        if (service.isVaildAuthToken(clientTokenStr)) {
+                        if (service.isValidAuthToken(clientTokenStr)) {
                             // Create a request obj from the token
                             request = new PersonRequest(id, clientTokenStr);
                             // Call the service

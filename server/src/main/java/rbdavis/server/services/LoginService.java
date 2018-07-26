@@ -11,6 +11,7 @@ import rbdavis.shared.models.data.AuthToken;
 import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.LoginRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
+import static rbdavis.shared.utils.Constants.*;
 
 /**
  * The service that performs the login action for the "/user/login" endpoint.
@@ -52,12 +53,11 @@ public class LoginService extends Service {
             // 2. Find username in DB... or don't
             User userFromDB = userDao.findById(reqUserName);
             if (userFromDB == null) {
-                logger.warning("Incorrect username given at login");
-                response.setMessage("That username does not match our records. Please sign up first");
+                response.setMessage(INCORRECT_USERNAME);
             }
             else {
                 if (reqPassword.equals(userFromDB.getPassword())) {
-                    logger.info("Login successful");
+                    logger.info(LOGIN_REQ_SUCCESS);
                     // 3. Create a new auth token for the user
                     AuthToken tokenModel = createNewAuthToken(userFromDB.getUsername());
                     authTokenDao.create(tokenModel);
@@ -67,12 +67,11 @@ public class LoginService extends Service {
                     response.setUserName(userFromDB.getUsername());
                     response.setAuthToken(tokenFromDB.getToken());
                     response.setPersonID(userFromDB.getPersonId());
-                    response.setMessage("Success!");
+                    response.setMessage(SUCCESS);
                     commit = true;
                 }
                 else {
-                    logger.warning("Incorrect password given at login");
-                    response.setMessage("Incorrect password");
+                    response.setMessage(INCORRECT_PASS);
                 }
             }
 
@@ -84,7 +83,7 @@ public class LoginService extends Service {
                     db.endTransaction(false);
                 }
                 catch (DAO.DatabaseException worthLessException) {
-                    logger.severe("Issue closing db connection");
+                    logger.severe(DB_CLOSE_ERR);
                 }
             }
             logger.warning(e.getMessage());

@@ -11,8 +11,9 @@ import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
 import rbdavis.shared.models.data.AuthToken;
+import static rbdavis.shared.utils.Constants.*;
 
-public class Service {
+public abstract class Service {
     static Logger logger;
 
     static {
@@ -40,7 +41,7 @@ public class Service {
         logger.addHandler(handlerFileHandler);
     }
 
-    public boolean isVaildAuthToken(String clientToken) {
+    public boolean isValidAuthToken(String clientToken) {
         boolean isValid = false;
         AuthToken token = null;
         SqlDatabase db = null;
@@ -49,7 +50,7 @@ public class Service {
             AuthTokenSqlDAO authDao = db.getAuthTokenDao();
             token = authDao.findById(clientToken);
             if (token != null && !token.isExpired()) {
-                logger.info("Valid token found");
+                logger.info(VALID_TOKEN);
                 isValid = true;
             }
             db.endTransaction(false);
@@ -60,7 +61,7 @@ public class Service {
                     db.endTransaction(false);
                 }
                 catch (DAO.DatabaseException worthLessException) {
-                    logger.severe("Issue closing db connection");
+                    logger.severe(DB_CLOSE_ERR);
                 }
             }
         }
