@@ -12,6 +12,7 @@ import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
 import rbdavis.shared.models.data.AuthToken;
 
 import static rbdavis.shared.utils.Constants.DB_CLOSE_ERR;
+import static rbdavis.shared.utils.Constants.INIT_LOG_ERR;
 import static rbdavis.shared.utils.Constants.VALID_TOKEN;
 
 public abstract class Service {
@@ -22,7 +23,7 @@ public abstract class Service {
             initLog();
         }
         catch (IOException e) {
-            System.out.println("Could not initialize log: " + e.getMessage());
+            System.out.println(INIT_LOG_ERR + e.getMessage());
             e.printStackTrace();
         }
     }
