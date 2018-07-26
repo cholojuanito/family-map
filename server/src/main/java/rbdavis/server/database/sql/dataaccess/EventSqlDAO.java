@@ -15,7 +15,18 @@ import java.util.logging.Logger;
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
 import rbdavis.shared.models.data.Event;
-import static rbdavis.shared.utils.Constants.*;
+
+import static rbdavis.shared.utils.Constants.CREATE_EVENT_FAIL;
+import static rbdavis.shared.utils.Constants.DELETE_BY_USER_EVENT_FAIL;
+import static rbdavis.shared.utils.Constants.DELETE_EVENTS_FAIL;
+import static rbdavis.shared.utils.Constants.DELETE_EVENT_FAIL;
+import static rbdavis.shared.utils.Constants.EVENT_ID_TAKEN;
+import static rbdavis.shared.utils.Constants.FIND_BY_PERSON_EVENTS_FAIL;
+import static rbdavis.shared.utils.Constants.FIND_BY_USER_EVENT_FAIL;
+import static rbdavis.shared.utils.Constants.FIND_EVENTS_FAIL;
+import static rbdavis.shared.utils.Constants.FIND_EVENT_FAIL;
+import static rbdavis.shared.utils.Constants.INVALID_SQL;
+import static rbdavis.shared.utils.Constants.UPDATE_EVENT_FAIL;
 
 /**
  * A {@code EventSqlDAO} implements the core functionality of a {@code DAO} for the Event table.

@@ -12,9 +12,16 @@ import java.security.InvalidParameterException;
 import rbdavis.server.services.EventService;
 import rbdavis.shared.models.http.requests.EventRequest;
 import rbdavis.shared.models.http.responses.Response;
-import static rbdavis.shared.utils.Constants.*;
 
 import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.Constants.AUTH;
+import static rbdavis.shared.utils.Constants.EVENT_REQ_START;
+import static rbdavis.shared.utils.Constants.EVENT_REQ_SUCCESS;
+import static rbdavis.shared.utils.Constants.GET;
+import static rbdavis.shared.utils.Constants.INVALID_PROP_ERR;
+import static rbdavis.shared.utils.Constants.METHOD_NOT_SUPPORTED;
+import static rbdavis.shared.utils.Constants.UNAUTHORIZED_REQ_ERR;
+import static rbdavis.shared.utils.Constants.UNAUTHORIZED_REQ_LOG;
 
 public class EventHandler extends Handler implements HttpHandler {
 

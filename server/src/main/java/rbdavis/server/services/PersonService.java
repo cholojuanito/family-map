@@ -6,15 +6,17 @@ import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
 import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
-import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
 import rbdavis.shared.models.data.AuthToken;
 import rbdavis.shared.models.data.Person;
-import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.requests.PersonRequest;
 import rbdavis.shared.models.http.responses.PeopleResponse;
 import rbdavis.shared.models.http.responses.PersonResponse;
-import static rbdavis.shared.utils.Constants.*;
+
+import static rbdavis.shared.utils.Constants.DB_CLOSE_ERR;
+import static rbdavis.shared.utils.Constants.NOT_THEIRS;
+import static rbdavis.shared.utils.Constants.NO_RECORDS_ERR;
+import static rbdavis.shared.utils.Constants.SUCCESS;
 
 /**
  * The service that performs the actions for the "/person"

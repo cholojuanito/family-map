@@ -15,7 +15,15 @@ import java.util.logging.Logger;
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
 import rbdavis.shared.models.data.AuthToken;
-import static rbdavis.shared.utils.Constants.*;
+
+import static rbdavis.shared.utils.Constants.CREATE_AUTH_FAIL;
+import static rbdavis.shared.utils.Constants.DELETE_AUTHS_FAIL;
+import static rbdavis.shared.utils.Constants.DELETE_AUTH_FAIL;
+import static rbdavis.shared.utils.Constants.FIND_AUTHS_FAIL;
+import static rbdavis.shared.utils.Constants.FIND_AUTH_FAIL;
+import static rbdavis.shared.utils.Constants.FIND_BY_USER_AUTH_FAIL;
+import static rbdavis.shared.utils.Constants.INVALID_SQL;
+import static rbdavis.shared.utils.Constants.TOKEN_TAKEN;
 
 /**
  * A {@code AuthTokenSqlDAO} implements the core functionality of a {@code DAO} for the AuthToken table.

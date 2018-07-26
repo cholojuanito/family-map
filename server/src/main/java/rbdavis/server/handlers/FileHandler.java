@@ -10,7 +10,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static rbdavis.shared.utils.Constants.*;
+import static rbdavis.shared.utils.Constants.FILE_SENT;
+import static rbdavis.shared.utils.Constants.FIVE_HUNDRED;
+import static rbdavis.shared.utils.Constants.FOUR_OH_FOUR;
+import static rbdavis.shared.utils.Constants.FOUR_OH_FOUR_ERR;
+import static rbdavis.shared.utils.Constants.GET;
+import static rbdavis.shared.utils.Constants.INTERNAL_SERVER_ERR_LOG;
+import static rbdavis.shared.utils.Constants.ROOT_INDEX;
 
 public class FileHandler extends Handler implements HttpHandler {
 

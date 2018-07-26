@@ -14,11 +14,17 @@ import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.server.database.sql.dataaccess.EventSqlDAO;
 import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
 import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
-import rbdavis.shared.models.data.*;
+import rbdavis.shared.models.data.Event;
+import rbdavis.shared.models.data.Gender;
+import rbdavis.shared.models.data.Location;
+import rbdavis.shared.models.data.Person;
+import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.responses.Response;
 import rbdavis.shared.utils.MockDataGenerator;
-import static rbdavis.shared.utils.Constants.*;
+
+import static rbdavis.shared.utils.Constants.DB_CLOSE_ERR;
+import static rbdavis.shared.utils.Constants.INVALID_USERNAME_ERR;
 
 /**
  * The service that performs the fill action for the "/fill/[username]/{generations}" endpoint.

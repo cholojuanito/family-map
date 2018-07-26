@@ -11,7 +11,12 @@ import rbdavis.shared.models.data.AuthToken;
 import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.LoginRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
-import static rbdavis.shared.utils.Constants.*;
+
+import static rbdavis.shared.utils.Constants.DB_CLOSE_ERR;
+import static rbdavis.shared.utils.Constants.INCORRECT_PASS;
+import static rbdavis.shared.utils.Constants.INCORRECT_USERNAME;
+import static rbdavis.shared.utils.Constants.LOGIN_REQ_SUCCESS;
+import static rbdavis.shared.utils.Constants.SUCCESS;
 
 /**
  * The service that performs the login action for the "/user/login" endpoint.

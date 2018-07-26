@@ -6,9 +6,10 @@ import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
 import rbdavis.server.database.sql.dataaccess.EventSqlDAO;
 import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
 import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
-import rbdavis.shared.models.data.AuthToken;
 import rbdavis.shared.models.http.responses.Response;
-import static rbdavis.shared.utils.Constants.*;
+
+import static rbdavis.shared.utils.Constants.CLEAR_ERR;
+import static rbdavis.shared.utils.Constants.CLEAR_SUCCESS;
 
 /**
  * The service that performs the clear action for the "/clear" endpoint.

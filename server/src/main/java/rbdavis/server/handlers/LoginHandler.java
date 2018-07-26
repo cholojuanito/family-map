@@ -13,10 +13,17 @@ import java.security.InvalidParameterException;
 import rbdavis.server.services.LoginService;
 import rbdavis.shared.models.http.requests.LoginRequest;
 import rbdavis.shared.models.http.responses.Response;
-import static rbdavis.shared.utils.Constants.*;
 
 import static rbdavis.server.StreamCommunicator.readString;
 import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.Constants.INTERNAL_SERVER_ERR;
+import static rbdavis.shared.utils.Constants.INTERNAL_SERVER_ERR_LOG;
+import static rbdavis.shared.utils.Constants.INVALID_PROP_ERR;
+import static rbdavis.shared.utils.Constants.JSON_SYNTAX_ERR;
+import static rbdavis.shared.utils.Constants.LOGIN_REQ_START;
+import static rbdavis.shared.utils.Constants.LOGIN_REQ_SUCCESS;
+import static rbdavis.shared.utils.Constants.METHOD_NOT_SUPPORTED;
+import static rbdavis.shared.utils.Constants.POST;
 
 public class LoginHandler extends Handler implements HttpHandler {
 

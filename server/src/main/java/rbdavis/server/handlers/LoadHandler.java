@@ -11,13 +11,23 @@ import java.net.HttpURLConnection;
 import java.security.InvalidParameterException;
 
 import rbdavis.server.services.LoadService;
-import rbdavis.shared.models.data.*;
+import rbdavis.shared.models.data.Event;
+import rbdavis.shared.models.data.Gender;
+import rbdavis.shared.models.data.Person;
+import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.LoadRequest;
 import rbdavis.shared.models.http.responses.Response;
-import static rbdavis.shared.utils.Constants.*;
 
 import static rbdavis.server.StreamCommunicator.readString;
 import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.Constants.INTERNAL_SERVER_ERR;
+import static rbdavis.shared.utils.Constants.INTERNAL_SERVER_ERR_LOG;
+import static rbdavis.shared.utils.Constants.INVALID_PROP_ERR;
+import static rbdavis.shared.utils.Constants.JSON_SYNTAX_ERR;
+import static rbdavis.shared.utils.Constants.LOAD_REQ_START;
+import static rbdavis.shared.utils.Constants.LOAD_REQ_SUCCESS;
+import static rbdavis.shared.utils.Constants.METHOD_NOT_SUPPORTED;
+import static rbdavis.shared.utils.Constants.POST;
 
 public class LoadHandler extends Handler implements HttpHandler {
 

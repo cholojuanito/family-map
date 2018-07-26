@@ -8,7 +8,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
@@ -19,7 +18,9 @@ import java.util.logging.SimpleFormatter;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.utils.MockDataGenerator;
 
-import static rbdavis.shared.utils.Constants.*;
+import static rbdavis.shared.utils.Constants.HANDLER_LOG;
+import static rbdavis.shared.utils.Constants.HANDLER_LOG_PATH;
+import static rbdavis.shared.utils.Constants.INIT_LOG_ERR;
 
 public class Handler {
     /*

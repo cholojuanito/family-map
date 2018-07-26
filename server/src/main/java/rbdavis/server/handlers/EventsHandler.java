@@ -11,9 +11,15 @@ import java.net.HttpURLConnection;
 import rbdavis.server.services.EventService;
 import rbdavis.shared.models.http.requests.EventsRequest;
 import rbdavis.shared.models.http.responses.Response;
-import static rbdavis.shared.utils.Constants.*;
 
 import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.Constants.AUTH;
+import static rbdavis.shared.utils.Constants.EVENTS_REQ_START;
+import static rbdavis.shared.utils.Constants.EVENTS_REQ_SUCCESS;
+import static rbdavis.shared.utils.Constants.GET;
+import static rbdavis.shared.utils.Constants.METHOD_NOT_SUPPORTED;
+import static rbdavis.shared.utils.Constants.UNAUTHORIZED_REQ_ERR;
+import static rbdavis.shared.utils.Constants.UNAUTHORIZED_REQ_LOG;
 
 public class EventsHandler extends Handler implements HttpHandler {
 

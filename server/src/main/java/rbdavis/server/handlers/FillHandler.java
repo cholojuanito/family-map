@@ -11,9 +11,14 @@ import java.security.InvalidParameterException;
 import rbdavis.server.services.FillService;
 import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.responses.Response;
-import static rbdavis.shared.utils.Constants.*;
 
 import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.Constants.FILL_NEG_ERR;
+import static rbdavis.shared.utils.Constants.FILL_REQ_START;
+import static rbdavis.shared.utils.Constants.FILL_REQ_SUCCESS;
+import static rbdavis.shared.utils.Constants.INVALID_PROP_ERR;
+import static rbdavis.shared.utils.Constants.METHOD_NOT_SUPPORTED;
+import static rbdavis.shared.utils.Constants.POST;
 
 public class FillHandler extends Handler implements HttpHandler{
 

@@ -1,7 +1,5 @@
 package rbdavis.shared.models.http.responses;
 
-import java.util.List;
-
 import rbdavis.shared.models.data.Person;
 
 /**

@@ -13,7 +13,17 @@ import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.Person;
-import static rbdavis.shared.utils.Constants.*;
+
+import static rbdavis.shared.utils.Constants.CREATE_PERSON_FAIL;
+import static rbdavis.shared.utils.Constants.DELETE_BY_USER_PERSON_FAIL;
+import static rbdavis.shared.utils.Constants.DELETE_PEOPLE_FAIL;
+import static rbdavis.shared.utils.Constants.DELETE_PERSON_FAIL;
+import static rbdavis.shared.utils.Constants.FIND_BY_USER_PERSON_FAIL;
+import static rbdavis.shared.utils.Constants.FIND_PEOPLE_FAIL;
+import static rbdavis.shared.utils.Constants.FIND_PERSON_FAIL;
+import static rbdavis.shared.utils.Constants.INVALID_SQL;
+import static rbdavis.shared.utils.Constants.PERSON_ID_TAKEN;
+import static rbdavis.shared.utils.Constants.UPDATE_PERSON_FAIL;
 
 /**
  * A {@code PersonSqlDAO} implements the core functionality of a {@code DAO} for the Person table.

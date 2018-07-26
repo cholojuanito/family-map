@@ -1,19 +1,20 @@
 package rbdavis.server.services;
 
-import org.sqlite.core.DB;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
-import rbdavis.server.database.sql.dataaccess.*;
+import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
+import rbdavis.server.database.sql.dataaccess.EventSqlDAO;
+import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
+import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Person;
 import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.LoadRequest;
 import rbdavis.shared.models.http.responses.Response;
-import static rbdavis.shared.utils.Constants.*;
+
+import static rbdavis.shared.utils.Constants.DB_CLOSE_ERR;
 
 /**
  * The service that performs the load action for the "/load" endpoint.

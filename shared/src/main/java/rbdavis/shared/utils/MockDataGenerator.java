@@ -13,11 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import static rbdavis.shared.utils.Constants.*;
 
 import rbdavis.shared.models.data.Location;
 
-import static java.util.Calendar.*;
+import static java.util.Calendar.APRIL;
+import static java.util.Calendar.AUGUST;
+import static java.util.Calendar.DECEMBER;
+import static java.util.Calendar.FEBRUARY;
+import static java.util.Calendar.JANUARY;
+import static java.util.Calendar.JUNE;
+import static java.util.Calendar.MARCH;
+import static java.util.Calendar.MAY;
+import static java.util.Calendar.NOVEMBER;
+import static java.util.Calendar.OCTOBER;
+import static java.util.Calendar.SEPTEMBER;
+import static rbdavis.shared.utils.Constants.F_NAMES_PATH;
+import static rbdavis.shared.utils.Constants.LAST_NAMES_PATH;
+import static rbdavis.shared.utils.Constants.LOCATIONS_PATH;
+import static rbdavis.shared.utils.Constants.M_NAMES_PATH;
 
 public class MockDataGenerator {
     // Constants

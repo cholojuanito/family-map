@@ -13,7 +13,11 @@ import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.requests.RegisterRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 import rbdavis.shared.models.http.responses.Response;
-import static rbdavis.shared.utils.Constants.*;
+
+import static rbdavis.shared.utils.Constants.DB_CLOSE_ERR;
+import static rbdavis.shared.utils.Constants.REG_REQ_SUCCESS;
+import static rbdavis.shared.utils.Constants.REG_REQ_UNSUCESS;
+import static rbdavis.shared.utils.Constants.SUCCESS;
 
 /**
  * The service that performs the registration action for the "/user/register" endpoint.

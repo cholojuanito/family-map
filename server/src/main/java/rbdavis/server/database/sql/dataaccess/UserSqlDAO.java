@@ -1,6 +1,5 @@
 package rbdavis.server.database.sql.dataaccess;
 
-import java.security.cert.CRLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +13,15 @@ import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.User;
-import static rbdavis.shared.utils.Constants.*;
+
+import static rbdavis.shared.utils.Constants.CREATE_USER_FAIL;
+import static rbdavis.shared.utils.Constants.DELETE_USERS_FAIL;
+import static rbdavis.shared.utils.Constants.DELETE_USER_FAIL;
+import static rbdavis.shared.utils.Constants.FIND_USERS_FAIL;
+import static rbdavis.shared.utils.Constants.FIND_USER_FAIL;
+import static rbdavis.shared.utils.Constants.INVALID_SQL;
+import static rbdavis.shared.utils.Constants.UPDATE_USER_FAIL;
+import static rbdavis.shared.utils.Constants.USER_ID_TAKEN;
 
 /**
  * A {@code UserSqlDAO} implements the core functionality of a {@code DAO} for the User table.

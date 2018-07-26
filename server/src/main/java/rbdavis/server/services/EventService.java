@@ -12,7 +12,11 @@ import rbdavis.shared.models.http.requests.EventRequest;
 import rbdavis.shared.models.http.requests.EventsRequest;
 import rbdavis.shared.models.http.responses.EventResponse;
 import rbdavis.shared.models.http.responses.EventsResponse;
-import static rbdavis.shared.utils.Constants.*;
+
+import static rbdavis.shared.utils.Constants.DB_CLOSE_ERR;
+import static rbdavis.shared.utils.Constants.NOT_THEIRS;
+import static rbdavis.shared.utils.Constants.NO_RECORDS_ERR;
+import static rbdavis.shared.utils.Constants.SUCCESS;
 
 /**
  * The service that performs the actions for the "/event"

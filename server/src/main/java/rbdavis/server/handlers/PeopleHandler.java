@@ -11,9 +11,15 @@ import java.net.HttpURLConnection;
 import rbdavis.server.services.PersonService;
 import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.responses.Response;
-import static rbdavis.shared.utils.Constants.*;
 
 import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.Constants.AUTH;
+import static rbdavis.shared.utils.Constants.GET;
+import static rbdavis.shared.utils.Constants.METHOD_NOT_SUPPORTED;
+import static rbdavis.shared.utils.Constants.PEOPLE_REQ_START;
+import static rbdavis.shared.utils.Constants.PEOPLE_REQ_SUCCESS;
+import static rbdavis.shared.utils.Constants.UNAUTHORIZED_REQ_ERR;
+import static rbdavis.shared.utils.Constants.UNAUTHORIZED_REQ_LOG;
 
 public class PeopleHandler extends Handler implements HttpHandler {
 

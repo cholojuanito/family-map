@@ -3,7 +3,6 @@ package rbdavis.shared.models.http.requests;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Person;
