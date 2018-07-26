@@ -49,6 +49,52 @@ public class Constants {
     public static final String NOT_THEIRS = " does not belong to your family tree";
 
 
+    // DAO Messages
+    public static final String INVALID_SQL = "Invalid SQL syntax";
+    public static final String TOKEN_TAKEN = "Token is already taken";
+    public static final String EVENT_ID_TAKEN = "Event id is already taken";
+    public static final String PERSON_ID_TAKEN = "Person id is already taken";
+    public static final String USER_ID_TAKEN = "Username is already taken";
+
+    public static final String CREATE_AUTH_FAIL = "Create auth token failed ";
+    public static final String CREATE_USER_FAIL = "Create user failed ";
+    public static final String CREATE_PERSON_FAIL = "Create person failed ";
+    public static final String CREATE_EVENT_FAIL = "Create event failed ";
+
+    public static final String UPDATE_USER_FAIL = "Update user failed ";
+    public static final String UPDATE_PERSON_FAIL = "Update person failed ";
+    public static final String UPDATE_EVENT_FAIL = "Update event failed ";
+
+    public static final String DELETE_AUTH_FAIL = "Delete auth token failed ";
+    public static final String DELETE_USER_FAIL = "Delete user failed ";
+    public static final String DELETE_PERSON_FAIL = "Delete person failed ";
+    public static final String DELETE_EVENT_FAIL = "Delete event failed ";
+
+    public static final String DELETE_AUTHS_FAIL = "Delete all auth tokens failed ";
+    public static final String DELETE_USERS_FAIL = "Delete all users failed ";
+    public static final String DELETE_PEOPLE_FAIL = "Delete all people failed ";
+    public static final String DELETE_EVENTS_FAIL = "Delete all events failed ";
+
+    public static final String DELETE_BY_USER_PERSON_FAIL = "Delete people by user_id failed ";
+    public static final String DELETE_BY_USER_EVENT_FAIL = "Delete events by user_id failed ";
+
+    public static final String FIND_BY_PERSON_EVENTS_FAIL = "Find all events by person_id failed ";
+
+    public static final String FIND_AUTH_FAIL = "Find auth token by id failed ";
+    public static final String FIND_USER_FAIL = "Find user by id failed ";
+    public static final String FIND_PERSON_FAIL = "Find person by id failed ";
+    public static final String FIND_EVENT_FAIL = "Find event by id failed ";
+
+    public static final String FIND_BY_USER_AUTH_FAIL = "Find auth token by user_id failed ";
+    public static final String FIND_BY_USER_PERSON_FAIL = "Find person by user_id failed ";
+    public static final String FIND_BY_USER_EVENT_FAIL = "Find event by user_id failed ";
+
+    public static final String FIND_AUTHS_FAIL = "Find all auth tokens failed ";
+    public static final String FIND_USERS_FAIL = "Find all users failed ";
+    public static final String FIND_PEOPLE_FAIL = "Find all people failed ";
+    public static final String FIND_EVENTS_FAIL = "Find all events failed ";
+
+
 
     // Logger Messages
     public static final String INIT_LOG_ERR = "Could not initialize log: ";
@@ -78,4 +124,6 @@ public class Constants {
     public static final String REG_REQ_START = "Register request began";
     public static final String REG_REQ_SUCCESS = "Register request successful";
     public static final String REG_REQ_UNSUCESS = "Registration unsuccessful";
+
+    // Log Messages for DAO's
 }

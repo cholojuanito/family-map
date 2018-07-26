@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
 import rbdavis.shared.models.data.Event;
+import static rbdavis.shared.utils.Constants.*;
 
 /**
  * A {@code EventSqlDAO} implements the core functionality of a {@code DAO} for the Event table.
@@ -28,7 +29,7 @@ import rbdavis.shared.models.data.Event;
  * @since v0.1
  */
 
-public class EventSqlDAO implements DAO<Event> {
+public class EventSqlDAO extends SqlDAO implements DAO<Event> {
     private static Logger logger;
 
     static {
@@ -77,14 +78,14 @@ public class EventSqlDAO implements DAO<Event> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "ID is already taken.";
+                    errorMessage = EVENT_ID_TAKEN;
                     break;
                 default:
-                    logger.severe("Event: create event failed " + e.getMessage());
-                    errorMessage = "Create event failed.";
+                    logger.severe(CREATE_EVENT_FAIL + e.getMessage());
+                    errorMessage = CREATE_EVENT_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -129,14 +130,14 @@ public class EventSqlDAO implements DAO<Event> {
             int errorCode = e.getErrorCode();
             switch (errorCode) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "Couldn't find the row.";
+                    errorMessage = eventDoesNotExist(id);
                     break;
                 default:
-                    logger.severe("Event: update event failed " + e.getMessage());
-                    errorMessage = "Update event failed.";
+                    logger.severe(UPDATE_EVENT_FAIL + e.getMessage());
+                    errorMessage = UPDATE_EVENT_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -174,14 +175,14 @@ public class EventSqlDAO implements DAO<Event> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "ID '" + id + "' does not exist.";
+                    errorMessage = eventDoesNotExist(id);
                     break;
                 default:
-                    logger.severe("Event: delete event failed " + e.getMessage());
-                    errorMessage = "Delete event failed.";
+                    logger.severe(DELETE_EVENT_FAIL + e.getMessage());
+                    errorMessage = DELETE_EVENT_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -225,14 +226,14 @@ public class EventSqlDAO implements DAO<Event> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "ID '" + id + "' does not exist.";
+                    errorMessage = eventDoesNotExist(id);
                     break;
                 default:
-                    logger.severe("Event: find event by id failed " + e.getMessage());
-                    errorMessage = "Find event by id failed.";
+                    logger.severe(FIND_EVENT_FAIL + e.getMessage());
+                    errorMessage = FIND_EVENT_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -269,11 +270,11 @@ public class EventSqlDAO implements DAO<Event> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 default:
-                    logger.severe("Event: find all events failed " + e.getMessage());
-                    errorMessage = "Find all events failed.";
+                    logger.severe(FIND_EVENTS_FAIL + e.getMessage());
+                    errorMessage = FIND_EVENTS_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -311,14 +312,14 @@ public class EventSqlDAO implements DAO<Event> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "UserId '" + username + "' does not exist.";
+                    errorMessage = userIdDoesNotExist(username);
                     break;
                 default:
-                    logger.severe("Event: find event by userId failed " + e.getMessage());
-                    errorMessage = "Find event by userId failed.";
+                    logger.severe(FIND_BY_USER_EVENT_FAIL + e.getMessage());
+                    errorMessage = FIND_BY_USER_EVENT_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -353,11 +354,11 @@ public class EventSqlDAO implements DAO<Event> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 default:
-                    logger.severe("Event: delete all events failed " + e.getMessage());
-                    errorMessage = "Delete all events failed.";
+                    logger.severe(DELETE_EVENTS_FAIL + e.getMessage());
+                    errorMessage = DELETE_EVENTS_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -393,14 +394,14 @@ public class EventSqlDAO implements DAO<Event> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "UserId '" + username + "' does not exist.";
+                    errorMessage = userIdDoesNotExist(username);
                     break;
                 default:
-                    logger.severe("Event: delete events by userId failed " + e.getMessage());
-                    errorMessage = "Delete events by userId failed.";
+                    logger.severe(DELETE_BY_USER_EVENT_FAIL + e.getMessage());
+                    errorMessage = DELETE_BY_USER_EVENT_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -439,14 +440,14 @@ public class EventSqlDAO implements DAO<Event> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "PersonId '" + personId + "' does not exist.";
+                    errorMessage = personIdDoesNotExist(personId);
                     break;
                 default:
-                    logger.severe("Event: find events by personId failed " + e.getMessage());
-                    errorMessage = "Find events by personId failed.";
+                    logger.severe(FIND_BY_PERSON_EVENTS_FAIL + e.getMessage());
+                    errorMessage = FIND_BY_PERSON_EVENTS_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);

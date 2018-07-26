@@ -1,5 +1,6 @@
 package rbdavis.server.database.sql.dataaccess;
 
+import java.security.cert.CRLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +14,7 @@ import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.User;
+import static rbdavis.shared.utils.Constants.*;
 
 /**
  * A {@code UserSqlDAO} implements the core functionality of a {@code DAO} for the User table.
@@ -26,7 +28,7 @@ import rbdavis.shared.models.data.User;
  * @since v0.1
  */
 
-public class UserSqlDAO implements DAO<User> {
+public class UserSqlDAO extends SqlDAO implements DAO<User> {
 
     private static Logger logger;
 
@@ -73,17 +75,14 @@ public class UserSqlDAO implements DAO<User> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax";
-                    break;
-                case 5:
-                    errorMessage = "Database is locked";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "Username is already taken";
+                    errorMessage = USER_ID_TAKEN;
                     break;
                 default:
-                    logger.severe("User: create user failed " + e.getMessage());
-                    errorMessage = "Create user failed";
+                    logger.severe(CREATE_USER_FAIL + e.getMessage());
+                    errorMessage = CREATE_USER_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -126,14 +125,14 @@ public class UserSqlDAO implements DAO<User> {
             int errorCode = e.getErrorCode();
             switch (errorCode) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "Username '" + user.getUsername() + "' doesn't exist";
+                    errorMessage = userIdDoesNotExist(id);
                     break;
                 default:
-                    logger.severe("User: update user failed " + e.getMessage());
-                    errorMessage = "Update user failed";
+                    logger.severe(UPDATE_USER_FAIL + e.getMessage());
+                    errorMessage = UPDATE_USER_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -171,14 +170,14 @@ public class UserSqlDAO implements DAO<User> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "Username '" + id + "' doesn't exist";
+                    errorMessage = userIdDoesNotExist(id);
                     break;
                 default:
-                    logger.severe("User: delete user failed " + e.getMessage());
-                    errorMessage = "Delete user failed";
+                    logger.severe(DELETE_USER_FAIL + e.getMessage());
+                    errorMessage = DELETE_USER_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -222,14 +221,14 @@ public class UserSqlDAO implements DAO<User> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "Username '" + id + "' doesn't exist";
+                    errorMessage = userIdDoesNotExist(id);
                     break;
                 default:
-                    logger.severe("User: find user by id failed " + e.getMessage());
-                    errorMessage = "Find user by id failed";
+                    logger.severe(FIND_USER_FAIL + e.getMessage());
+                    errorMessage = FIND_USER_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -266,11 +265,11 @@ public class UserSqlDAO implements DAO<User> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax";
+                    errorMessage = INVALID_SQL;
                     break;
                 default:
-                    logger.severe("User: find all users failed " + e.getMessage());
-                    errorMessage = "Find all users failed";
+                    logger.severe(FIND_USERS_FAIL + e.getMessage());
+                    errorMessage = FIND_USERS_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -305,11 +304,11 @@ public class UserSqlDAO implements DAO<User> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax";
+                    errorMessage = INVALID_SQL;
                     break;
                 default:
-                    logger.severe("User: delete all users failed " + e.getMessage());
-                    errorMessage = "Delete all users failed";
+                    logger.severe(DELETE_USERS_FAIL + e.getMessage());
+                    errorMessage = DELETE_USERS_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);

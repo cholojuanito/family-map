@@ -13,6 +13,7 @@ import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlConnectionManager;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.Person;
+import static rbdavis.shared.utils.Constants.*;
 
 /**
  * A {@code PersonSqlDAO} implements the core functionality of a {@code DAO} for the Person table.
@@ -26,7 +27,7 @@ import rbdavis.shared.models.data.Person;
  * @since v0.1
  */
 
-public class PersonSqlDAO implements DAO<Person> {
+public class PersonSqlDAO extends SqlDAO implements DAO<Person> {
     private static Logger logger;
 
     static {
@@ -73,14 +74,14 @@ public class PersonSqlDAO implements DAO<Person> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "ID is already taken.";
+                    errorMessage = PERSON_ID_TAKEN;
                     break;
                 default:
-                    logger.severe("Person: create person failed " + e.getMessage());
-                    errorMessage = "Create person failed.";
+                    logger.severe(CREATE_PERSON_FAIL + e.getMessage());
+                    errorMessage = CREATE_PERSON_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -125,14 +126,14 @@ public class PersonSqlDAO implements DAO<Person> {
             int errorCode = e.getErrorCode();
             switch (errorCode) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "Couldn't find the row.";
+                    errorMessage = personIdDoesNotExist(id);
                     break;
                 default:
-                    logger.severe("Person: update person failed " + e.getMessage());
-                    errorMessage = "Update person failed.";
+                    logger.severe(UPDATE_PERSON_FAIL + e.getMessage());
+                    errorMessage = UPDATE_PERSON_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -170,14 +171,14 @@ public class PersonSqlDAO implements DAO<Person> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "ID '" + id +"' does not exist";
+                    errorMessage = personIdDoesNotExist(id);
                     break;
                 default:
-                    logger.severe("Person: delete person failed " + e.getMessage());
-                    errorMessage = "Delete person failed.";
+                    logger.severe(DELETE_PERSON_FAIL + e.getMessage());
+                    errorMessage = DELETE_PERSON_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -221,14 +222,14 @@ public class PersonSqlDAO implements DAO<Person> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "ID '" + id + "' does not exist";
+                    errorMessage = personIdDoesNotExist(id);
                     break;
                 default:
-                    logger.severe("Person: find person by id failed " + e.getMessage());
-                    errorMessage = "find person by id failed.";
+                    logger.severe(FIND_PERSON_FAIL + e.getMessage());
+                    errorMessage = FIND_PERSON_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -265,11 +266,11 @@ public class PersonSqlDAO implements DAO<Person> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 default:
-                    logger.severe("Person: find all persons failed " + e.getMessage());
-                    errorMessage = "Find all persons failed.";
+                    logger.severe(FIND_PEOPLE_FAIL + e.getMessage());
+                    errorMessage = FIND_PEOPLE_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -304,11 +305,11 @@ public class PersonSqlDAO implements DAO<Person> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 default:
-                    logger.severe("Person: delete all persons failed " + e.getMessage());
-                    errorMessage = "Delete all persons failed.";
+                    logger.severe(DELETE_PEOPLE_FAIL + e.getMessage());
+                    errorMessage = DELETE_PEOPLE_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -347,14 +348,14 @@ public class PersonSqlDAO implements DAO<Person> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "User id '" + username + "' does not exist";
+                    errorMessage = userIdDoesNotExist(username);
                     break;
                 default:
-                    logger.severe("Person: find person by userId failed " + e.getMessage());
-                    errorMessage = "Find person by userId failed.";
+                    logger.severe(FIND_BY_USER_PERSON_FAIL + e.getMessage());
+                    errorMessage = FIND_BY_USER_PERSON_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
@@ -388,14 +389,14 @@ public class PersonSqlDAO implements DAO<Person> {
             String errorMessage;
             switch (e.getErrorCode()) {
                 case 1:
-                    errorMessage = "Invalid SQL syntax.";
+                    errorMessage = INVALID_SQL;
                     break;
                 case 19:
-                    errorMessage = "User id '" + username + "' does not exist";
+                    errorMessage = userIdDoesNotExist(username);
                     break;
                 default:
-                    logger.severe("Person: delete person by userId failed " + e.getMessage());
-                    errorMessage = "Delete person by userId failed.";
+                    logger.severe(DELETE_BY_USER_PERSON_FAIL + e.getMessage());
+                    errorMessage = DELETE_BY_USER_PERSON_FAIL;
                     break;
             }
             throw new DAO.DatabaseException(errorMessage);
