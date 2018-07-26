@@ -19,6 +19,11 @@ public class Constants {
     // Log Paths
     public static final String HANDLER_LOG = "handler";
     public static final String HANDLER_LOG_PATH = "server" + File.separator + "logs" + File.separator + "handlers.txt";
+    public static final String MOCK_DATA_PATH = "shared/src/mockdata/";
+    public static final String M_NAMES_PATH =  MOCK_DATA_PATH + "mnames.json";
+    public static final String F_NAMES_PATH = MOCK_DATA_PATH + "fnames.json";
+    public static final String LAST_NAMES_PATH = MOCK_DATA_PATH + "snames.json";
+    public static final String LOCATIONS_PATH = MOCK_DATA_PATH + "locations.json";
 
     // Http Methods
     public static final String GET = "get";
