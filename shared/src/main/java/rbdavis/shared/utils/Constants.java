@@ -9,10 +9,11 @@ public class Constants {
     public static final String AUTH = "Authorization";
 
     // File Paths
-    public static final String WEB_ROOT_DIR = "server" + File.separator + "web" + File.separator;
-    public static final String ROOT_INDEX = WEB_ROOT_DIR + "index.html";
-    public static final String FOUR_OH_FOUR = WEB_ROOT_DIR + "HTML" + File.separator + "404.html";
-    public static final String FIVE_HUNDRED = WEB_ROOT_DIR + "HTML" + File.separator + "500.html";
+    public static final String WEB_ROOT_DIR = "server/web";
+    //public static final String WEB_ROOT_DIR = "/web";
+    public static final String ROOT_INDEX = WEB_ROOT_DIR + "/index.html";
+    public static final String FOUR_OH_FOUR = WEB_ROOT_DIR + "/HTML/404.html";
+    public static final String FIVE_HUNDRED = WEB_ROOT_DIR + "/HTML/500.html";
 
     // Log Paths
     public static final String HANDLER_LOG = "handler";
