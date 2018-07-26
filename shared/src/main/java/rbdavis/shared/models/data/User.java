@@ -17,7 +17,7 @@ import java.security.InvalidParameterException;
 public class User {
     @SerializedName(value = "username", alternate = "userName")
     private String username;
-    @SerializedName("personId")
+    @SerializedName(value = "personId", alternate = "personID")
     private String personId;
     @SerializedName("password")
     private String password;

@@ -24,7 +24,7 @@ import java.security.InvalidParameterException;
  */
 
 public class Person {
-    @SerializedName("id")
+    @SerializedName(value = "id", alternate = {"personId", "personID"})
     private String id;
     @SerializedName(value = "userId", alternate = {"descendant", "userName", "userID"})
     private String userId;
@@ -124,12 +124,10 @@ public class Person {
     }
 
     public void setGender(String genderStr) {
-        switch (genderStr) {
-            case "M":
+        switch (genderStr.toLowerCase()) {
             case "m":
                 this.gender = Gender.M;
                 break;
-            case "F":
             case "f":
                 this.gender = Gender.F;
                 break;

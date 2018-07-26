@@ -26,11 +26,11 @@ import java.time.LocalDate;
  */
 
 public class Event {
-    @SerializedName("id")
+    @SerializedName(value = "id", alternate = "eventID")
     private String id;
-    @SerializedName("personId")
+    @SerializedName(value = "personId", alternate = "personID")
     private String personId;
-    @SerializedName(value = "userId", alternate = {"descendant", "userName"})
+    @SerializedName(value = "userId", alternate = {"descendant", "userName", "userID"})
     private String userId;
     @SerializedName(value = "type", alternate = "eventType")
     private EventType type;
@@ -42,7 +42,7 @@ public class Event {
     private String city;
     @SerializedName("country")
     private String country;
-    @SerializedName(value = "dateHappened", alternate = "year, date")
+    @SerializedName(value = "dateHappened", alternate = "year")
     private LocalDate dateHappened;
 
     public Event(String personId, String userId, EventType type, String latitude, String longitude,
@@ -130,21 +130,17 @@ public class Event {
     }
 
     public void setType(String typeStr) {
-        switch (typeStr) {
-            case "BIRTH":
-            case "Birth":
+        switch (typeStr.toLowerCase()) {
+            case "birth":
                 this.type = EventType.BIRTH;
                 break;
-            case "BAPTISM":
-            case "Baptism":
+            case "baptism":
                 this.type = EventType.BAPTISM;
                 break;
-            case "MARRIAGE":
-            case "Marriage":
+            case "marriage":
                 this.type = EventType.MARRIAGE;
                 break;
-            case "DEATH":
-            case "Death":
+            case "death":
                 this.type = EventType.DEATH;
                 break;
             default:
@@ -225,9 +221,13 @@ public class Event {
      * @since v0.1
      */
     public enum EventType {
+        @SerializedName(value = "birth", alternate = {"BIRTH", "Birth"})
         BIRTH("Birth"),
+        @SerializedName(value = "baptism", alternate = {"BAPTISM", "Baptism"})
         BAPTISM("Baptism"),
+        @SerializedName(value = "marriage", alternate = {"MARRIAGE", "Marriage"})
         MARRIAGE("Marriage"),
+        @SerializedName(value = "death", alternate = {"DEATH", "Death"})
         DEATH("Death");
 
         private final String strVal;

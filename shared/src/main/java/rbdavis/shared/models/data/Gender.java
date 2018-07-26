@@ -1,5 +1,7 @@
 package rbdavis.shared.models.data;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * An enumeration of the 2 supported {@code Gender}s.
  * <p>
@@ -14,7 +16,10 @@ package rbdavis.shared.models.data;
  * @since v0.1
  */
 public enum Gender {
-    M("m"), F("f");
+    @SerializedName(value = "m", alternate = "M")
+    M("m"),
+    @SerializedName(value = "f", alternate = "F")
+    F("f");
 
     private final String strVal;
 
