@@ -14,14 +14,11 @@ import rbdavis.server.database.sql.SqlDatabase;
 import rbdavis.server.database.sql.dataaccess.EventSqlDAO;
 import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
 import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
-import rbdavis.shared.models.data.Event;
-import rbdavis.shared.models.data.Gender;
-import rbdavis.shared.models.data.Location;
-import rbdavis.shared.models.data.Person;
-import rbdavis.shared.models.data.User;
+import rbdavis.shared.models.data.*;
 import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.responses.Response;
 import rbdavis.shared.utils.MockDataGenerator;
+import static rbdavis.shared.utils.Constants.*;
 
 /**
  * The service that performs the fill action for the "/fill/[username]/{generations}" endpoint.
@@ -107,7 +104,7 @@ public class FillService extends Service {
                 response.setMessage("Added " + numPeopleCreated + " people and " + numEventsCreated + " events to the database");
             }
             else {
-                response.setMessage("Error: Username unrecognized");
+                response.setMessage(INVALID_USERNAME_ERR);
             }
 
             db.endTransaction(commit);
@@ -118,7 +115,7 @@ public class FillService extends Service {
                     db.endTransaction(false);
                 }
                 catch (DAO.DatabaseException worthLessException) {
-                    logger.severe("Issue closing db connection");
+                    logger.severe(DB_CLOSE_ERR);
                 }
             }
             logger.warning(e.getMessage());

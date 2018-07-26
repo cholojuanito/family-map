@@ -14,6 +14,7 @@ import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.requests.PersonRequest;
 import rbdavis.shared.models.http.responses.PeopleResponse;
 import rbdavis.shared.models.http.responses.PersonResponse;
+import static rbdavis.shared.utils.Constants.*;
 
 /**
  * The service that performs the actions for the "/person"
@@ -50,17 +51,12 @@ public class PersonService extends Service {
 
             AuthToken currUserToken =  authDao.findById(request.getToken());
             List<Person> peopleFromDB = personDao.findByUsername(currUserToken.getUserId());
-            if (peopleFromDB == null) {
-                logger.warning("Query for all Person's unsuccessful");
-                response.setMessage("Unable to find any records");
-            }
-            else if (peopleFromDB.size() == 0) {
-                response.setMessage("You have no people saved in the database");
+            if (peopleFromDB == null || peopleFromDB.size() == 0) {
+                response.setMessage(NO_RECORDS_ERR);
             }
             else {
-                logger.info("Query for all Person's successful");
                 response.setData(peopleFromDB);
-                response.setMessage("Success!");
+                response.setMessage(SUCCESS);
                 commit = true;
             }
             db.endTransaction(commit);
@@ -71,7 +67,7 @@ public class PersonService extends Service {
                     db.endTransaction(false);
                 }
                 catch (DAO.DatabaseException worthLessException) {
-                    logger.severe("Issue closing db connection");
+                    logger.severe(DB_CLOSE_ERR);
                 }
             }
             logger.warning(e.getMessage());
@@ -93,16 +89,20 @@ public class PersonService extends Service {
             boolean commit = false;
             db = new SqlDatabase();
             PersonSqlDAO personDao = db.getPersonDao();
+            AuthTokenSqlDAO authDao = db.getAuthTokenDao();
 
+            AuthToken currUserToken =  authDao.findById(request.getToken());
             Person personFromDB = personDao.findById(request.getId());
             if (personFromDB == null) {
-                logger.warning("Query for Person with id " + request.getId() + " unsuccessful");
-                response.setMessage("A Person with id " + request.getId() + " does not exist");
+                String noSuchPerson = "No person with id " + request.getId() + " exists";
+                response.setMessage(noSuchPerson);
+            }
+            else if (!personFromDB.getUserId().equals(currUserToken.getUserId())) {
+                response.setMessage("This person " + NOT_THEIRS);
             }
             else {
-                logger.info("Query for Person with id " + request.getId() + " successful");
                 response.setData(personFromDB);
-                response.setMessage("Success!");
+                response.setMessage(SUCCESS);
                 commit = true;
             }
             db.endTransaction(commit);
@@ -113,7 +113,7 @@ public class PersonService extends Service {
                     db.endTransaction(false);
                 }
                 catch (DAO.DatabaseException worthLessException) {
-                    logger.severe("Issue closing db connection");
+                    logger.severe(DB_CLOSE_ERR);
                 }
             }
             logger.warning(e.getMessage());

@@ -8,6 +8,7 @@ import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
 import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
 import rbdavis.shared.models.data.AuthToken;
 import rbdavis.shared.models.http.responses.Response;
+import static rbdavis.shared.utils.Constants.*;
 
 /**
  * The service that performs the clear action for the "/clear" endpoint.
@@ -43,7 +44,7 @@ public class ClearService extends Service {
 
                 // 3. Make a Response and return it
                 db.endTransaction(true);
-                response.setMessage("Clear succeeded");
+                response.setMessage(CLEAR_SUCCESS);
             }
             catch (DAO.DatabaseException e) {
                 logger.warning(e.getMessage());
@@ -53,7 +54,7 @@ public class ClearService extends Service {
             return response;
         }
         catch (DAO.DatabaseException e) {
-            response.setMessage("Unable to clear database");
+            response.setMessage(CLEAR_ERR);
         }
         return response;
     }

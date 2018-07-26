@@ -1,19 +1,19 @@
 package rbdavis.server.services;
 
+import org.sqlite.core.DB;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import rbdavis.server.database.DAO;
 import rbdavis.server.database.sql.SqlDatabase;
-import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
-import rbdavis.server.database.sql.dataaccess.EventSqlDAO;
-import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
-import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
+import rbdavis.server.database.sql.dataaccess.*;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Person;
 import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.LoadRequest;
 import rbdavis.shared.models.http.responses.Response;
+import static rbdavis.shared.utils.Constants.*;
 
 /**
  * The service that performs the load action for the "/load" endpoint.
@@ -45,6 +45,7 @@ public class LoadService extends Service {
         int numUsersAdded = request.getUsers().size();
         int numPeopleAdded = request.getPeople().size();
         int numEventsAdded = request.getEvents().size();
+        String successResponse = "Added " + numUsersAdded + " users " + numPeopleAdded + " people and " + numEventsAdded + " events to database";
 
         try {
             db = new SqlDatabase();
@@ -60,8 +61,7 @@ public class LoadService extends Service {
 
             commit = true;
             db.endTransaction(commit);
-            logger.info("Successfully loaded data to database");
-            response.setMessage("Successfully added " + numUsersAdded + " users, " + numPeopleAdded + " people, " + numEventsAdded + " events to the database");
+            response.setMessage(successResponse);
         }
         catch (DAO.DatabaseException e) {
             if (db != null) {
@@ -69,7 +69,7 @@ public class LoadService extends Service {
                     db.endTransaction(commit);
                 }
                 catch (DAO.DatabaseException worthLessException) {
-                    logger.severe("Issue closing db connection");
+                    logger.severe(DB_CLOSE_ERR);
                 }
             }
             logger.warning(e.getMessage());
