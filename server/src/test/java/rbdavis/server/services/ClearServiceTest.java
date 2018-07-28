@@ -5,9 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import rbdavis.shared.models.http.responses.Response;
-import static rbdavis.shared.utils.Constants.CLEAR_SUCCESS;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static rbdavis.shared.utils.Constants.CLEAR_SUCCESS;
 
 public class ClearServiceTest {
 

@@ -16,7 +16,7 @@ import rbdavis.shared.models.http.responses.Response;
 
 import static rbdavis.shared.utils.Constants.DB_CLOSE_ERR;
 import static rbdavis.shared.utils.Constants.REG_REQ_SUCCESS;
-import static rbdavis.shared.utils.Constants.REG_REQ_UNSUCESS;
+import static rbdavis.shared.utils.Constants.REG_REQ_UNSUCCESS;
 import static rbdavis.shared.utils.Constants.SUCCESS;
 
 /**
@@ -80,8 +80,8 @@ public class RegisterService extends Service {
                 response.setMessage(SUCCESS);
             }
             else {
-                logger.severe(REG_REQ_UNSUCESS);
-                response.setMessage(REG_REQ_UNSUCESS);
+                logger.severe(REG_REQ_UNSUCCESS);
+                response.setMessage(REG_REQ_UNSUCCESS);
             }
 
             // Uncommented because the Fill Service will end the transaction

@@ -5,10 +5,9 @@ import rbdavis.shared.models.data.Person;
 /**
  * A specific find-by-id response that contains a {@code Person} model.
  *
- *
- * @see FindByIdResponse
  * @author Tanner Davis
  * @version 0.1
+ * @see FindByIdResponse
  * @since v0.1
  */
 

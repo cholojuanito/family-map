@@ -57,10 +57,10 @@ public class MockDataGenerator {
     private ArrayList<Location> locations;
 
     public MockDataGenerator() throws FileNotFoundException {
-            readMaleFirstNames();
-            readFemaleFirstNames();
-            readLastNames();
-            readLocations();
+        readMaleFirstNames();
+        readFemaleFirstNames();
+        readLastNames();
+        readLocations();
     }
 
     public String generateUUID() {

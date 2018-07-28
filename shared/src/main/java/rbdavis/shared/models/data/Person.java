@@ -17,9 +17,9 @@ import java.security.InvalidParameterException;
  * <li>Spouse</li>
  * </ul>
  *
- * @see Gender
  * @author Tanner Davis
  * @version 0.1
+ * @see Gender
  * @since v0.1
  */
 
@@ -34,11 +34,11 @@ public class Person {
     private String lastName;
     @SerializedName("gender")
     private Gender gender;
-    @SerializedName(value = "fatherId", alternate = "fatherID")
+    @SerializedName(value = "fatherId", alternate = {"fatherID", "father"})
     private String fatherId = null;
-    @SerializedName(value = "motherId", alternate = "motherID")
+    @SerializedName(value = "motherId", alternate = {"motherID", "mother"})
     private String motherId = null;
-    @SerializedName(value = "spouseId", alternate = "spouseID")
+    @SerializedName(value = "spouseId", alternate = {"spouseID", "spouse"})
     private String spouseId = null;
 
     public Person(String userId, String firstName, String lastName, Gender gender,

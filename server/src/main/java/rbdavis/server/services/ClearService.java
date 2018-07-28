@@ -35,7 +35,6 @@ public class ClearService extends Service {
         try {
             SqlDatabase db = new SqlDatabase();
             try {
-                // 1. Get all the dao's
                 UserSqlDAO userDao = db.getUserDao();
                 PersonSqlDAO personDao = db.getPersonDao();
                 EventSqlDAO eventDao = db.getEventDao();
@@ -43,7 +42,6 @@ public class ClearService extends Service {
 
                 clearDatabase(userDao, personDao, eventDao, authTokenDao);
 
-                // 3. Make a Response and return it
                 db.endTransaction(true);
                 response.setMessage(CLEAR_SUCCESS);
             }

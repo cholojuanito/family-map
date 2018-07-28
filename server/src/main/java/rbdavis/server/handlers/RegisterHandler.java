@@ -34,50 +34,50 @@ public class RegisterHandler extends Handler implements HttpHandler {
         int emptyBodyCode = 0;
         Response response = new Response();
 
-            switch (exchange.getRequestMethod().toLowerCase()) {
-                case POST:
-                    logger.info(REG_REQ_START);
-                    try {
-                        InputStream reqBody = exchange.getRequestBody();
-                        String reqData = readString(reqBody);
+        switch (exchange.getRequestMethod().toLowerCase()) {
+            case POST:
+                logger.info(REG_REQ_START);
+                try {
+                    InputStream reqBody = exchange.getRequestBody();
+                    String reqData = readString(reqBody);
 
-                        RegisterRequest request = gson.fromJson(reqData, RegisterRequest.class);
-                        if (isValidRegisterRequest(request)) {
-                            response = new RegisterService().register(request);
-                            respData = gson.toJson(response);
-                            responseCode = HttpURLConnection.HTTP_OK;
+                    RegisterRequest request = gson.fromJson(reqData, RegisterRequest.class);
+                    if (isValidRegisterRequest(request)) {
+                        response = new RegisterService().register(request);
+                        respData = gson.toJson(response);
+                        responseCode = HttpURLConnection.HTTP_OK;
 
-                            logger.info(REG_REQ_SUCCESS);
-                        }
-                        else {
-                            throw new InvalidParameterException(INVALID_PROP_ERR);
-                        }
+                        logger.info(REG_REQ_SUCCESS);
                     }
-                    catch (InvalidParameterException e) {
-                        logger.warning(e.getMessage());
-                        response.setMessage(e.getMessage());
-                        responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                        respData = gson.toJson(response);
+                    else {
+                        throw new InvalidParameterException(INVALID_PROP_ERR);
                     }
-                    catch (JsonParseException e) {
-                        response.setMessage(JSON_SYNTAX_ERR);
-                        responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
-                        respData = gson.toJson(response);
-                    }
-                    catch (IOException e) {
-                        logger.severe(INTERNAL_SERVER_ERR_LOG + e.getMessage());
-                        response.setMessage(INTERNAL_SERVER_ERR);
-                        responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
-                        respData = gson.toJson(response);
-                    }
-                    break;
-
-                default:
-                    response.setMessage(exchange.getRequestMethod() + METHOD_NOT_SUPPORTED);
+                }
+                catch (InvalidParameterException e) {
+                    logger.warning(e.getMessage());
+                    response.setMessage(e.getMessage());
                     responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
                     respData = gson.toJson(response);
-                    break;
-            }
+                }
+                catch (JsonParseException e) {
+                    response.setMessage(JSON_SYNTAX_ERR);
+                    responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
+                    respData = gson.toJson(response);
+                }
+                catch (IOException e) {
+                    logger.severe(INTERNAL_SERVER_ERR_LOG + e.getMessage());
+                    response.setMessage(INTERNAL_SERVER_ERR);
+                    responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
+                    respData = gson.toJson(response);
+                }
+                break;
+
+            default:
+                response.setMessage(exchange.getRequestMethod() + METHOD_NOT_SUPPORTED);
+                responseCode = HttpURLConnection.HTTP_BAD_REQUEST;
+                respData = gson.toJson(response);
+                break;
+        }
 
         exchange.sendResponseHeaders(responseCode, emptyBodyCode);
         OutputStream respBody = exchange.getResponseBody();
@@ -86,7 +86,7 @@ public class RegisterHandler extends Handler implements HttpHandler {
 
     }
 
-    private boolean isValidRegisterRequest (RegisterRequest request) throws InvalidParameterException {
+    private boolean isValidRegisterRequest(RegisterRequest request) throws InvalidParameterException {
         boolean isValid = true;
         try {
             if (request.getUserName() == null || request.getPassword() == null || request.getEmail() == null ||

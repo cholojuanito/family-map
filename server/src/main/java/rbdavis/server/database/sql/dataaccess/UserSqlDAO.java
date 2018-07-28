@@ -100,7 +100,7 @@ public class UserSqlDAO extends SqlDAO implements DAO<User> {
     /**
      * Updates a row in the User table of the database.
      *
-     * @param id The id of the row that needs to be updated
+     * @param id   The id of the row that needs to be updated
      * @param user A {@code User} model that will be used to get values
      * @return The new {@code User} model that came from the database
      * @throws DatabaseException Any issue with the database is thrown

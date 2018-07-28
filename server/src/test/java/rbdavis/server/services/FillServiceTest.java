@@ -7,7 +7,7 @@ import org.junit.Test;
 import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class FillServiceTest {
     private String username = "cholo";

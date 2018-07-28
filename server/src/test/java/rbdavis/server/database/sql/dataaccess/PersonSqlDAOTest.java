@@ -25,11 +25,11 @@ public class PersonSqlDAOTest {
     private final String husbandID = "8e231070-d4a4-404e-b50b-30135c935a8a"; //UUID.randomUUID().toString();
     private final String wifeID = "8e2c071-d5p4-414e-b50n-y9735c935b8a";
     // Husband parents
-    private final String fatherID1  = "632d54e3-3bf5-4f1f-b82e-93cf1b855217";
-    private final String motherID1  = "fa49178c-e180-4ff5-9376-7ca08b3a89c8";
+    private final String fatherID1 = "632d54e3-3bf5-4f1f-b82e-93cf1b855217";
+    private final String motherID1 = "fa49178c-e180-4ff5-9376-7ca08b3a89c8";
     // Wife parents
-    private final String fatherID2  = "907efd25-07ce-4c33-8020-420a4beab2ea";
-    private final String motherID2  = "d9fb6d00-9a0a-4030-9bf4-70815e504e40";
+    private final String fatherID2 = "907efd25-07ce-4c33-8020-420a4beab2ea";
+    private final String motherID2 = "d9fb6d00-9a0a-4030-9bf4-70815e504e40";
     // Husband g-pa's
     private final String grandpaID1 = "eeb64aa0-fd7b-40e9-b54a-bff861f72d20";
     private final String grandmaID1 = "be35e7e0-a429-4fcd-bc0b-3420f59ccf59";
@@ -59,6 +59,7 @@ public class PersonSqlDAOTest {
 
     private PersonSqlDAO daoUnderTest;
     private Person husband, wife;
+
     @Before
     public void setUp() throws Exception {
         try {

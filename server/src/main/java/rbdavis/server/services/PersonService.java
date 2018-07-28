@@ -51,7 +51,7 @@ public class PersonService extends Service {
             PersonSqlDAO personDao = db.getPersonDao();
             AuthTokenSqlDAO authDao = db.getAuthTokenDao();
 
-            AuthToken currUserToken =  authDao.findById(request.getToken());
+            AuthToken currUserToken = authDao.findById(request.getToken());
             List<Person> peopleFromDB = personDao.findByUsername(currUserToken.getUserId());
             if (peopleFromDB == null || peopleFromDB.size() == 0) {
                 response.setMessage(NO_RECORDS_ERR);
@@ -61,6 +61,7 @@ public class PersonService extends Service {
                 response.setMessage(SUCCESS);
                 commit = true;
             }
+
             db.endTransaction(commit);
         }
         catch (DAO.DatabaseException e) {
@@ -72,9 +73,11 @@ public class PersonService extends Service {
                     logger.severe(DB_CLOSE_ERR);
                 }
             }
+
             logger.warning(e.getMessage());
             response.setMessage(e.getMessage());
         }
+
         return response;
     }
 
@@ -93,7 +96,7 @@ public class PersonService extends Service {
             PersonSqlDAO personDao = db.getPersonDao();
             AuthTokenSqlDAO authDao = db.getAuthTokenDao();
 
-            AuthToken currUserToken =  authDao.findById(request.getToken());
+            AuthToken currUserToken = authDao.findById(request.getToken());
             Person personFromDB = personDao.findById(request.getId());
             if (personFromDB == null) {
                 String noSuchPerson = "No person with id " + request.getId() + " exists";
@@ -107,6 +110,7 @@ public class PersonService extends Service {
                 response.setMessage(SUCCESS);
                 commit = true;
             }
+
             db.endTransaction(commit);
         }
         catch (DAO.DatabaseException e) {
@@ -118,9 +122,11 @@ public class PersonService extends Service {
                     logger.severe(DB_CLOSE_ERR);
                 }
             }
+
             logger.warning(e.getMessage());
             response.setMessage(e.getMessage());
         }
+
         return response;
     }
 }

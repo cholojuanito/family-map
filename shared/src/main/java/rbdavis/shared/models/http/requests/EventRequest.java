@@ -6,13 +6,12 @@ package rbdavis.shared.models.http.requests;
  * {@code EventService} and finds the event with the
  * given id.
  *
- *
  * @author Tanner Davis
  * @version 0.1
  * @since v0.1
  */
 
-public class EventRequest extends FindByIdRequest{
+public class EventRequest extends FindByIdRequest {
 
     public EventRequest(String id, String token) {
         super(id, token);

@@ -9,7 +9,6 @@ import java.net.HttpURLConnection;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static rbdavis.shared.utils.Constants.FILE_SENT;
 import static rbdavis.shared.utils.Constants.FIVE_HUNDRED;

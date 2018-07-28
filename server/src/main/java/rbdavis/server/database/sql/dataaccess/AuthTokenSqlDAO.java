@@ -99,7 +99,7 @@ public class AuthTokenSqlDAO extends SqlDAO implements DAO<AuthToken> {
     /**
      * Updates a row in the AuthToken table of the database.
      *
-     * @param id The id of the row that needs to be updated
+     * @param id    The id of the row that needs to be updated
      * @param token A {@code AuthToken} model that will be used to get values
      * @return The new {@code AuthToken} model that came from the database
      * @throws DatabaseException Any issue with the database is thrown
@@ -369,7 +369,7 @@ public class AuthTokenSqlDAO extends SqlDAO implements DAO<AuthToken> {
     private AuthToken findCurrentToken(List<AuthToken> tokens) {
         AuthToken mostRecentValidToken = null;
         LocalDateTime mostRecentStartTime = LocalDateTime.MIN;
-        for (AuthToken token: tokens) {
+        for (AuthToken token : tokens) {
             if (!token.isExpired()) {
                 if (token.getStartTime().isAfter(mostRecentStartTime)) {
                     mostRecentValidToken = token;

@@ -1,6 +1,5 @@
 package rbdavis.shared.utils;
 
-import java.io.File;
 
 public class Constants {
     // Basic Strings
@@ -10,16 +9,24 @@ public class Constants {
 
     // File Paths
     public static final String WEB_ROOT_DIR = "server/web";
-    //public static final String WEB_ROOT_DIR = "/web";
     public static final String ROOT_INDEX = WEB_ROOT_DIR + "/index.html";
     public static final String FOUR_OH_FOUR = WEB_ROOT_DIR + "/HTML/404.html";
     public static final String FIVE_HUNDRED = WEB_ROOT_DIR + "/HTML/500.html";
 
     // Log Paths
+    public static final String SERVER_LOG = "server";
     public static final String HANDLER_LOG = "handler";
-    public static final String HANDLER_LOG_PATH = "server" + File.separator + "logs" + File.separator + "handlers.txt";
+    public static final String SERVICE_LOG = "service";
+    public static final String DAO_LOG = "database";
+
+
+    public static final String SERVER_LOG_PATH = "server/logs/server.txt";
+    public static final String HANDLER_LOG_PATH = "server/logs/handlers.txt";
+    public static final String SERVICE_LOG_PATH = "server/logs/services.txt";
+    public static final String DAO_LOG_PATH = "server/logs/dataaccess.txt";
+
     public static final String MOCK_DATA_PATH = "shared/src/mockdata/";
-    public static final String M_NAMES_PATH =  MOCK_DATA_PATH + "mnames.json";
+    public static final String M_NAMES_PATH = MOCK_DATA_PATH + "mnames.json";
     public static final String F_NAMES_PATH = MOCK_DATA_PATH + "fnames.json";
     public static final String LAST_NAMES_PATH = MOCK_DATA_PATH + "snames.json";
     public static final String LOCATIONS_PATH = MOCK_DATA_PATH + "locations.json";
@@ -40,6 +47,7 @@ public class Constants {
 
     // Service Messages
     public static final String CLEAR_ERR = ERR + "Unable to clear database";
+    public static final String MOCK_DATA_FILES_MIA = "Unable to open files with mock data";
     public static final String CLEAR_SUCCESS = "Clear succeeded";
     public static final String FILL_NEG_ERR = ERR + "Cannot generate a negative number of generations";
     public static final String INVALID_USERNAME_ERR = ERR + "Username unrecognized";
@@ -51,6 +59,10 @@ public class Constants {
 
 
     // DAO Messages
+    public static final String DB_CONN_OPENED = "Database connection opened";
+    public static final String DB_CONN_CLOSED = "Database connection closed";
+    public static final String DB_CONN_FAILED = "Database connection failed ";
+
     public static final String INVALID_SQL = "Invalid SQL syntax";
     public static final String TOKEN_TAKEN = "Token is already taken";
     public static final String EVENT_ID_TAKEN = "Event id is already taken";
@@ -96,8 +108,11 @@ public class Constants {
     public static final String FIND_EVENTS_FAIL = "Find all events failed ";
 
 
-
     // Logger Messages
+    public static final String INIT_SERVER = "Initializing HTTP Server";
+    public static final String START_SERVER = "Starting HTTP server";
+    public static final String SERVER_LISTENING_ON = "Server listening on port: ";
+    public static final String SERVER_NO_PORT_ERR = ERR + "Server attempted to start without port #.";
     public static final String INIT_LOG_ERR = "Could not initialize log: ";
     public static final String FILE_SENT = " file was sent";
     public static final String INTERNAL_SERVER_ERR_LOG = "Internal server error occurred ";
@@ -124,7 +139,5 @@ public class Constants {
     public static final String LOGIN_REQ_SUCCESS = "Login request successful";
     public static final String REG_REQ_START = "Register request began";
     public static final String REG_REQ_SUCCESS = "Register request successful";
-    public static final String REG_REQ_UNSUCESS = "Registration unsuccessful";
-
-    // Log Messages for DAO's
+    public static final String REG_REQ_UNSUCCESS = "Registration unsuccessful";
 }

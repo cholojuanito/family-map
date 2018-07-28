@@ -49,13 +49,9 @@ public class LoginService extends Service {
             db = new SqlDatabase();
             String reqUserName = request.getUserName();
             String reqPassword = request.getPassword();
-
-            // 1. Get needed DAO's
             UserSqlDAO userDao = db.getUserDao();
             AuthTokenSqlDAO authTokenDao = db.getAuthTokenDao();
 
-
-            // 2. Find username in DB... or don't
             User userFromDB = userDao.findById(reqUserName);
             if (userFromDB == null) {
                 response.setMessage(INCORRECT_USERNAME);
@@ -63,12 +59,11 @@ public class LoginService extends Service {
             else {
                 if (reqPassword.equals(userFromDB.getPassword())) {
                     logger.info(LOGIN_REQ_SUCCESS);
-                    // 3. Create a new auth token for the user
+
                     AuthToken tokenModel = createNewAuthToken(userFromDB.getUsername());
                     authTokenDao.create(tokenModel);
                     AuthToken tokenFromDB = authTokenDao.findById(tokenModel.getToken());
 
-                    // 4. Send a successful response back
                     response.setUserName(userFromDB.getUsername());
                     response.setAuthToken(tokenFromDB.getToken());
                     response.setPersonID(userFromDB.getPersonId());
@@ -91,6 +86,7 @@ public class LoginService extends Service {
                     logger.severe(DB_CLOSE_ERR);
                 }
             }
+
             logger.warning(e.getMessage());
             response.setMessage(e.getMessage());
         }
@@ -101,6 +97,7 @@ public class LoginService extends Service {
     public static AuthToken createNewAuthToken(String userName) {
         LocalDateTime startTime = LocalDateTime.now();
         String tokenUUID = UUID.randomUUID().toString();
+
         return new AuthToken(tokenUUID, userName, startTime);
     }
 }

@@ -6,10 +6,8 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
 
 import rbdavis.shared.models.data.Event;
-import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.EventRequest;
 import rbdavis.shared.models.http.requests.EventsRequest;
 import rbdavis.shared.models.http.requests.LoginRequest;
@@ -17,7 +15,8 @@ import rbdavis.shared.models.http.responses.EventResponse;
 import rbdavis.shared.models.http.responses.EventsResponse;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class EventServiceTest {
 

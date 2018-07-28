@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.requests.PersonRequest;
 import rbdavis.shared.models.http.requests.RegisterRequest;
@@ -12,7 +11,7 @@ import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 import rbdavis.shared.models.http.responses.PeopleResponse;
 import rbdavis.shared.models.http.responses.PersonResponse;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class RegisterServiceTest {
     private String username = "newUser";

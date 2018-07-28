@@ -8,11 +8,10 @@ import com.google.gson.annotations.SerializedName;
  * The enumeration generates a lower case "M" for males and a lower case "F"
  * for females.
  *
- *
- * @see User
- * @see Person
  * @author Tanner Davis
  * @version 0.1
+ * @see User
+ * @see Person
  * @since v0.1
  */
 public enum Gender {

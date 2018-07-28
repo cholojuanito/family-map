@@ -1,6 +1,5 @@
 package rbdavis.server.database.sql;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -13,14 +12,15 @@ import rbdavis.server.database.sql.dataaccess.AuthTokenSqlDAO;
 import rbdavis.server.database.sql.dataaccess.EventSqlDAO;
 import rbdavis.server.database.sql.dataaccess.PersonSqlDAO;
 import rbdavis.server.database.sql.dataaccess.UserSqlDAO;
+import static rbdavis.shared.utils.Constants.*;
 
 public class SqlDatabase {
-    // Dao's
+
     private UserSqlDAO userDao;
     private PersonSqlDAO personDao;
     private EventSqlDAO eventDao;
     private AuthTokenSqlDAO authTokenDao;
-    // Connection
+
     private Connection connection;
 
     static Logger logger;
@@ -30,21 +30,20 @@ public class SqlDatabase {
             initLog();
         }
         catch (IOException e) {
-            System.out.println("Could not initialize log: " + e.getMessage());
+            System.out.println(INIT_LOG_ERR + e.getMessage());
             e.printStackTrace();
         }
     }
 
     private static void initLog() throws IOException {
-        final String handlerLogPath = "server" + File.separator + "logs" + File.separator + "dataaccess.txt";
 
         Level logLevel = Level.ALL;
 
-        logger = Logger.getLogger("database");
+        logger = Logger.getLogger(DAO_LOG);
         logger.setLevel(logLevel);
         logger.setUseParentHandlers(false);
 
-        java.util.logging.FileHandler databaseFileHandler = new java.util.logging.FileHandler(handlerLogPath, false);
+        java.util.logging.FileHandler databaseFileHandler = new java.util.logging.FileHandler(DAO_LOG_PATH, false);
         databaseFileHandler.setLevel(logLevel);
         databaseFileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(databaseFileHandler);
@@ -56,22 +55,20 @@ public class SqlDatabase {
             connection.setAutoCommit(false);
         }
         catch (SQLException e) {
-            logger.warning("Database connection failed " + e.getMessage());
-            throw new DAO.DatabaseException("Database connection failed");
+            logger.warning(DB_CONN_FAILED + e.getMessage());
+            throw new DAO.DatabaseException(DB_CONN_FAILED);
         }
         userDao = new UserSqlDAO(connection);
         personDao = new PersonSqlDAO(connection);
         eventDao = new EventSqlDAO(connection);
         authTokenDao = new AuthTokenSqlDAO(connection);
-        logger.info("Database connection opened");
+        logger.info(DB_CONN_OPENED);
     }
 
     public void endTransaction(boolean commit) throws DAO.DatabaseException {
         SqlConnectionManager.closeConnection(connection, commit);
-        logger.info("Database connection closed");
+        logger.info(DB_CONN_CLOSED);
     }
-
-
 
     public UserSqlDAO getUserDao() {
         return userDao;

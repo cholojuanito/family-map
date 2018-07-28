@@ -72,6 +72,11 @@ public class LoadHandler extends Handler implements HttpHandler {
                     responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
                     respData = gson.toJson(response);
                 }
+                catch (Exception e) {
+                    response.setMessage(INTERNAL_SERVER_ERR);
+                    responseCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
+                    respData = gson.toJson(response);
+                }
                 break;
 
             default:
@@ -94,8 +99,8 @@ public class LoadHandler extends Handler implements HttpHandler {
         try {
             for (User u : request.getUsers()) {
                 if (u.getUsername() == null || u.getPersonId() == null || u.getPassword() == null || u.getEmail() == null ||
-                    u.getFirstName() == null || u.getLastName() == null ||
-                    (u.getGender() != Gender.M && u.getGender() != Gender.F)) {
+                        u.getFirstName() == null || u.getLastName() == null ||
+                        (u.getGender() != Gender.M && u.getGender() != Gender.F)) {
 
                     isValid = false;
                 }
@@ -103,7 +108,7 @@ public class LoadHandler extends Handler implements HttpHandler {
 
             for (Person p : request.getPeople()) {
                 if (p.getId() == null || p.getUserId() == null || p.getFirstName() == null || p.getLastName() == null ||
-                    (p.getGender() != Gender.M && p.getGender() != Gender.F)) {
+                        (p.getGender() != Gender.M && p.getGender() != Gender.F)) {
 
                     isValid = false;
                 }
@@ -111,9 +116,9 @@ public class LoadHandler extends Handler implements HttpHandler {
 
             for (Event e : request.getEvents()) {
                 if (e.getId() == null || e.getPersonId() == null || e.getUserId() == null || e.getLatitude() == null ||
-                    e.getLongitude() == null || e.getCity() == null || e.getCountry() == null || e.getDateHappened() == null ||
-                    (e.getType() != Event.EventType.BIRTH && e.getType() != Event.EventType.BAPTISM &&
-                     e.getType() != Event.EventType.MARRIAGE && e.getType() != Event.EventType.DEATH)) {
+                        e.getLongitude() == null || e.getCity() == null || e.getCountry() == null || e.getDateHappened() == null ||
+                        (e.getType() != Event.EventType.BIRTH && e.getType() != Event.EventType.BAPTISM &&
+                                e.getType() != Event.EventType.MARRIAGE && e.getType() != Event.EventType.DEATH)) {
 
                     isValid = false;
                 }

@@ -107,7 +107,7 @@ public class EventSqlDAO extends SqlDAO implements DAO<Event> {
     /**
      * Updates a row in the Event table of the database.
      *
-     * @param id The id of the row that needs to be updated
+     * @param id    The id of the row that needs to be updated
      * @param event A {@code Event} model that will be used to get values
      * @return The new {@code Event} model that came from the database
      * @throws DatabaseException Any issue with the database is thrown
@@ -484,26 +484,7 @@ public class EventSqlDAO extends SqlDAO implements DAO<Event> {
             date = null;
         }
 
-        Event.EventType type;
-        switch (typeStr) {
-            case "Birth":
-                type = Event.EventType.BIRTH;
-                break;
-            case "Baptism":
-                type = Event.EventType.BAPTISM;
-                break;
-            case "Marriage":
-                type = Event.EventType.MARRIAGE;
-                break;
-            case "Death":
-                type = Event.EventType.DEATH;
-                break;
-            default:
-                type = null;
-                break;
-        }
-
-        event = new Event(id, personId, userId, type, latitude, longitude, city, country, date);
+        event = new Event(id, personId, userId, typeStr, latitude, longitude, city, country, date);
 
         return event;
     }

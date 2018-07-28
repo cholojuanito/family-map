@@ -11,15 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import rbdavis.server.handlers.ClearHandler;
-import rbdavis.server.handlers.EventHandler;
-import rbdavis.server.handlers.EventsHandler;
-import rbdavis.server.handlers.FillHandler;
-import rbdavis.server.handlers.LoadHandler;
-import rbdavis.server.handlers.LoginHandler;
-import rbdavis.server.handlers.PeopleHandler;
-import rbdavis.server.handlers.PersonHandler;
-import rbdavis.server.handlers.RegisterHandler;
+import rbdavis.server.handlers.*;
+import static rbdavis.shared.utils.Constants.*;
 
 public class Server {
     private static final int MAX_WAITING_CONNECTIONS = 12;
@@ -32,17 +25,16 @@ public class Server {
             initLog();
         }
         catch (IOException e) {
-            System.out.println("Could not initialize log: " + e.getMessage());
+            System.out.println(INIT_LOG_ERR + e.getMessage());
             e.printStackTrace();
         }
     }
 
     private static void initLog() throws IOException {
-        final String serverLogPath = "server" + File.separator + "logs" + File.separator + "server.txt";
 
         Level logLevel = Level.ALL;
 
-        logger = Logger.getLogger("server");
+        logger = Logger.getLogger(SERVER_LOG);
         logger.setLevel(logLevel);
         logger.setUseParentHandlers(false);
 
@@ -51,7 +43,7 @@ public class Server {
         consoleHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(consoleHandler);
 
-        java.util.logging.FileHandler serverFileHandler = new java.util.logging.FileHandler(serverLogPath, false);
+        java.util.logging.FileHandler serverFileHandler = new java.util.logging.FileHandler(SERVER_LOG_PATH, false);
         serverFileHandler.setLevel(logLevel);
         serverFileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(serverFileHandler);
@@ -60,11 +52,9 @@ public class Server {
 
     private void run(String portNumber) {
 
-        logger.info("Initializing HTTP Server");
+        logger.info(INIT_SERVER);
         try {
-            server = HttpServer.create(
-                    new InetSocketAddress(Integer.parseInt(portNumber)),
-                                            MAX_WAITING_CONNECTIONS);
+            server = HttpServer.create(new InetSocketAddress(Integer.parseInt(portNumber)), MAX_WAITING_CONNECTIONS);
         }
         catch (IOException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
@@ -74,8 +64,6 @@ public class Server {
         // Indicate that we are using the default "executor".
         // This line is necessary, but its function is unimportant for our purposes.
         server.setExecutor(null);
-
-        logger.info("Creating contexts");
 
         // Create and install the HTTP handlers
         server.createContext("/user/register", new RegisterHandler());
@@ -91,16 +79,17 @@ public class Server {
 
         server.createContext("/", new rbdavis.server.handlers.FileHandler());
 
-        logger.info("Starting HTTP server");
+        logger.info(START_SERVER);
 
         server.start();
 
-        logger.info("Server listening on port: " + portNumber);
+        logger.info(SERVER_LISTENING_ON + portNumber);
     }
 
     public static void main(String[] args) {
         if (args.length < 1) {
-            System.out.println("Server attempted to start without port #.");
+            logger.warning(SERVER_NO_PORT_ERR);
+            System.out.println(SERVER_NO_PORT_ERR);
             return;
         }
         String port = args[0];

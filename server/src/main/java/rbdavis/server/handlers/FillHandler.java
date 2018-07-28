@@ -20,7 +20,7 @@ import static rbdavis.shared.utils.Constants.INVALID_PROP_ERR;
 import static rbdavis.shared.utils.Constants.METHOD_NOT_SUPPORTED;
 import static rbdavis.shared.utils.Constants.POST;
 
-public class FillHandler extends Handler implements HttpHandler{
+public class FillHandler extends Handler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -53,7 +53,7 @@ public class FillHandler extends Handler implements HttpHandler{
                             }
                             break;
                         default:
-                        throw new InvalidParameterException(INVALID_PROP_ERR);
+                            throw new InvalidParameterException(INVALID_PROP_ERR);
                     }
 
                     FillRequest request = new FillRequest(userName, numGens);

@@ -62,6 +62,7 @@ public class LoadService extends Service {
 
             commit = true;
             db.endTransaction(commit);
+
             response.setMessage(successResponse);
         }
         catch (DAO.DatabaseException e) {
@@ -73,9 +74,11 @@ public class LoadService extends Service {
                     logger.severe(DB_CLOSE_ERR);
                 }
             }
+
             logger.warning(e.getMessage());
             response.setMessage(e.getMessage());
         }
+
         return response;
     }
 

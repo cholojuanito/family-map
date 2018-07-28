@@ -25,6 +25,7 @@ import rbdavis.shared.utils.MockDataGenerator;
 
 import static rbdavis.shared.utils.Constants.DB_CLOSE_ERR;
 import static rbdavis.shared.utils.Constants.INVALID_USERNAME_ERR;
+import static rbdavis.shared.utils.Constants.MOCK_DATA_FILES_MIA;
 
 /**
  * The service that performs the fill action for the "/fill/[username]/{generations}" endpoint.
@@ -53,7 +54,7 @@ public class FillService extends Service {
             gen = new MockDataGenerator();
         }
         catch (FileNotFoundException e) {
-            System.out.println("Error: Unable to open files with mock data.");
+            System.out.println(MOCK_DATA_FILES_MIA);
         }
     }
 
@@ -87,23 +88,20 @@ public class FillService extends Service {
             if (db == null) {
                 db = new SqlDatabase();
             }
+
             UserSqlDAO userDao = db.getUserDao();
             PersonSqlDAO personDao = db.getPersonDao();
             EventSqlDAO eventDao = db.getEventDao();
 
-            // Verify the User exists already
             User userFromDB = userDao.findById(request.getUserName());
             if (userFromDB != null) {
-                // Clear any data associated with the username
                 personDao.deleteByUsername(userName);
                 eventDao.deleteByUsername(userName);
 
-                // Create family tree data
                 Person rootPerson = new Person(userFromDB.getPersonId(), userName, userFromDB.getFirstName(),
                                                userFromDB.getLastName(), userFromDB.getGender(), null, null, null);
                 createFamilyTree(rootPerson);
 
-                // Persist the generated data to the database
                 persistGeneratedData(personDao, eventDao);
 
                 commit = true;
@@ -124,14 +122,15 @@ public class FillService extends Service {
                     logger.severe(DB_CLOSE_ERR);
                 }
             }
+
             logger.warning(e.getMessage());
             response.setMessage(e.getMessage());
         }
+
         return response;
     }
 
     private void persistGeneratedData(PersonSqlDAO personDao, EventSqlDAO eventDao) throws DAO.DatabaseException {
-
         for (Person p : generatedPeople) {
             personDao.create(p);
         }
@@ -146,9 +145,9 @@ public class FillService extends Service {
 
     private void createFamilyTree(Person rootPerson) throws NullPointerException {
         LocalDate sept1994 = LocalDate.of(1994, Month.SEPTEMBER, 5);
-        // Base person's father's side
+
         Person baseFather = createPersonsTree(1, Gender.M, 1994, rootPerson.getLastName());
-        // Base person's mother's side
+
         Person baseMother = createPersonsTree(1, Gender.F, 1994, gen.generateLastName());
 
         if (baseFather != null & baseMother != null) {
@@ -168,6 +167,7 @@ public class FillService extends Service {
         if (currGeneration > generationCap) {
             return null;
         }
+
         String id = gen.generateUUID();
         LocalDate birthDate = gen.generateBirthDate(childBirthYear);
         boolean isDead = currGeneration > 3;
@@ -187,14 +187,11 @@ public class FillService extends Service {
         String motherId = null;
         Person father = createPersonsTree(currGeneration + 1, Gender.M, birthDate.getYear(), lastName);
         Person mother = createPersonsTree(currGeneration + 1, Gender.F, birthDate.getYear(), gen.generateLastName());
-        if (father != null) {
-            fatherId = father.getId();
-        }
-        if (mother != null) {
-            motherId = mother.getId();
-        }
 
         if (father != null && mother != null) {
+            fatherId = father.getId();
+            motherId = mother.getId();
+
             createParentsMarriageEvent(fatherId, motherId);
             father.setSpouseId(motherId);
             mother.setSpouseId(fatherId);
@@ -225,8 +222,8 @@ public class FillService extends Service {
 
         if (deathDate != null && deathLocation != null) {
             Event death = new Event(gen.generateUUID(), personId, userName, Event.EventType.DEATH, deathLocation.getLatitude(),
-                              deathLocation.getLongitude(), deathLocation.getCity(), deathLocation.getCountry(),
-                              deathDate);
+                                    deathLocation.getLongitude(), deathLocation.getCity(), deathLocation.getCountry(),
+                                    deathDate);
 
             addToPersonsEvents(death, personId);
         }
@@ -240,11 +237,10 @@ public class FillService extends Service {
         LocalDate marriageDate = gen.generateMarriageDate(avgBirthYear);
         Location marriageLocation = gen.generateLocation();
 
-        Event fatherMarriageEvent = new Event(gen.generateUUID(), fatherId, userName, Event.EventType.MARRIAGE,
-                                         marriageLocation.getLatitude(), marriageLocation.getLongitude(),
-                                         marriageLocation.getCity(), marriageLocation.getCountry(),
-                                         marriageDate);
+        Event fatherMarriageEvent = new Event(gen.generateUUID(), fatherId, userName, Event.EventType.MARRIAGE, marriageLocation.getLatitude(),
+                                              marriageLocation.getLongitude(), marriageLocation.getCity(), marriageLocation.getCountry(), marriageDate);
         Event motherMarriageEvent = new Event(fatherMarriageEvent);
+
         motherMarriageEvent.setId(gen.generateUUID());
         motherMarriageEvent.setPersonId(motherId);
 
@@ -254,11 +250,13 @@ public class FillService extends Service {
 
     private int findPersonsBirthYear(String personId) {
         Set<Event> mothersEvents = generatedEvents.get(personId);
+
         for (Event e : mothersEvents) {
-            if (e.getType() == Event.EventType.BIRTH) {
+            if (e.getType().toString().toLowerCase().equals("birth")) {
                 return e.getDateHappened().getYear();
             }
         }
+        // Needed a return value to appease the compiler
         return 0;
     }
 
@@ -269,6 +267,7 @@ public class FillService extends Service {
 
     private void addToPersonsEvents(Event event, String personId) {
         Set<Event> events = generatedEvents.get(personId);
+
         if (events == null) {
             events = new HashSet<>();
             events.add(event);
@@ -277,6 +276,7 @@ public class FillService extends Service {
         else {
             events.add(event);
         }
+
         numEventsCreated++;
     }
 }

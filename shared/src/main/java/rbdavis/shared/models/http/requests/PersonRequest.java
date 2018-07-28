@@ -6,7 +6,6 @@ package rbdavis.shared.models.http.requests;
  * {@code PersonService} and finds the person with the
  * given id.
  *
- *
  * @author Tanner Davis
  * @version 0.1
  * @since v0.1

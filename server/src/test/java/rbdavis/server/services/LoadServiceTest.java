@@ -13,7 +13,7 @@ import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.LoadRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class LoadServiceTest {
 

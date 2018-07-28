@@ -86,7 +86,7 @@ public class LoginHandler extends Handler implements HttpHandler {
         respBody.close();
     }
 
-    private boolean isValidLoginRequest (LoginRequest request) throws InvalidParameterException {
+    private boolean isValidLoginRequest(LoginRequest request) throws InvalidParameterException {
         boolean isValid = true;
         try {
             if (request.getUserName() == null || request.getPassword() == null) {

@@ -12,7 +12,8 @@ import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 import rbdavis.shared.models.http.responses.PeopleResponse;
 import rbdavis.shared.models.http.responses.PersonResponse;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class PersonServiceTest {
     private final String username = "cholo";
@@ -20,7 +21,6 @@ public class PersonServiceTest {
     private String currToken;
     private Person p1 = new Person("4", "cholo", "Tanner", "Davis", "M", "6", "5", null);
     private Person p2 = new Person("1", "juls", "Julianne", "Capito", "F", "2", "3", null);
-
 
 
     private PersonService serviceUnderTest;

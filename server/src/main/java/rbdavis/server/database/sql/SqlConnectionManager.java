@@ -19,21 +19,23 @@ import rbdavis.server.database.DAO;
 
 public class SqlConnectionManager {
     private static Logger logger;
+
     static {
         logger = Logger.getLogger("database");
         try {
             final String driver = "org.sqlite.JDBC";
             Class.forName(driver);
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
 
     //URL to the database
-    private static final String DB_URL = "jdbc:sqlite:server" + File.separator  + "database" + File.separator + "family_map.db";
+    private static final String DB_URL = "jdbc:sqlite:server/database/family_map.db";
     //URL to the unit test database
-    private static final String TEST_DB_URL = "jdbc:sqlite:database" + File.separator + "test.db";
+    private static final String TEST_DB_URL = "jdbc:sqlite:server/database/test.db";
 
     /**
      * Creates a new {@code Connection} through the {@code DriverManager}
@@ -47,7 +49,8 @@ public class SqlConnectionManager {
             // Open a database connection
             return DriverManager.getConnection(DB_URL);
 
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             logger.severe("Failed to open database connection " + e.getMessage());
             throw new DAO.DatabaseException("openConnection failed", e);
         }
@@ -65,7 +68,8 @@ public class SqlConnectionManager {
             // Open a database connection
             return DriverManager.getConnection(TEST_DB_URL);
 
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             logger.severe("Failed to open test database connection " + e.getMessage());
             throw new DAO.DatabaseException("openTestConnection failed", e);
         }

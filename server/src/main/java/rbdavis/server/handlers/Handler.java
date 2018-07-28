@@ -23,57 +23,9 @@ import static rbdavis.shared.utils.Constants.HANDLER_LOG_PATH;
 import static rbdavis.shared.utils.Constants.INIT_LOG_ERR;
 
 public class Handler {
-    /*
-     * This deserializer is just so I can pass off the lab.
-     * I need to be able to take in an int for the "dateHappened" data member
-     * and produce a full LocalDate object.
-     */
-    private JsonDeserializer<Event> eventDeserializer = new JsonDeserializer<Event>() {
-        @Override
-        public Event deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            JsonObject jsonObj = json.getAsJsonObject();
-
-            Event.EventType type;
-            switch (jsonObj.get("eventType").getAsString().toLowerCase()) {
-                case "birth":
-                    type = Event.EventType.BIRTH;
-                    break;
-                case "baptism":
-                    type = Event.EventType.BAPTISM;
-                    break;
-                case "marriage":
-                    type = Event.EventType.MARRIAGE;
-                    break;
-                case "death":
-                    type = Event.EventType.DEATH;
-                    break;
-                default:
-                    type = null;
-                    break;
-            }
-
-            int year = jsonObj.get("year").getAsInt();
-            LocalDate date = MockDataGenerator.createRandomDate(year);
-
-
-            return new Event(
-                    jsonObj.get("eventID").getAsString(),
-                    jsonObj.get("personID").getAsString(),
-                    jsonObj.get("descendant").getAsString(),
-                    type,
-                    jsonObj.get("latitude").getAsString(),
-                    jsonObj.get("longitude").getAsString(),
-                    jsonObj.get("city").getAsString(),
-                    jsonObj.get("country").getAsString(),
-                    date
-            );
-        }
-    };
-
-
 
     private GsonBuilder gsonBuilder = new GsonBuilder();
-    public Gson gson = gsonBuilder.registerTypeAdapter(Event.class, eventDeserializer).create();
+    public Gson gson = gsonBuilder.create();
 
     static Logger logger;
 

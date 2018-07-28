@@ -19,7 +19,6 @@ import java.time.LocalDate;
  * <li>Death</li>
  * </ul>
  *
- * @see EventType
  * @author Tanner Davis
  * @version 0.1
  * @since v0.1
@@ -57,6 +56,7 @@ public class Event {
         setDateHappened(dateHappened);
     }
 
+
     public Event(String personId, String userId, String typeStr, String latitude, String longitude,
                  String city, String country, LocalDate dateHappened) {
         setPersonId(personId);
@@ -69,11 +69,13 @@ public class Event {
         setDateHappened(dateHappened);
     }
 
+
     public Event(String id, String personId, String userId, EventType type, String latitude,
                  String longitude, String city, String country, LocalDate dateHappened) {
         this(personId, userId, type, latitude, longitude, city, country, dateHappened);
         setId(id);
     }
+
 
     public Event(String id, String personId, String userId, String typeStr, String latitude,
                  String longitude, String city, String country, LocalDate dateHappened) {
@@ -82,14 +84,14 @@ public class Event {
     }
 
     public Event(Event other) {
-        this.personId       = other.personId;
-        this.userId         = other.userId;
-        this.type           = other.type;
-        this.latitude       = other.latitude;
-        this.longitude      = other.longitude;
-        this.city           = other.city;
-        this.country        = other.country;
-        this.dateHappened   = other.dateHappened;
+        this.personId = other.personId;
+        this.userId = other.userId;
+        this.type = other.type;
+        this.latitude = other.latitude;
+        this.longitude = other.longitude;
+        this.city = other.city;
+        this.country = other.country;
+        this.dateHappened = other.dateHappened;
     }
 
     public String getId() {
@@ -220,6 +222,7 @@ public class Event {
      * @version 0.1
      * @since v0.1
      */
+
     public enum EventType {
         @SerializedName(value = "birth", alternate = {"BIRTH", "Birth"})
         BIRTH("Birth"),
@@ -241,4 +244,5 @@ public class Event {
             return strVal;
         }
     }
+
 }

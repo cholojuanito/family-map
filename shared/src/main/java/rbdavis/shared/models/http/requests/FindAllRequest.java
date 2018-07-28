@@ -29,13 +29,11 @@ public class FindAllRequest {
         this.type = type;
     }
 
-    public String getToken()
-    {
+    public String getToken() {
         return token;
     }
 
-    public void setToken(String token)
-    {
+    public void setToken(String token) {
         this.token = token;
     }
 }

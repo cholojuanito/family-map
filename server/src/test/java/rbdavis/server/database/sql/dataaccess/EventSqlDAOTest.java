@@ -42,9 +42,9 @@ public class EventSqlDAOTest {
 
     private final String hBirthID = "eeb64aa0-fd7b-40e9-b54a-bff861f72d20";
     private final String wBirthID = "be35e7e0-a429-4fcd-bc0b-3420f59ccf59";
-    private final String hBaptismID  = "632d54e3-3bf5-4f1f-b82e-93cf1b855217";
-    private final String wBaptismID  = "fa49178c-e180-4ff5-9376-7ca08b3a89c8";
-    private final String hMarriageID  = "907efd25-07ce-4c33-8020-420a4beab2ea";
+    private final String hBaptismID = "632d54e3-3bf5-4f1f-b82e-93cf1b855217";
+    private final String wBaptismID = "fa49178c-e180-4ff5-9376-7ca08b3a89c8";
+    private final String hMarriageID = "907efd25-07ce-4c33-8020-420a4beab2ea";
     private final String wMarriageID = "d9fb6d00-9a0a-4030-9bf4-70815e504e40";
 
     private final DateTimeFormatter EVENT_FORMATTER = DateTimeFormatter.ofPattern("dd MMM yyyy");
@@ -56,14 +56,14 @@ public class EventSqlDAOTest {
     private final LocalDate marriageDay = LocalDate.of(2017, Month.AUGUST, 5);
 
 
-    private final Event husbandBirth = new Event(hBirthID, husbandID, username, Event.EventType.BIRTH, "79.9833", "-84.0667", "Eureka", "Canada", hBirthday);
-    private final Event husbandBaptism = new Event(hBaptismID, husbandID, username, Event.EventType.BAPTISM, "79.9833", "-84.0667", "Eureka", "Canada", hBaptismDay);
-    private final Event husbandMarriage = new Event(hMarriageID, husbandID, username, Event.EventType.MARRIAGE, "37.8044", "122.2711", "Oakland", "California", marriageDay);
-    private final Event wifeBirth = new Event(wBirthID, wifeID, username, Event.EventType.BIRTH, "45.5", "-72.4333", "Montreal", "Canada", wBirthday);
-    private final Event wifeBaptism = new Event(wBaptismID, wifeID, username, Event.EventType.BAPTISM, "45.5", "-72.4333", "Montreal", "Canada", wBaptismDay);
-    private final Event wifeMarriage = new Event(wMarriageID, wifeID, username, Event.EventType.MARRIAGE, "37.8044", "122.2711", "Oakland", "California", marriageDay);
+    private final Event husbandBirth = new Event(hBirthID, husbandID, username, "Birth", "79.9833", "-84.0667", "Eureka", "Canada", hBirthday);
+    private final Event husbandBaptism = new Event(hBaptismID, husbandID, username, "Baptism", "79.9833", "-84.0667", "Eureka", "Canada", hBaptismDay);
+    private final Event husbandMarriage = new Event(hMarriageID, husbandID, username, "Marriage", "37.8044", "122.2711", "Oakland", "California", marriageDay);
+    private final Event wifeBirth = new Event(wBirthID, wifeID, username, "Birth", "45.5", "-72.4333", "Montreal", "Canada", wBirthday);
+    private final Event wifeBaptism = new Event(wBaptismID, wifeID, username, "Baptism", "45.5", "-72.4333", "Montreal", "Canada", wBaptismDay);
+    private final Event wifeMarriage = new Event(wMarriageID, wifeID, username, "Marriage", "37.8044", "122.2711", "Oakland", "California", marriageDay);
 
-    private final Event differentUsername = new Event("randomId", "personId", "username", Event.EventType.BIRTH, "0.00", "0.00", "Greenwich", "England", LocalDate.now());
+    private final Event differentUsername = new Event("randomId", "personId", "username", "Birth", "0.00", "0.00", "Greenwich", "England", LocalDate.now());
 
     private EventSqlDAO daoUnderTest;
 

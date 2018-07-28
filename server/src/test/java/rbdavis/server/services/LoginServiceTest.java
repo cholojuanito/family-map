@@ -4,13 +4,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import rbdavis.shared.models.data.AuthToken;
 import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.LoginRequest;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
-import rbdavis.shared.models.http.responses.Response;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class LoginServiceTest {
 
@@ -29,9 +28,9 @@ public class LoginServiceTest {
     @Test
     public void testLogin() {
         User u1 = new User("juls", "1", "secret", "email@me",
-                    "Julianne", "Capito", "F");
+                           "Julianne", "Capito", "F");
         User u2 = new User("cholo", "4", "pass", "email@me",
-                   "Tanner", "Davis", "M");
+                           "Tanner", "Davis", "M");
 
         LoginRequest loginU1Req = new LoginRequest(u1.getUsername(), u1.getPassword());
         LoginRequest loginU2Req = new LoginRequest(u2.getUsername(), u2.getPassword());

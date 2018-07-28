@@ -7,9 +7,9 @@ import rbdavis.shared.models.data.Event;
 /**
  * A specific find-all response that contains an {@code Event} model.
  *
- * @see FindAllResponse
  * @author Tanner Davis
  * @version 0.1
+ * @see FindAllResponse
  * @since v0.1
  */
 

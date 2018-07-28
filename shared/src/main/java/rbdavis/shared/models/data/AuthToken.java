@@ -71,7 +71,8 @@ public class AuthToken {
     public void setToken(String token) {
         if (token == null) {
             throw new InvalidParameterException("Token cannot be empty.");
-        } else {
+        }
+        else {
             this.token = token;
         }
     }
@@ -105,7 +106,7 @@ public class AuthToken {
         }
     }
 
-    public void setEndTime( LocalDateTime endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 }

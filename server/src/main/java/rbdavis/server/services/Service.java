@@ -1,6 +1,5 @@
 package rbdavis.server.services;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,6 +12,8 @@ import rbdavis.shared.models.data.AuthToken;
 
 import static rbdavis.shared.utils.Constants.DB_CLOSE_ERR;
 import static rbdavis.shared.utils.Constants.INIT_LOG_ERR;
+import static rbdavis.shared.utils.Constants.SERVICE_LOG;
+import static rbdavis.shared.utils.Constants.SERVICE_LOG_PATH;
 import static rbdavis.shared.utils.Constants.VALID_TOKEN;
 
 public abstract class Service {
@@ -29,15 +30,14 @@ public abstract class Service {
     }
 
     private static void initLog() throws IOException {
-        final String handlerLogPath = "server" + File.separator + "logs" + File.separator + "services.txt";
 
         Level logLevel = Level.ALL;
 
-        logger = Logger.getLogger("service");
+        logger = Logger.getLogger(SERVICE_LOG);
         logger.setLevel(logLevel);
         logger.setUseParentHandlers(false);
 
-        java.util.logging.FileHandler handlerFileHandler = new java.util.logging.FileHandler(handlerLogPath, false);
+        java.util.logging.FileHandler handlerFileHandler = new java.util.logging.FileHandler(SERVICE_LOG_PATH, false);
         handlerFileHandler.setLevel(logLevel);
         handlerFileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(handlerFileHandler);
@@ -47,14 +47,17 @@ public abstract class Service {
         boolean isValid = false;
         AuthToken token = null;
         SqlDatabase db = null;
+
         try {
             db = new SqlDatabase();
             AuthTokenSqlDAO authDao = db.getAuthTokenDao();
+
             token = authDao.findById(clientToken);
             if (token != null && !token.isExpired()) {
                 logger.info(VALID_TOKEN);
                 isValid = true;
             }
+
             db.endTransaction(false);
         }
         catch (DAO.DatabaseException e) {

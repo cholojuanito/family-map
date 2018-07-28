@@ -102,7 +102,7 @@ public class PersonSqlDAO extends SqlDAO implements DAO<Person> {
     /**
      * Updates a row in the Person table of the database.
      *
-     * @param id The id of the row that needs to be updated
+     * @param id     The id of the row that needs to be updated
      * @param person A {@code Person} model that will be used to get values
      * @return The new {@code Person} model that came from the database
      * @throws DatabaseException Any issue with the database is thrown

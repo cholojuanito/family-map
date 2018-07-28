@@ -5,7 +5,6 @@ package rbdavis.shared.models.http.requests;
  * in the database and carries the needed information to the
  * {@code PersonService} and finds all the people.
  *
- *
  * @author Tanner Davis
  * @version 0.1
  * @since v0.1

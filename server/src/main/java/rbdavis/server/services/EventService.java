@@ -44,13 +44,14 @@ public class EventService extends Service {
      */
     public EventsResponse findAllEvents(EventsRequest request) {
         EventsResponse response = new EventsResponse();
+
         try {
             boolean commit = false;
             db = new SqlDatabase();
             EventSqlDAO eventDao = db.getEventDao();
             AuthTokenSqlDAO authDao = db.getAuthTokenDao();
 
-            AuthToken currUserToken =  authDao.findById(request.getToken());
+            AuthToken currUserToken = authDao.findById(request.getToken());
             List<Event> eventsFromDB = eventDao.findByUsername(currUserToken.getUserId());
             if (eventsFromDB == null || eventsFromDB.size() == 0) {
                 response.setMessage(NO_RECORDS_ERR);
@@ -60,7 +61,8 @@ public class EventService extends Service {
                 response.setMessage(SUCCESS);
                 commit = true;
             }
-            db.endTransaction(commit);
+
+             db.endTransaction(commit);
         }
         catch (DAO.DatabaseException e) {
             if (db != null) {
@@ -71,9 +73,11 @@ public class EventService extends Service {
                     logger.severe(DB_CLOSE_ERR);
                 }
             }
+
             logger.warning(e.getMessage());
             response.setMessage(e.getMessage());
         }
+
         return response;
     }
 
@@ -86,13 +90,14 @@ public class EventService extends Service {
      */
     public EventResponse findEvent(EventRequest request) {
         EventResponse response = new EventResponse();
+
         try {
             boolean commit = false;
             db = new SqlDatabase();
             EventSqlDAO eventDao = db.getEventDao();
             AuthTokenSqlDAO authDao = db.getAuthTokenDao();
 
-            AuthToken currUserToken =  authDao.findById(request.getToken());
+            AuthToken currUserToken = authDao.findById(request.getToken());
             Event eventFromDB = eventDao.findById(request.getId());
             if (eventFromDB == null) {
                 String noSuchEvent = "No event with id " + request.getId() + " exists";
@@ -106,6 +111,7 @@ public class EventService extends Service {
                 response.setMessage(SUCCESS);
                 commit = true;
             }
+
             db.endTransaction(commit);
         }
         catch (DAO.DatabaseException e) {
@@ -117,9 +123,11 @@ public class EventService extends Service {
                     logger.severe(DB_CLOSE_ERR);
                 }
             }
+
             logger.warning(e.getMessage());
             response.setMessage(e.getMessage());
         }
+
         return response;
     }
 }
