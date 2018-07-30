@@ -73,7 +73,7 @@ public class EventSqlDAO extends SqlDAO implements DAO<Event> {
                 stmt.setString(1, event.getId());
                 stmt.setString(2, event.getPersonId());
                 stmt.setString(3, event.getUserId());
-                stmt.setString(4, event.getType().toString());
+                stmt.setString(4, event.getEventType());
                 stmt.setString(5, event.getLatitude());
                 stmt.setString(6, event.getLongitude());
                 stmt.setString(7, event.getCity());
@@ -123,7 +123,7 @@ public class EventSqlDAO extends SqlDAO implements DAO<Event> {
                         "country = ?, date_happened = ? " +
                         "WHERE id = ?";
                 stmt = connection.prepareStatement(sql);
-                stmt.setString(1, event.getType().toString());
+                stmt.setString(1, event.getEventType());
                 stmt.setString(2, event.getLatitude());
                 stmt.setString(3, event.getLongitude());
                 stmt.setString(4, event.getCity());

@@ -117,8 +117,7 @@ public class LoadHandler extends Handler implements HttpHandler {
             for (Event e : request.getEvents()) {
                 if (e.getId() == null || e.getPersonId() == null || e.getUserId() == null || e.getLatitude() == null ||
                         e.getLongitude() == null || e.getCity() == null || e.getCountry() == null || e.getDateHappened() == null ||
-                        (e.getType() != Event.EventType.BIRTH && e.getType() != Event.EventType.BAPTISM &&
-                                e.getType() != Event.EventType.MARRIAGE && e.getType() != Event.EventType.DEATH)) {
+                        e.getEventType() == null) {
 
                     isValid = false;
                 }
