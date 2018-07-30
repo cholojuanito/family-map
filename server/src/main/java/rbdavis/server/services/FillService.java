@@ -210,10 +210,10 @@ public class FillService extends Service {
         LocalDate deathDate = isDead ? gen.generateDeathDate(birthDate.getYear()) : null;
         Location deathLocation = isDead ? gen.generateLocation() : null;
 
-        Event birth = new Event(gen.generateUUID(), personId, userName, Event.EventType.BIRTH,
+        Event birth = new Event(gen.generateUUID(), personId, userName, "Birth",
                                 birthLocation.getLatitude(), birthLocation.getLongitude(), birthLocation.getCity(),
                                 birthLocation.getCountry(), birthDate);
-        Event baptism = new Event(gen.generateUUID(), personId, userName, Event.EventType.BAPTISM,
+        Event baptism = new Event(gen.generateUUID(), personId, userName, "Baptism",
                                   baptismLocation.getLatitude(), baptismLocation.getLongitude(), baptismLocation.getCity(),
                                   baptismLocation.getCountry(), baptismDate);
 
@@ -221,7 +221,7 @@ public class FillService extends Service {
         addToPersonsEvents(baptism, personId);
 
         if (deathDate != null && deathLocation != null) {
-            Event death = new Event(gen.generateUUID(), personId, userName, Event.EventType.DEATH, deathLocation.getLatitude(),
+            Event death = new Event(gen.generateUUID(), personId, userName, "Death", deathLocation.getLatitude(),
                                     deathLocation.getLongitude(), deathLocation.getCity(), deathLocation.getCountry(),
                                     deathDate);
 
@@ -237,7 +237,7 @@ public class FillService extends Service {
         LocalDate marriageDate = gen.generateMarriageDate(avgBirthYear);
         Location marriageLocation = gen.generateLocation();
 
-        Event fatherMarriageEvent = new Event(gen.generateUUID(), fatherId, userName, Event.EventType.MARRIAGE, marriageLocation.getLatitude(),
+        Event fatherMarriageEvent = new Event(gen.generateUUID(), fatherId, userName, "Marriage", marriageLocation.getLatitude(),
                                               marriageLocation.getLongitude(), marriageLocation.getCity(), marriageLocation.getCountry(), marriageDate);
         Event motherMarriageEvent = new Event(fatherMarriageEvent);
 
@@ -252,7 +252,7 @@ public class FillService extends Service {
         Set<Event> mothersEvents = generatedEvents.get(personId);
 
         for (Event e : mothersEvents) {
-            if (e.getType().toString().toLowerCase().equals("birth")) {
+            if (e.getEventType().equals("Birth")) {
                 return e.getDateHappened().getYear();
             }
         }
