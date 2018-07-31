@@ -38,7 +38,7 @@ public class LoadHandler extends Handler implements HttpHandler {
         int emptyBodyCode = 0;
         Response response = new Response();
 
-        switch (exchange.getRequestMethod().toLowerCase()) {
+        switch (exchange.getRequestMethod()) {
             case POST:
                 logger.info(LOAD_REQ_START);
                 try {

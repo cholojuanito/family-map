@@ -31,7 +31,7 @@ public class FillHandler extends Handler implements HttpHandler {
         final int UN_INDEX = 2;
         final int NUM_GENS_INDEX = 3;
 
-        switch (exchange.getRequestMethod().toLowerCase()) {
+        switch (exchange.getRequestMethod()) {
             case POST:
                 try {
                     logger.info(FILL_REQ_START);

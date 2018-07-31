@@ -32,7 +32,7 @@ public class EventHandler extends Handler implements HttpHandler {
         int emptyBodyCode = 0;
         Response response = new Response();
 
-        switch (exchange.getRequestMethod().toLowerCase()) {
+        switch (exchange.getRequestMethod()) {
             case GET:
                 try {
                     logger.info(EVENT_REQ_START);

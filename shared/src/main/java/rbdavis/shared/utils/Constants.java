@@ -32,10 +32,10 @@ public class Constants {
     public static final String LOCATIONS_PATH = MOCK_DATA_PATH + "locations.json";
 
     // Http Methods
-    public static final String GET = "get";
-    public static final String POST = "post";
-    public static final String PATCH = "patch";
-    public static final String DELETE = "delete";
+    public static final String GET = "GET";
+    public static final String POST = "POST";
+    public static final String PATCH = "PATCH";
+    public static final String DELETE = "DELETE";
 
     // Endpoints
     public static final String LOGIN_ENDPOINT = "/user/login";

@@ -34,7 +34,7 @@ public class LoginHandler extends Handler implements HttpHandler {
         int emptyBodyCode = 0;
         Response response = new Response();
 
-        switch (exchange.getRequestMethod().toLowerCase()) {
+        switch (exchange.getRequestMethod()) {
             case POST:
                 try {
                     logger.info(LOGIN_REQ_START);
