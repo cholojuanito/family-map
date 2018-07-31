@@ -13,7 +13,7 @@ import rbdavis.server.services.PersonService;
 import rbdavis.shared.models.http.requests.PersonRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.StreamCommunicator.writeString;
 import static rbdavis.shared.utils.Constants.AUTH;
 import static rbdavis.shared.utils.Constants.GET;
 import static rbdavis.shared.utils.Constants.INVALID_PROP_ERR;

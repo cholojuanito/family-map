@@ -12,7 +12,7 @@ import rbdavis.server.services.PersonService;
 import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.StreamCommunicator.writeString;
 import static rbdavis.shared.utils.Constants.AUTH;
 import static rbdavis.shared.utils.Constants.GET;
 import static rbdavis.shared.utils.Constants.METHOD_NOT_SUPPORTED;

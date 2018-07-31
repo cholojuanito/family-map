@@ -37,6 +37,12 @@ public class Constants {
     public static final String PATCH = "patch";
     public static final String DELETE = "delete";
 
+    // Endpoints
+    public static final String LOGIN_ENDPOINT = "/user/login";
+    public static final String REGISTER_ENDPOINT = "/user/register";
+    public static final String PEOPLE_ENDPOINT = "/person";
+    public static final String EVENTS_ENDPOINT = "/event";
+
     //  Handler Error Messages
     public static final String METHOD_NOT_SUPPORTED = " method is not supported for this URL";
     public static final String INVALID_PROP_ERR = ERR + "Request property missing or has invalid value ";

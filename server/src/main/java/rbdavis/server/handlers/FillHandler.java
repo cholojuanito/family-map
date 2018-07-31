@@ -12,7 +12,7 @@ import rbdavis.server.services.FillService;
 import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.StreamCommunicator.writeString;
 import static rbdavis.shared.utils.Constants.FILL_NEG_ERR;
 import static rbdavis.shared.utils.Constants.FILL_REQ_START;
 import static rbdavis.shared.utils.Constants.FILL_REQ_SUCCESS;

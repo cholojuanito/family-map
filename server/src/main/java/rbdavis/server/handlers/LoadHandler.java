@@ -18,8 +18,8 @@ import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.LoadRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-import static rbdavis.server.StreamCommunicator.readString;
-import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.StreamCommunicator.readString;
+import static rbdavis.shared.utils.StreamCommunicator.writeString;
 import static rbdavis.shared.utils.Constants.INTERNAL_SERVER_ERR;
 import static rbdavis.shared.utils.Constants.INTERNAL_SERVER_ERR_LOG;
 import static rbdavis.shared.utils.Constants.INVALID_PROP_ERR;

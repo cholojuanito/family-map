@@ -13,7 +13,7 @@ import rbdavis.server.services.EventService;
 import rbdavis.shared.models.http.requests.EventRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.StreamCommunicator.writeString;
 import static rbdavis.shared.utils.Constants.AUTH;
 import static rbdavis.shared.utils.Constants.EVENT_REQ_START;
 import static rbdavis.shared.utils.Constants.EVENT_REQ_SUCCESS;
