@@ -25,11 +25,17 @@ import static rbdavis.shared.utils.StreamCommunicator.writeString;
 import static rbdavis.shared.utils.Constants.*;
 
 public class ServerProxy {
-    private static ServerProxy _instance = new ServerProxy();
+    /*Singleton*/
+    private static ServerProxy _instance;
 
     public static ServerProxy getInstance() {
         return _instance;
     }
+
+    static {
+        _instance = new ServerProxy();
+    }
+
 
     private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT_NUMBER = 8080;
@@ -49,7 +55,9 @@ public class ServerProxy {
         HttpURLConnection connection = openHttpConnection(LOGIN_ENDPOINT, POST);
         sendRequestBody(connection, request);
         response = (LoginOrRegisterResponse) deserializeResponse(connection, LoginOrRegisterResponse.class);
-
+        if (response.getAuthToken() != null) {
+            setToken(response.getAuthToken());
+        }
         return response;
     }
 
@@ -58,7 +66,9 @@ public class ServerProxy {
         HttpURLConnection connection = openHttpConnection(REGISTER_ENDPOINT, POST);
         sendRequestBody(connection, request);
         response = (LoginOrRegisterResponse) deserializeResponse(connection, LoginOrRegisterResponse.class);
-
+        if (response.getAuthToken() != null) {
+            setToken(response.getAuthToken());
+        }
         return response;
     }
 
