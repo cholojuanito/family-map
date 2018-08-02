@@ -34,7 +34,6 @@ public class MapFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_map, container, false);
         textName = (TextView) v.findViewById(R.id.name);
 
-        App model = App.getInstance();
         String usersName = App.getInstance().getUser().getFirstName() + " " + App.getInstance().getUser().getLastName() + " is logged in";
         textName.setText(usersName);
 

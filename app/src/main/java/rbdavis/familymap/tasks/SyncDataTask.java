@@ -39,16 +39,16 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
 
         // TODO put with constants
         String responseStr = "Finished!";
+        rest();
 
         String progressUpdate = "Fetching ancestors' data...";
         publishProgress(progressUpdate);
+        rest();
 
         PeopleRequest peopleRequest = new PeopleRequest(tokens[0]);
         PeopleResponse peopleResponse = ServerProxy.getInstance().getAllPeople(peopleRequest);
         if (peopleResponse.getMessage().equals(SUCCESS)) {
             updateAppData(peopleResponse);
-            progressUpdate = "Got ancestors!";
-            publishProgress(progressUpdate);
         }
         else {
             responseStr = peopleResponse.getMessage();
@@ -66,8 +66,6 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
         EventsResponse eventsResponse = ServerProxy.getInstance().getAllEvents(eventsRequest);
         if (eventsResponse.getMessage().equals(SUCCESS)) {
             updateAppData(eventsResponse);
-            progressUpdate = "Got life events!";
-            publishProgress(progressUpdate);
         }
         else {
             responseStr = eventsResponse.getMessage();

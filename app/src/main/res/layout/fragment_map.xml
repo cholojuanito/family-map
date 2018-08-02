@@ -12,9 +12,9 @@
         android:layout_height="100dp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:layout_editor_absoluteX="141dp"
-        tools:layout_editor_absoluteY="215dp" />
+        tools:layout_editor_absoluteY="215dp"
+        android:textSize="20sp"/>
 </RelativeLayout>

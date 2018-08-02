@@ -2,8 +2,12 @@ package rbdavis.familymap.ui.components;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +69,7 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
@@ -90,6 +94,24 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
 
         fillDefaults();
 
+        initOnTextChangeListeners();
+
+        initOnClickListeners();
+
+        return v;
+    }
+
+    private void initOnTextChangeListeners() {
+        hostEditText.addTextChangedListener(new LoginTextWatcher());
+        portEditText.addTextChangedListener(new LoginTextWatcher());
+        usernameEditText.addTextChangedListener(new LoginTextWatcher());
+        passwordEditText.addTextChangedListener(new LoginTextWatcher());
+        firstNameEditText.addTextChangedListener(new LoginTextWatcher());
+        lastNameEditText.addTextChangedListener(new LoginTextWatcher());
+        emailEditText.addTextChangedListener(new LoginTextWatcher());
+    }
+
+    private void initOnClickListeners() {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,10 +125,6 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
                 onRegisterButtonClick();
             }
         });
-
-        enableButtons();
-
-        return v;
     }
 
     private void fillDefaults() {
@@ -122,11 +140,11 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
     private void onLoginButtonClick() {
         disableButtons();
         try {
-            updateProxyInfo();
-
+            String host = hostEditText.getText().toString();
+            String port = portEditText.getText().toString();
             String username = usernameEditText.getText().toString();
             String password = passwordEditText.getText().toString();
-            reviewAllLoginInfo(username, password);
+            reviewAllLoginInfo(host, port, username, password);
 
             LoginRequest newRequest = new LoginRequest(username, password);
 
@@ -136,22 +154,22 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
         catch (InvalidParameterException e) {
             //TODO Log it
             showEmptyFieldToast(e.getMessage());
-            enableButtons();
         }
     }
 
     private void onRegisterButtonClick() {
         disableButtons();
         try {
-            updateProxyInfo();
 
+            String host = hostEditText.getText().toString();
+            String port = portEditText.getText().toString();
             String username = usernameEditText.getText().toString();
             String password = passwordEditText.getText().toString();
             String first = firstNameEditText.getText().toString();
             String last = lastNameEditText.getText().toString();
             String email = emailEditText.getText().toString();
             String gender = maleRadio.isChecked() ? "m" : "f";
-            reviewAllRegisterInfo(username, password, first, last, email);
+            reviewAllRegisterInfo(host, port, username, password, first, last, email);
 
             RegisterRequest newRequest = new RegisterRequest(username, password, email, first, last, gender);
 
@@ -161,14 +179,11 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
         catch (InvalidParameterException e) {
             //TODO Log it
             showEmptyFieldToast(e.getMessage());
-            enableButtons();
         }
 
     }
 
-    public void updateProxyInfo() throws InvalidParameterException {
-        String host = hostEditText.getText().toString();
-
+    public void reviewAllLoginInfo(String host, String portStr, String userName, String password) throws InvalidParameterException {
         if (TextUtils.isEmpty(host)) {
             throw new InvalidParameterException(getString(R.string.host_hint));
         }
@@ -176,16 +191,14 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
             ServerProxy.getInstance().setHostName(host);
         }
 
-        if (TextUtils.isEmpty(portEditText.getText().toString())) {
+        if (TextUtils.isEmpty(portStr)) {
             throw new InvalidParameterException(getString(R.string.port_hint));
         }
         else {
-            int port = Integer.parseInt(portEditText.getText().toString());
+            int port = Integer.parseInt(portStr);
             ServerProxy.getInstance().setPortNum(port);
         }
-    }
 
-    public void reviewAllLoginInfo(String userName, String password) throws InvalidParameterException {
         if(TextUtils.isEmpty(userName)) {
             throw new InvalidParameterException(getString(R.string.username_hint));
         }
@@ -196,10 +209,10 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
 
     }
 
-    public void reviewAllRegisterInfo(String userName, String password, String firstName,
-                                      String lastName, String email) throws InvalidParameterException {
+    public void reviewAllRegisterInfo(String host, String portStr, String userName, String password,
+                                      String firstName, String lastName, String email) throws InvalidParameterException {
 
-        reviewAllLoginInfo(userName, password);
+        reviewAllLoginInfo(host, portStr, userName, password);
 
         if(TextUtils.isEmpty(firstName)) {
             throw new InvalidParameterException(getString(R.string.first_hint));
@@ -233,14 +246,34 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
         }
     }
 
-    private void enableButtons() {
-        loginButton.setEnabled(true);
+    private void enableRegister() {
         registerButton.setEnabled(true);
+        registerButton.setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+    }
+
+    private void enableLogin() {
+        loginButton.setEnabled(true);
+        loginButton.setTextColor(ContextCompat.getColor(getContext(),R.color.colorAccent));
+    }
+
+    private void disableRegister() {
+        registerButton.setEnabled(false);
+        registerButton.setTextColor(ContextCompat.getColor(getContext(),R.color.disabledButtonTextColor));
+    }
+
+    private void disableLogin() {
+        loginButton.setEnabled(false);
+        loginButton.setTextColor(ContextCompat.getColor(getContext(),R.color.disabledButtonTextColor));
+    }
+
+    private void enableButtons() {
+        enableLogin();
+        enableRegister();
     }
 
     private void disableButtons() {
-        loginButton.setEnabled(false);
-        registerButton.setEnabled(false);
+        disableLogin();
+        disableRegister();
     }
 
     private void showEmptyFieldToast(String fieldName) {
@@ -256,5 +289,42 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
         toast.show();
     }
 
+    private class LoginTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String host = hostEditText.getText().toString();
+            String port = portEditText.getText().toString();
+            String username = usernameEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
+            String first = firstNameEditText.getText().toString();
+            String last = lastNameEditText.getText().toString();
+            String email = emailEditText.getText().toString();
+
+            try {
+                LoginFragment.this.reviewAllLoginInfo(host, port, username, password);
+                LoginFragment.this.enableLogin();
+            }
+            catch (InvalidParameterException e) {
+                //TODO Log it
+                LoginFragment.this.disableLogin();
+            }
+
+            try {
+                LoginFragment.this.reviewAllRegisterInfo(host, port, username, password, first, last, email);
+                LoginFragment.this.enableRegister();
+            }
+            catch (InvalidParameterException e) {
+                //TODO Log it
+                LoginFragment.this.disableRegister();
+            }
+        }
+    }
 
 }
