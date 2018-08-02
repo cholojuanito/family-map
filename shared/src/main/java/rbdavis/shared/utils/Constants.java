@@ -37,6 +37,18 @@ public class Constants {
     public static final String PATCH = "PATCH";
     public static final String DELETE = "DELETE";
 
+    // Http Url Construction
+    public static final String HTTP = "http://";
+    public static final String COLON = ":";
+
+    // Http Error Messages
+    public static final String INVALID_URL = "Invalid URL. Please check the URL and try again.";
+    public static final String CONNECT_SERVER_ERR = "Unable to connect to server";
+
+    // Success Messages
+    public static final String LOGIN_SUCCESS = "Still coming back eh?";
+    public static final String REG_SUCCESS = "Welcome! I've just sucked one year of your life away";
+
     // Endpoints
     public static final String LOGIN_ENDPOINT = "/user/login";
     public static final String REGISTER_ENDPOINT = "/user/register";

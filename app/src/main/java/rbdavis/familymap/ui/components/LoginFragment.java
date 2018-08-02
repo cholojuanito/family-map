@@ -1,129 +1,251 @@
 package rbdavis.familymap.ui.components;
 
-import android.content.Context;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LoginFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LoginFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class LoginFragment extends Fragment implements Button.OnClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import java.security.InvalidParameterException;
 
-    private EditText host;
-    private EditText port;
-    private EditText username;
-    private EditText password;
+import rbdavis.familymap.R;
+import rbdavis.familymap.net.http.ServerProxy;
+import rbdavis.familymap.tasks.LoginUserTask;
+import rbdavis.familymap.tasks.RegisterUserTask;
+import rbdavis.shared.models.http.requests.LoginRequest;
+import rbdavis.shared.models.http.requests.RegisterRequest;
+import static rbdavis.shared.utils.Constants.*;
+
+public class LoginFragment extends Fragment implements LoginUserTask.Callback, RegisterUserTask.Callback  {
+    private static Callback callback;
+
+    public interface Callback {
+        void onLogin();
+    }
+
+    private EditText hostEditText;
+    private EditText portEditText;
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+    private EditText firstNameEditText;
+    private EditText lastNameEditText;
+    private EditText emailEditText;
+    private RadioButton maleRadio;
+    private RadioButton femaleRadio;
 
     private Button loginButton;
-    private String authToken;
-    private String personId;
-    private String statusMsg;
+    private Button registerButton;
 
-    private OnFragmentInteractionListener mListener;
-    private OnFragmentInteractionListener listener;
 
-    public LoginFragment() {
-        // Required empty public constructor
-    }
+    public LoginFragment() {}
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param callback A Callback
      * @return A new instance of fragment LoginFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static LoginFragment newInstance(String param1, String param2) {
-        LoginFragment fragment = new LoginFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static LoginFragment newInstance(Callback callback) {
+        LoginFragment.callback = callback;
+        return new LoginFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-//        View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-//        loginButton = (Button) rootView.findViewById(R.id.login);
-//        username = (EditText) rootView.findViewById(R.id.username);
-//        password = (EditText) rootView.findViewById(R.id.password);
-//        host = (EditText) rootView.findViewById(R.id.host);
-//        port = (EditText) rootView.findViewById(R.id.port);
-//        loginButton.setOnClickListener(this);
-//        return rootView;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View v = inflater.inflate(R.layout.fragment_login, container, false);
+
+        hostEditText = (EditText) v.findViewById(R.id.edit_host);
+        portEditText = (EditText) v.findViewById(R.id.edit_port);
+        usernameEditText = (EditText) v.findViewById(R.id.edit_username);
+        passwordEditText = (EditText) v.findViewById(R.id.edit_password);
+        firstNameEditText = (EditText) v.findViewById(R.id.edit_first);
+        lastNameEditText = (EditText) v.findViewById(R.id.edit_last);
+        emailEditText = (EditText) v.findViewById(R.id.edit_email);
+        maleRadio = (RadioButton) v.findViewById(R.id.radio_male);
+        femaleRadio = (RadioButton) v.findViewById(R.id.radio_female);
+        loginButton = (Button) v.findViewById(R.id.btn_login);
+        registerButton = (Button) v.findViewById(R.id.btn_register);
+
+        fillDefaults();
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onLoginButtonClick();
+            }
+        });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRegisterButtonClick();
+            }
+        });
+
+        enableButtons();
+
+        return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    private void fillDefaults() {
+        hostEditText.setText(getString(R.string.default_host));
+        portEditText.setText(getString(R.string.default_port));
+        usernameEditText.setText(getString(R.string.default_user));
+        passwordEditText.setText(getString(R.string.default_pass));
+        firstNameEditText.setText(getString(R.string.default_first));
+        lastNameEditText.setText(getString(R.string.default_last));
+        emailEditText.setText(getString(R.string.default_email));
+    }
+
+    private void onLoginButtonClick() {
+        disableButtons();
+        try {
+            updateProxyInfo();
+
+            String username = usernameEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
+            reviewAllLoginInfo(username, password);
+
+            LoginRequest newRequest = new LoginRequest(username, password);
+
+            LoginUserTask task = new LoginUserTask(this);
+            task.execute(newRequest);
+        }
+        catch (InvalidParameterException e) {
+            //TODO Log it
+            showEmptyFieldToast(e.getMessage());
+            enableButtons();
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+    private void onRegisterButtonClick() {
+        disableButtons();
+        try {
+            updateProxyInfo();
+
+            String username = usernameEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
+            String first = firstNameEditText.getText().toString();
+            String last = lastNameEditText.getText().toString();
+            String email = emailEditText.getText().toString();
+            String gender = maleRadio.isChecked() ? "m" : "f";
+            reviewAllRegisterInfo(username, password, first, last, email);
+
+            RegisterRequest newRequest = new RegisterRequest(username, password, email, first, last, gender);
+
+            RegisterUserTask task = new RegisterUserTask(this);
+            task.execute(newRequest);
+        }
+        catch (InvalidParameterException e) {
+            //TODO Log it
+            showEmptyFieldToast(e.getMessage());
+            enableButtons();
+        }
+
+    }
+
+    public void updateProxyInfo() throws InvalidParameterException {
+        String host = hostEditText.getText().toString();
+
+        if (TextUtils.isEmpty(host)) {
+            throw new InvalidParameterException(getString(R.string.host_hint));
         }
         else {
-            throw new RuntimeException(context.toString()
-                                               + " must implement OnFragmentInteractionListener");
+            ServerProxy.getInstance().setHostName(host);
+        }
+
+        if (TextUtils.isEmpty(portEditText.getText().toString())) {
+            throw new InvalidParameterException(getString(R.string.port_hint));
+        }
+        else {
+            int port = Integer.parseInt(portEditText.getText().toString());
+            ServerProxy.getInstance().setPortNum(port);
+        }
+    }
+
+    public void reviewAllLoginInfo(String userName, String password) throws InvalidParameterException {
+        if(TextUtils.isEmpty(userName)) {
+            throw new InvalidParameterException(getString(R.string.username_hint));
+        }
+
+        if(TextUtils.isEmpty(password)) {
+            throw new InvalidParameterException(getString(R.string.password_hint));
+        }
+
+    }
+
+    public void reviewAllRegisterInfo(String userName, String password, String firstName,
+                                      String lastName, String email) throws InvalidParameterException {
+
+        reviewAllLoginInfo(userName, password);
+
+        if(TextUtils.isEmpty(firstName)) {
+            throw new InvalidParameterException(getString(R.string.first_hint));
+        }
+
+        if(TextUtils.isEmpty(lastName)) {
+            throw new InvalidParameterException(getString(R.string.last_hint));
+        }
+
+        if(TextUtils.isEmpty(email)) {
+            throw new InvalidParameterException(getString(R.string.email_hint));
+        }
+
+    }
+
+    @Override
+    public void onLoginComplete(String message) {
+        showResponseToast(message);
+        enableButtons();
+        if (message.equals(LOGIN_SUCCESS)) {
+            callback.onLogin();
         }
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void onRegistrationComplete(String message) {
+        showResponseToast(message);
+        enableButtons();
+        if (message.equals(REG_SUCCESS)) {
+            callback.onLogin();
+        }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    private void enableButtons() {
+        loginButton.setEnabled(true);
+        registerButton.setEnabled(true);
     }
 
-    @Override
-    public void onClick(View v) {
-
+    private void disableButtons() {
+        loginButton.setEnabled(false);
+        registerButton.setEnabled(false);
     }
+
+    private void showEmptyFieldToast(String fieldName) {
+        String output = fieldName + " field cannot be empty";
+        Toast toast = Toast.makeText(getContext(), output, Toast.LENGTH_LONG);
+        // You can personalize it later
+        toast.show();
+    }
+
+    private void showResponseToast(String reason) {
+        Toast toast = Toast.makeText(getContext(), reason, Toast.LENGTH_SHORT);
+        // You can personalize it later
+        toast.show();
+    }
+
+
 }

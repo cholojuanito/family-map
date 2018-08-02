@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import rbdavis.familymap.models.App;
 import rbdavis.shared.models.http.requests.EventsRequest;
 import rbdavis.shared.models.http.requests.LoginRequest;
 import rbdavis.shared.models.http.requests.PeopleRequest;
@@ -36,101 +37,118 @@ public class ServerProxy {
         _instance = new ServerProxy();
     }
 
-
-    private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT_NUMBER = 8080;
-    //TODO: Change URL PREFIX to just http://
-    private static final String URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT_NUMBER;
-
     private String hostName;
     private int portNum;
     private String token;
+    private boolean isLoggedIn = false;
+
     private GsonBuilder gb = new GsonBuilder();
     private Gson gson = gb.create();
 
     private ServerProxy() {}
 
     public LoginOrRegisterResponse login(LoginRequest request) {
-        LoginOrRegisterResponse response = null;
-        HttpURLConnection connection = openHttpConnection(LOGIN_ENDPOINT, POST);
-        sendRequestBody(connection, request);
-        response = (LoginOrRegisterResponse) deserializeResponse(connection, LoginOrRegisterResponse.class);
+        LoginOrRegisterResponse response = new LoginOrRegisterResponse();
+
+        try {
+            HttpURLConnection connection = openHttpConnection(LOGIN_ENDPOINT, POST);
+            sendRequestBody(connection, request);
+            response = (LoginOrRegisterResponse) deserializeResponse(connection, LoginOrRegisterResponse.class);
+        }
+        catch (MalformedURLException e) {
+            response.setMessage(INVALID_URL);
+        }
+        catch (IOException e) {
+            response.setMessage(CONNECT_SERVER_ERR);
+        }
+
         if (response.getAuthToken() != null) {
             setToken(response.getAuthToken());
+            App.getInstance().setUserPersonId(response.getPersonID());
+            isLoggedIn = true;
         }
+
         return response;
     }
 
     public LoginOrRegisterResponse register(RegisterRequest request) {
-        LoginOrRegisterResponse response = null;
-        HttpURLConnection connection = openHttpConnection(REGISTER_ENDPOINT, POST);
-        sendRequestBody(connection, request);
-        response = (LoginOrRegisterResponse) deserializeResponse(connection, LoginOrRegisterResponse.class);
+        LoginOrRegisterResponse response = new LoginOrRegisterResponse();
+
+        try {
+            HttpURLConnection connection = openHttpConnection(REGISTER_ENDPOINT, POST);
+            sendRequestBody(connection, request);
+            response = (LoginOrRegisterResponse) deserializeResponse(connection, LoginOrRegisterResponse.class);
+        }
+        catch (MalformedURLException e) {
+            response.setMessage(INVALID_URL);
+        }
+        catch (IOException e) {
+            response.setMessage(CONNECT_SERVER_ERR);
+        }
+
         if (response.getAuthToken() != null) {
             setToken(response.getAuthToken());
+            App.getInstance().setUserPersonId(response.getPersonID());
+            isLoggedIn = true;
         }
+
         return response;
     }
 
     public PeopleResponse getAllPeople(PeopleRequest request) {
-        PeopleResponse response = null;
-        HttpURLConnection connection = openHttpConnection(PEOPLE_ENDPOINT, GET, request.getToken());
-        response = (PeopleResponse) deserializeResponse(connection, PeopleResponse.class);
+        PeopleResponse response = new PeopleResponse();
 
+        try {
+            HttpURLConnection connection = openHttpConnection(PEOPLE_ENDPOINT, GET, request.getToken());
+            response = (PeopleResponse) deserializeResponse(connection, PeopleResponse.class);
+        }
+        catch (MalformedURLException e) {
+            response.setMessage(INVALID_URL);
+        }
+        catch (IOException e) {
+            response.setMessage(CONNECT_SERVER_ERR);
+        }
 
         return response;
     }
 
     public EventsResponse getAllEvents(EventsRequest request) {
-        EventsResponse response = null;
-        HttpURLConnection connection = openHttpConnection(EVENTS_ENDPOINT, GET, request.getToken());
-        response = (EventsResponse) deserializeResponse(connection, EventsResponse.class);
+        EventsResponse response = new EventsResponse();
 
+        try {
+            HttpURLConnection connection = openHttpConnection(EVENTS_ENDPOINT, GET, request.getToken());
+            response = (EventsResponse) deserializeResponse(connection, EventsResponse.class);
+        }
+        catch (MalformedURLException e) {
+            response.setMessage(INVALID_URL);
+        }
+        catch (IOException e) {
+            response.setMessage(CONNECT_SERVER_ERR);
+        }
 
         return response;
     }
 
-    private HttpURLConnection openHttpConnection(String endPoint, String requestMethod) {
+    private HttpURLConnection openHttpConnection(String endPoint, String requestMethod) throws MalformedURLException, IOException  {
         HttpURLConnection result = null;
-        try {
-            //String urlStr = URL_PREFIX + hostName + ":" + portNum + endPoint;
-            URL url = new URL(URL_PREFIX + endPoint);
-            result = (HttpURLConnection) url.openConnection();
-            result.setRequestMethod(requestMethod);
-            result.setDoOutput(true);
-            result.connect();
-        }
-        catch (MalformedURLException e) {
-            //TODO: Log it
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            //TODO: Log it
-            e.printStackTrace();
-        }
+        URL url = new URL(getUrlPrefix() + endPoint);
+        result = (HttpURLConnection) url.openConnection();
+        result.setRequestMethod(requestMethod);
+        result.setDoOutput(true);
+        result.connect();
 
         return result;
     }
 
-    private HttpURLConnection openHttpConnection(String endPoint, String requestMethod, String authCode) {
+    private HttpURLConnection openHttpConnection(String endPoint, String requestMethod, String authCode) throws MalformedURLException, IOException {
         HttpURLConnection result = null;
-        try {
-            //String urlStr = URL_PREFIX + hostName + ":" + portNum + endPoint;
-            URL url = new URL(URL_PREFIX + endPoint);
+            URL url = new URL(getUrlPrefix() + endPoint);
             result = (HttpURLConnection) url.openConnection();
             result.setRequestMethod(requestMethod);
             result.setRequestProperty(AUTH, authCode);
             result.setDoOutput(false);
             result.connect();
-        }
-        catch (MalformedURLException e) {
-            //TODO: Log it
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            //TODO: Log it
-            e.printStackTrace();
-        }
+
 
         return result;
     }
@@ -188,7 +206,7 @@ public class ServerProxy {
         }
         catch (Exception e) {
             //TODO: Log it
-            System.out.println("Error in deserializeResponse");
+            System.out.println("Error while deserializing Response");
             e.printStackTrace();
         }
 
@@ -217,5 +235,33 @@ public class ServerProxy {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
+
+    public String getUrlPrefix() {
+        return HTTP + this.hostName + COLON + this.portNum;
+    }
+
+    public String getUrlLogin() {
+        return getUrlPrefix() + LOGIN_ENDPOINT;
+    }
+
+    public String getUrlRegister() {
+        return getUrlPrefix() + REGISTER_ENDPOINT;
+    }
+
+    public String getUrlPeople() {
+        return getUrlPrefix() + PEOPLE_ENDPOINT;
+    }
+
+    public String getUrlEvents() {
+        return getUrlPrefix() + EVENTS_ENDPOINT;
     }
 }

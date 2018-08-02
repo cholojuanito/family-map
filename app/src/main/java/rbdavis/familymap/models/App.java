@@ -1,12 +1,13 @@
 package rbdavis.familymap.models;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Person;
-import rbdavis.shared.models.data.User;
 
 public class App {
     /*Singleton*/
@@ -20,28 +21,39 @@ public class App {
         _familyMap =  new App();
     }
 
-
-    private Map<String, User> people;
+    private Map<String, Person> people;
     private Map<String, Event> events;
     private Map<String, List<Event>> personalEvents;
-    // Settings
-    // Filter
-    private Set<String> eventTypes;
-    private Map<String, MapPinColor> typeColors;
-
+    private String userPersonId;
     private Person user;
     private Set<String> paternalAncestors;
     private Set<String> maternalAncestors;
     private Map<String, List<Person>> childrenOfPerson;
+    // Settings
+    // Filters
+    private Set<String> eventTypes;
+    private Map<String, MapPinColor> eventTypeColors;
 
+    private App() {
+        people = new HashMap<>();
+        events = new HashMap<>();
+        personalEvents = new HashMap<>();
+        userPersonId = null;
+        user = null;
+        paternalAncestors = new HashSet<>();
+        maternalAncestors =  new HashSet<>();
+        childrenOfPerson = new HashMap<>();
+        // Settings
+        // Filters
+        eventTypes = new HashSet<>();
+        eventTypeColors = new HashMap<>();
+    }
 
-
-
-    public Map<String, User> getPeople() {
+    public Map<String, Person> getPeople() {
         return people;
     }
 
-    public void setPeople(Map<String, User> people) {
+    public void setPeople(Map<String, Person> people) {
         this.people = people;
     }
 
@@ -69,12 +81,20 @@ public class App {
         this.eventTypes = eventTypes;
     }
 
-    public Map<String, MapPinColor> getTypeColors() {
-        return typeColors;
+    public Map<String, MapPinColor> getEventTypeColors() {
+        return eventTypeColors;
     }
 
-    public void setTypeColors(Map<String, MapPinColor> typeColors) {
-        this.typeColors = typeColors;
+    public void setEventTypeColors(Map<String, MapPinColor> eventTypeColors) {
+        this.eventTypeColors = eventTypeColors;
+    }
+
+    public String getUserPersonId() {
+        return userPersonId;
+    }
+
+    public void setUserPersonId(String userPersonId) {
+        this.userPersonId = userPersonId;
     }
 
     public Person getUser() {
