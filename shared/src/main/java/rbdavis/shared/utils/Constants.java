@@ -32,10 +32,28 @@ public class Constants {
     public static final String LOCATIONS_PATH = MOCK_DATA_PATH + "locations.json";
 
     // Http Methods
-    public static final String GET = "get";
-    public static final String POST = "post";
-    public static final String PATCH = "patch";
-    public static final String DELETE = "delete";
+    public static final String GET = "GET";
+    public static final String POST = "POST";
+    public static final String PATCH = "PATCH";
+    public static final String DELETE = "DELETE";
+
+    // Http Url Construction
+    public static final String HTTP = "http://";
+    public static final String COLON = ":";
+
+    // Http Error Messages
+    public static final String INVALID_URL = "Invalid URL. Please check the URL and try again.";
+    public static final String CONNECT_SERVER_ERR = "Unable to connect to server";
+
+    // Success Messages
+    public static final String LOGIN_SUCCESS = "Still coming back eh?";
+    public static final String REG_SUCCESS = "Welcome! I've just sucked one year of your life away";
+
+    // Endpoints
+    public static final String LOGIN_ENDPOINT = "/user/login";
+    public static final String REGISTER_ENDPOINT = "/user/register";
+    public static final String PEOPLE_ENDPOINT = "/person";
+    public static final String EVENTS_ENDPOINT = "/event";
 
     //  Handler Error Messages
     public static final String METHOD_NOT_SUPPORTED = " method is not supported for this URL";

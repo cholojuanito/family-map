@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import rbdavis.server.services.ClearService;
 import rbdavis.shared.models.http.responses.Response;
 
-import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.StreamCommunicator.writeString;
 import static rbdavis.shared.utils.Constants.CLEAR_ERR;
 import static rbdavis.shared.utils.Constants.CLEAR_SUCCESS;
 import static rbdavis.shared.utils.Constants.METHOD_NOT_SUPPORTED;
@@ -24,7 +24,7 @@ public class ClearHandler extends Handler implements HttpHandler {
         int emptyBodyCode = 0;
         Response response = new Response();
 
-        switch (exchange.getRequestMethod().toLowerCase()) {
+        switch (exchange.getRequestMethod()) {
             case POST:
                 try {
                     response = ClearService.clear();

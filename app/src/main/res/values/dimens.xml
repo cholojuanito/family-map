@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="app_padding">18dp</dimen>
+
+    <!-- Login Form -->
+    <dimen name="edit_text_width">300dp</dimen>
+
+    <dimen name="btn_width">100dp</dimen>
+    <dimen name="btn_height">50dp</dimen>
+    <dimen name="radio_width">50dp</dimen>
+    <dimen name="btn_margin_bot">20dp</dimen>
+    <dimen name="btn_margin_top">10dp</dimen>
+    <dimen name="btn_margin_left_right">15dp</dimen>
+
+    <dimen name="login_form_text_size">18sp</dimen>
+    <dimen name="btn_text_size">16sp</dimen>
+
+    <dimen name="sync_data_text_size">20sp</dimen>
+    <dimen name="sync_data_circle_size">200dp</dimen>
+
+</resources>

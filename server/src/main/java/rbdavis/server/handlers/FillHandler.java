@@ -12,7 +12,7 @@ import rbdavis.server.services.FillService;
 import rbdavis.shared.models.http.requests.FillRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.StreamCommunicator.writeString;
 import static rbdavis.shared.utils.Constants.FILL_NEG_ERR;
 import static rbdavis.shared.utils.Constants.FILL_REQ_START;
 import static rbdavis.shared.utils.Constants.FILL_REQ_SUCCESS;
@@ -31,7 +31,7 @@ public class FillHandler extends Handler implements HttpHandler {
         final int UN_INDEX = 2;
         final int NUM_GENS_INDEX = 3;
 
-        switch (exchange.getRequestMethod().toLowerCase()) {
+        switch (exchange.getRequestMethod()) {
             case POST:
                 try {
                     logger.info(FILL_REQ_START);

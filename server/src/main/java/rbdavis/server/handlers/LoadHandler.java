@@ -18,8 +18,8 @@ import rbdavis.shared.models.data.User;
 import rbdavis.shared.models.http.requests.LoadRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-import static rbdavis.server.StreamCommunicator.readString;
-import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.StreamCommunicator.readString;
+import static rbdavis.shared.utils.StreamCommunicator.writeString;
 import static rbdavis.shared.utils.Constants.INTERNAL_SERVER_ERR;
 import static rbdavis.shared.utils.Constants.INTERNAL_SERVER_ERR_LOG;
 import static rbdavis.shared.utils.Constants.INVALID_PROP_ERR;
@@ -38,7 +38,7 @@ public class LoadHandler extends Handler implements HttpHandler {
         int emptyBodyCode = 0;
         Response response = new Response();
 
-        switch (exchange.getRequestMethod().toLowerCase()) {
+        switch (exchange.getRequestMethod()) {
             case POST:
                 logger.info(LOAD_REQ_START);
                 try {

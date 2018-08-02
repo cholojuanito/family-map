@@ -1,4 +1,4 @@
-package rbdavis.server;
+package rbdavis.shared.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
