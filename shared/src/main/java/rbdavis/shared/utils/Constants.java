@@ -158,4 +158,7 @@ public class Constants {
     public static final String REG_REQ_START = "Register request began";
     public static final String REG_REQ_SUCCESS = "Register request successful";
     public static final String REG_REQ_UNSUCCESS = "Registration unsuccessful";
+
+    // Bundle Keys
+    public static final String SYNC_ERROR_KEY = "syncError";
 }

@@ -74,6 +74,7 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
             callback.onSyncError(responseStr);
             //TODO Terminate early
         }
+
         rest();
 
         /*-------------------------------------------------------------------------------------------*/

@@ -42,13 +42,18 @@ public class SyncDataProgressFragment extends Fragment implements SyncDataTask.C
         progressCircle = (ProgressBar) v.findViewById(R.id.progressCircle);
         progressText = (TextView) v.findViewById(R.id.progressText);
 
-        String content = "Getting the stuff";
+        String content = "Syncing data...";
         progressText.setText(content);
 
-        // Try with a bad token
-        syncData(ServerProxy.getInstance().getToken());
-
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //TODO Run tests on how to handle this part well
+        //syncData("badToken");
+        syncData(ServerProxy.getInstance().getToken());
     }
 
     private void syncData(String authToken) {

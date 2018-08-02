@@ -10,10 +10,9 @@ import rbdavis.familymap.net.http.ServerProxy;
 import rbdavis.familymap.ui.components.LoginFragment;
 import rbdavis.familymap.ui.components.MapFragment;
 import rbdavis.familymap.ui.components.SyncDataProgressFragment;
+import rbdavis.shared.utils.Constants;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.Callback, SyncDataProgressFragment.Callback {
-
-    private static final String SYNC_ERROR_KEY = "syncError";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +43,12 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
     @Override
     public void onSyncError(String... messages) {
         FragmentManager fragManager = getSupportFragmentManager();
-        MapFragment mapFrag = MapFragment.newInstance();
+        LoginFragment loginFrag = LoginFragment.newInstance(MainActivity.this);
         Bundle bundle = new Bundle();
-        bundle.putString(SYNC_ERROR_KEY, "Error occurred while syncing the data");
+        bundle.putString(Constants.SYNC_ERROR_KEY, "Error occurred while syncing your data. Please try again");
 
-        mapFrag.setArguments(bundle);
-        fragManager.beginTransaction().replace(R.id.frag_container, mapFrag).commit();
+        loginFrag.setArguments(bundle);
+        fragManager.beginTransaction().replace(R.id.frag_container, loginFrag).commit();
     }
 
     @Override

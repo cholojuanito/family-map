@@ -20,6 +20,8 @@ import rbdavis.familymap.tasks.LoginUserTask;
 import rbdavis.familymap.tasks.RegisterUserTask;
 import rbdavis.shared.models.http.requests.LoginRequest;
 import rbdavis.shared.models.http.requests.RegisterRequest;
+import rbdavis.shared.utils.Constants;
+
 import static rbdavis.shared.utils.Constants.*;
 
 public class LoginFragment extends Fragment implements LoginUserTask.Callback, RegisterUserTask.Callback  {
@@ -66,6 +68,13 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.fragment_login, container, false);
+
+        if (savedInstanceState != null) {
+            // Save their info?
+            if (savedInstanceState.getString(Constants.SYNC_ERROR_KEY) != null) {
+                showResponseToast(savedInstanceState.getString(Constants.SYNC_ERROR_KEY));
+            }
+        }
 
         hostEditText = (EditText) v.findViewById(R.id.edit_host);
         portEditText = (EditText) v.findViewById(R.id.edit_port);
