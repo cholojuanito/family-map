@@ -27,7 +27,7 @@ public class FileHandler extends Handler implements HttpHandler {
         int responseCode = 0;
         int emptyBodyCode = 0;
 
-        switch (exchange.getRequestMethod().toLowerCase()) {
+        switch (exchange.getRequestMethod()) {
             case GET:
                 String url = WEB_ROOT_DIR + exchange.getRequestURI().getPath();
                 if (url.length() == 0 || url.equals(WEB_ROOT_DIR + "/")) {

@@ -12,7 +12,7 @@ import rbdavis.server.services.PersonService;
 import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.responses.Response;
 
-import static rbdavis.server.StreamCommunicator.writeString;
+import static rbdavis.shared.utils.StreamCommunicator.writeString;
 import static rbdavis.shared.utils.Constants.AUTH;
 import static rbdavis.shared.utils.Constants.GET;
 import static rbdavis.shared.utils.Constants.METHOD_NOT_SUPPORTED;
@@ -30,7 +30,7 @@ public class PeopleHandler extends Handler implements HttpHandler {
         int emptyBodyCode = 0;
         Response response = new Response();
 
-        switch (exchange.getRequestMethod().toLowerCase()) {
+        switch (exchange.getRequestMethod()) {
             case GET:
                 logger.info(PEOPLE_REQ_START);
 
