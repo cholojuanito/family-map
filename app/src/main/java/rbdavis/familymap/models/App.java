@@ -32,7 +32,7 @@ public class App {
     // Settings
     // Filters
     private Set<String> eventTypes;
-    private Map<String, MapPinColor> eventTypeColors;
+    private Map<String, MapMarkerColor> eventTypeColors;
 
     private App() {
         people = new HashMap<>();
@@ -81,11 +81,11 @@ public class App {
         this.eventTypes = eventTypes;
     }
 
-    public Map<String, MapPinColor> getEventTypeColors() {
+    public Map<String, MapMarkerColor> getEventTypeColors() {
         return eventTypeColors;
     }
 
-    public void setEventTypeColors(Map<String, MapPinColor> eventTypeColors) {
+    public void setEventTypeColors(Map<String, MapMarkerColor> eventTypeColors) {
         this.eventTypeColors = eventTypeColors;
     }
 

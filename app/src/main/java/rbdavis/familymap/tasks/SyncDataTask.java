@@ -5,8 +5,10 @@ import android.os.AsyncTask;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import rbdavis.familymap.models.App;
+import rbdavis.familymap.models.MapMarkerColor;
 import rbdavis.familymap.net.http.ServerProxy;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Person;
@@ -15,7 +17,6 @@ import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.responses.EventsResponse;
 import rbdavis.shared.models.http.responses.PeopleResponse;
 
-import static rbdavis.shared.utils.Constants.REG_SUCCESS;
 import static rbdavis.shared.utils.Constants.SUCCESS;
 
 public class SyncDataTask extends AsyncTask<String, String, String> {
@@ -84,7 +85,7 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
 
         progressUpdate = responseStr;
         publishProgress(progressUpdate);
-        rest();
+        //rest();
 
         return responseStr;
     }
@@ -120,7 +121,7 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
         App model = App.getInstance();
 
         organizePersonalEvents(model);
-        // organizeEventTypeColors
+        organizeEventTypeColors(model);
     }
 
     private void organizePersonalEvents(App model) {
@@ -136,6 +137,20 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
             }
             else {
                 personsEvents.add(e);
+            }
+        }
+    }
+
+    private void organizeEventTypeColors(App model) {
+        Set<String> eventTypes = model.getEventTypes();
+
+        for (String type : eventTypes) {
+            for (MapMarkerColor color : MapMarkerColor.values()) {
+                if (!color.isUsed()) {
+                    color.setIsUsed(true);
+                    model.getEventTypeColors().put(type, color);
+                    break;
+                }
             }
         }
     }
