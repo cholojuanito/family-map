@@ -102,4 +102,10 @@
     <string name="btn_login">Login</string>
     <string name="btn_register">Register</string>
 
+
+
+    <!-- Intent keys -->
+    <string name="personKey">PERSON_ID</string>
+    <string name="eventKey">EVENT_ID</string>
+
 </resources>
