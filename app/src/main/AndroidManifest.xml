@@ -25,16 +25,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.screens.PersonActivity" />
+            android:name=".ui.screens.PersonActivity"
+            android:parentActivityName=".ui.screens.MainActivity"/>
         <activity
             android:name=".ui.screens.SettingsActivity"
+            android:parentActivityName=".ui.screens.MainActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".ui.screens.EventActivity" />
+            android:name=".ui.screens.EventActivity"
+            android:parentActivityName=".ui.screens.MainActivity"/>
         <activity
-            android:name=".ui.screens.SearchActivity" />
+            android:name=".ui.screens.SearchActivity"
+            android:parentActivityName=".ui.screens.MainActivity"
+            android:label="Search"/>
         <activity
-            android:name=".ui.screens.FilterActivity" />
+            android:name=".ui.screens.FilterActivity"
+            android:parentActivityName=".ui.screens.MainActivity"
+            android:label="Filters"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

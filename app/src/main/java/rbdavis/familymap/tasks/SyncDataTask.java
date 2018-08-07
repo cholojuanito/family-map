@@ -100,6 +100,7 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
             }
 
             model.getPeople().put(id, p);
+            model.addChildToParent(p);
         }
     }
 

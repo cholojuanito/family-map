@@ -1,5 +1,9 @@
 package rbdavis.familymap.models;
 
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polyline;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,8 +35,15 @@ public class App {
     private Map<String, List<Person>> childrenOfPerson;
     // Settings
     // Filters
+
+    // Map data
+    private String focusedPersonId;
     private Set<String> eventTypes;
     private Map<String, MapMarkerColor> eventTypeColors;
+    private Map<Marker, String> markersToEvents;
+    private Map<String, Marker> eventsToMarkers;
+    private Map<Marker, String> personMarkers;
+    private List<Polyline> connections;
 
     private App() {
         people = new HashMap<>();
@@ -45,8 +56,54 @@ public class App {
         childrenOfPerson = new HashMap<>();
         // Settings
         // Filters
+        focusedPersonId = null;
         eventTypes = new HashSet<>();
         eventTypeColors = new HashMap<>();
+        markersToEvents = new HashMap<>();
+        eventsToMarkers = new HashMap<>();
+        personMarkers = new HashMap<>();
+        connections = new ArrayList<>();
+    }
+
+    private void findAncestors(String id, Set<String> ancestors) {
+        ancestors.add(id);
+
+        if (people.get(id).getFatherId() != null) {
+            findAncestors(people.get(id).getFatherId(), ancestors);
+        }
+
+        if (people.get(id).getMotherId() != null) {
+            findAncestors(people.get(id).getMotherId(), ancestors);
+        }
+    }
+
+    public void addChildToParent(Person child) {
+        if (child.getFatherId() != null) {
+            if (childrenOfPerson.containsKey(child.getFatherId())) {
+                childrenOfPerson.get(child.getFatherId()).add(child);
+            }
+            else {
+                // Todo maybe make it a LinkedList
+                List<Person> children = new ArrayList<>();
+
+                children.add(child);
+                childrenOfPerson.put(child.getFatherId(), children);
+            }
+        }
+
+        if (child.getMotherId() != null) {
+            if (childrenOfPerson.containsKey(child.getMotherId())) {
+                childrenOfPerson.get(child.getMotherId()).add(child);
+            }
+            else {
+                // Todo maybe make it a LinkedList
+                List<Person> children = new ArrayList<>();
+
+                children.add(child);
+                childrenOfPerson.put(child.getMotherId(), children);
+            }
+        }
+
     }
 
     public Map<String, Person> getPeople() {
@@ -109,12 +166,24 @@ public class App {
         return paternalAncestors;
     }
 
+    public void setPaternalAncestors() {
+        String fatherId = people.get(focusedPersonId).getFatherId();
+        paternalAncestors.add(focusedPersonId);
+        findAncestors(fatherId, paternalAncestors);
+    }
+
     public void setPaternalAncestors(Set<String> paternalAncestors) {
         this.paternalAncestors = paternalAncestors;
     }
 
     public Set<String> getMaternalAncestors() {
         return maternalAncestors;
+    }
+
+    public void setMaternalAncestors() {
+        String motherId = people.get(focusedPersonId).getMotherId();
+        maternalAncestors.add(focusedPersonId);
+        findAncestors(motherId, maternalAncestors);
     }
 
     public void setMaternalAncestors(Set<String> maternalAncestors) {
@@ -127,5 +196,37 @@ public class App {
 
     public void setChildrenOfPerson(Map<String, List<Person>> childrenOfPerson) {
         this.childrenOfPerson = childrenOfPerson;
+    }
+
+    public Map<Marker, String> getMarkersToEvents() {
+        return markersToEvents;
+    }
+
+    public void setMarkersToEvents(Map<Marker, String> markersToEvents) {
+        this.markersToEvents = markersToEvents;
+    }
+
+    public Map<String, Marker> getEventsToMarkers() {
+        return eventsToMarkers;
+    }
+
+    public void setEventsToMarkers(Map<String, Marker> eventsToMarkers) {
+        this.eventsToMarkers = eventsToMarkers;
+    }
+
+    public Map<Marker, String> getPersonMarkers() {
+        return personMarkers;
+    }
+
+    public void setPersonMarkers(Map<Marker, String> personMarkers) {
+        this.personMarkers = personMarkers;
+    }
+
+    public List<Polyline> getConnections() {
+        return connections;
+    }
+
+    public void setConnections(List<Polyline> connections) {
+        this.connections = connections;
     }
 }

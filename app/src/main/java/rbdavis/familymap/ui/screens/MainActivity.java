@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
 
     @Override
     public void onSynced(String... messages) {
+        if (android.os.Debug.isDebuggerConnected()) {
+            android.os.Debug.waitForDebugger();
+        }
         FragmentManager fragManager = getSupportFragmentManager();
         MapFragment mapFrag = MapFragment.newInstance();
         Bundle bundle = new Bundle();
