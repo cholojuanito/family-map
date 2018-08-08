@@ -1,8 +1,11 @@
 package rbdavis.familymap.ui.screens;
 
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 import rbdavis.familymap.R;
 import rbdavis.familymap.models.App;
@@ -14,14 +17,20 @@ public class EventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Toolbar appBar = (Toolbar) findViewById(R.id.event_appbar);
+        setSupportActionBar(appBar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         String eventId = null;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             eventId = extras.getString(getString(R.string.eventKey));
-            String type = App.getInstance().getEvents().get(eventId).getEventType();
-            getSupportActionBar().setTitle(type + " event");
+            String title = App.getInstance().getEvents().get(eventId).getEventType() + " event";
+
+            TextView appBarTitle = (TextView) findViewById(R.id.event_appbar_title);
+            appBarTitle.setText(title);
         }
 
         Bundle bundle = new Bundle();

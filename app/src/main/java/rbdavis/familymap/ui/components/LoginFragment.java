@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -22,6 +23,7 @@ import rbdavis.familymap.R;
 import rbdavis.familymap.net.http.ServerProxy;
 import rbdavis.familymap.tasks.LoginUserTask;
 import rbdavis.familymap.tasks.RegisterUserTask;
+import rbdavis.familymap.ui.screens.MainActivity;
 import rbdavis.shared.models.http.requests.LoginRequest;
 import rbdavis.shared.models.http.requests.RegisterRequest;
 import rbdavis.shared.utils.Constants;
@@ -30,6 +32,11 @@ import static rbdavis.shared.utils.Constants.*;
 
 public class LoginFragment extends Fragment implements LoginUserTask.Callback, RegisterUserTask.Callback  {
     private static Callback callback;
+    private HideAppBarListener hideAppBarListener;
+
+    public interface HideAppBarListener {
+        void hideAppBar();
+    }
 
     public interface Callback {
         void onLogin();
@@ -98,7 +105,18 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
 
         initOnClickListeners();
 
+        if (hideAppBarListener != null) {
+            hideAppBarListener.hideAppBar();
+        }
+
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ((MainActivity)getActivity()).getSupportActionBar().hide();
     }
 
     private void initOnTextChangeListeners() {
@@ -325,6 +343,10 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
                 LoginFragment.this.disableRegister();
             }
         }
+    }
+
+    public void setHideAppBarListener(HideAppBarListener hideAppBarListener) {
+        this.hideAppBarListener = hideAppBarListener;
     }
 
 }

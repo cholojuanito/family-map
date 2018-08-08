@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,10 +7,71 @@
     android:layout_height="match_parent"
     tools:context=".ui.screens.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="false"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/panel_white"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:text="@string/app_name"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+
+            <ImageButton
+                android:id="@+id/search_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/filter_icon"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_search"/>
+
+            <ImageButton
+                android:id="@+id/filter_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/settings_icon"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_filter"/>
+
+            <ImageButton
+                android:id="@+id/settings_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_settings"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
     <FrameLayout
         android:id="@+id/frag_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

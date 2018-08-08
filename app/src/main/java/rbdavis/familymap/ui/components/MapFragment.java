@@ -38,6 +38,8 @@ import rbdavis.shared.models.data.Person;
 public class MapFragment extends Fragment implements OnMapReadyCallback{
     private final DateTimeFormatter EVENT_FORMATTER = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
+    private ShowAppBarListener showAppBarListener;
+
     private GoogleMap map;
     private RelativeLayout infoPanel;
     private ImageView genderIcon;
@@ -68,6 +70,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         super.onCreateView(inflater, container, savedInstanceState);
 
         View v = inflater.inflate(R.layout.fragment_map, container, false);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -81,8 +84,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         personName = (TextView) v.findViewById(R.id.person_name);
         date = (TextView) v.findViewById(R.id.date);
         location = (TextView) v.findViewById(R.id.location);
-
         infoPanel = (RelativeLayout) v.findViewById(R.id.info_panel);
+
+        if (showAppBarListener != null) {
+            showAppBarListener.showAppBar();
+        }
 
         return v;
     }
@@ -94,6 +100,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         if(map != null) {
             onMapReady(map);
         }
+
     }
 
     public void onMapReady(GoogleMap googleMap) {
@@ -256,5 +263,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     public void setFocusedPersonId(String focusedPersonId) {
         this.focusedPersonId = focusedPersonId;
+    }
+
+    public interface ShowAppBarListener {
+
+        void showAppBar();
+    }
+
+    public void setShowAppBarListener(ShowAppBarListener showAppBarListener) {
+        this.showAppBarListener = showAppBarListener;
     }
 }

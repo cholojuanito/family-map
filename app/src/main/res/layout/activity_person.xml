@@ -1,97 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/app_padding"
     tools:context=".ui.screens.PersonActivity">
 
-    <RelativeLayout
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/person_appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <TextView
-            android:id="@+id/first_name_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:text="First Name:"/>
-
-        <TextView
-            android:id="@+id/first_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/first_name_label" />
-
-        <TextView
-            android:id="@+id/last_name_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/first_name"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:text="Last Name:"/>
-
-        <TextView
-            android:id="@+id/last_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/last_name_label" />
-
-        <TextView
-            android:id="@+id/gender_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/last_name"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:text="Gender:"/>
-
-        <TextView
-            android:id="@+id/gender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/gender_label" />
-
-        <View
-            android:id="@+id/divider1"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/disabledButtonBackgroundColor"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_below="@+id/gender"/>
+            android:layout_height="match_parent"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/life_events"
+            <TextView
+                android:id="@+id/person_appbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/app_padding"
+        android:layout_below="@+id/person_appbar">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/divider1">
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content">
 
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/disabledButtonBackgroundColor"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_below="@+id/life_events"/>
+            <TextView
+                android:id="@+id/first_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="First Name:"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/family_members"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/divider2">
-        </android.support.v7.widget.RecyclerView>
+            <TextView
+                android:id="@+id/first_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/first_name_label" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/last_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/first_name"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Last Name:"/>
+
+            <TextView
+                android:id="@+id/last_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/last_name_label" />
+
+            <TextView
+                android:id="@+id/gender_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/last_name"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:text="Gender:"/>
+
+            <TextView
+                android:id="@+id/gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gender_label" />
+
+            <View
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/disabledButtonBackgroundColor"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@+id/gender"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/life_events"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider1">
+            </android.support.v7.widget.RecyclerView>
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/disabledButtonBackgroundColor"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@+id/life_events"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/family_members"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider2">
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
 
 
-</ScrollView>
+    </ScrollView>
+</RelativeLayout>

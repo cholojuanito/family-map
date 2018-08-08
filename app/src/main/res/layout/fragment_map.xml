@@ -20,7 +20,9 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:padding="10dp"
         android:background="@drawable/panel_white"
         android:elevation="10dp"
@@ -43,16 +45,6 @@
             android:layout_toEndOf="@+id/icon_gender"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline">
         </TextView>
-
-        <!--<TextView-->
-            <!--android:id="@+id/event_type"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentEnd="true"-->
-            <!--android:layout_toEndOf="@+id/icon_gender"-->
-            <!--android:layout_below="@+id/person_name"-->
-            <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium">-->
-        <!--</TextView>-->
         
         <View
             android:id="@+id/divider"
@@ -61,7 +53,9 @@
             android:background="@color/disabledButtonBackgroundColor"
             android:layout_toEndOf="@+id/icon_gender"
             android:layout_alignParentEnd="true"
-            android:layout_below="@+id/person_name"/>
+            android:layout_below="@+id/person_name"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"/>
 
         <TextView
             android:id="@+id/date"
@@ -70,6 +64,8 @@
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/divider"
             android:layout_toEndOf="@+id/icon_gender"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium">
         </TextView>
 
@@ -81,6 +77,8 @@
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/icon_gender"
             android:layout_below="@+id/date"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium">
         </TextView>
 

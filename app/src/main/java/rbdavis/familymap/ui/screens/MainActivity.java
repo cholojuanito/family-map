@@ -1,10 +1,9 @@
 package rbdavis.familymap.ui.screens;
 
-
-import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import rbdavis.familymap.R;
 import rbdavis.familymap.net.http.ServerProxy;
@@ -20,20 +19,35 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar appBar = (Toolbar) findViewById(R.id.main_appbar);
+        setSupportActionBar(appBar);
+
         FragmentManager fragManager = getSupportFragmentManager();
         if (!ServerProxy.getInstance().isLoggedIn()) {
             LoginFragment loginFrag = LoginFragment.newInstance(MainActivity.this);
+            loginFrag.setHideAppBarListener(new LoginFragment.HideAppBarListener() {
+                @Override
+                public void hideAppBar() {
+                    getSupportActionBar().hide();
+                }
+            });
             fragManager.beginTransaction().add(R.id.frag_container, loginFrag).commit();
-
         }
         else {
             MapFragment mapFrag = new MapFragment();
+            mapFrag.setShowAppBarListener(new MapFragment.ShowAppBarListener() {
+                @Override
+                public void showAppBar() {
+                    getSupportActionBar().show();
+                }
+            });
             fragManager.beginTransaction().add(R.id.frag_container, mapFrag).commit();
         }
     }
 
     @Override
     public void onLogin() {
+        //showAppBar();
         FragmentManager fragManager = getSupportFragmentManager();
         SyncDataProgressFragment syncDataFrag = SyncDataProgressFragment.newInstance(MainActivity.this);
         Bundle bundle = new Bundle();
@@ -45,6 +59,13 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
     public void onSyncError(String... messages) {
         FragmentManager fragManager = getSupportFragmentManager();
         LoginFragment loginFrag = LoginFragment.newInstance(MainActivity.this);
+        loginFrag.setHideAppBarListener(new LoginFragment.HideAppBarListener() {
+            @Override
+            public void hideAppBar() {
+                getSupportActionBar().hide();
+            }
+        });
+
         Bundle bundle = new Bundle();
         bundle.putString(Constants.SYNC_ERROR_KEY, "Error occurred while syncing your data. Please try again");
 
@@ -57,8 +78,15 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
         if (android.os.Debug.isDebuggerConnected()) {
             android.os.Debug.waitForDebugger();
         }
+        //showAppBar();
         FragmentManager fragManager = getSupportFragmentManager();
         MapFragment mapFrag = MapFragment.newInstance();
+        mapFrag.setShowAppBarListener(new MapFragment.ShowAppBarListener() {
+            @Override
+            public void showAppBar() {
+                getSupportActionBar().show();
+            }
+        });
         Bundle bundle = new Bundle();
         // Add stuff to bundle if you need
         fragManager.beginTransaction().replace(R.id.frag_container, mapFrag).commit();

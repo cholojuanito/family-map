@@ -1,11 +1,12 @@
 package rbdavis.familymap.ui.screens;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -57,7 +58,7 @@ public class PersonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         App model = App.getInstance();
         if (savedInstanceState != null) {
@@ -83,6 +84,15 @@ public class PersonActivity extends AppCompatActivity {
         Person focusedPerson = model.getPeople().get(personId);
         setDefaultTexts(focusedPerson);
 
+        Toolbar appBar = (Toolbar) findViewById(R.id.person_appbar);
+        setSupportActionBar(appBar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        TextView appBarTitle = (TextView) findViewById(R.id.person_appbar_title);
+        String title = focusedPerson.getFirstName() + " " + focusedPerson.getLastName() + "'s Info";
+        appBarTitle.setText(title);
+
         setupAdapters();
     }
 
@@ -106,9 +116,6 @@ public class PersonActivity extends AppCompatActivity {
     }
 
     private void setDefaultTexts(Person person) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(person.getFirstName() + " " + person.getLastName() + "'s Info");
-
         firstNameText.setText(person.getFirstName());
         lastNameText.setText(person.getLastName());
         String genderStr = (person.getGender() == Gender.M) ? "Male" : "Female";
