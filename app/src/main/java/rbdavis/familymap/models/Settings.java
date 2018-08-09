@@ -54,15 +54,15 @@ public class Settings {
     }
 
     private void initAncestorOptions() {
-        lifeStoryOptions.put(Color.RED, false);
-        lifeStoryOptions.put(Color.YELLOW, true);
-        lifeStoryOptions.put(Color.BLUE, false);
+        ancestorsOptions.put(Color.RED, false);
+        ancestorsOptions.put(Color.YELLOW, true);
+        ancestorsOptions.put(Color.BLUE, false);
     }
 
     private void initSpouseOptions() {
-        lifeStoryOptions.put(Color.RED, false);
-        lifeStoryOptions.put(Color.YELLOW, false);
-        lifeStoryOptions.put(Color.BLUE, true);
+        spouseOptions.put(Color.RED, false);
+        spouseOptions.put(Color.YELLOW, false);
+        spouseOptions.put(Color.BLUE, true);
     }
 
     private void initLineSettings() {
