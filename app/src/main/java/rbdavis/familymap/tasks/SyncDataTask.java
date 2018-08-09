@@ -101,6 +101,9 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
 
         model.setPersonalEvents();
         model.setEventTypeColors();
+        model.setFocusedPersonId(model.getUserPersonId());
+        model.setPaternalAncestors();
+        model.setMaternalAncestors();
     }
 
     private void rest() {
