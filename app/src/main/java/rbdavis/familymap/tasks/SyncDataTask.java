@@ -3,10 +3,13 @@ package rbdavis.familymap.tasks;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import rbdavis.familymap.models.App;
+import rbdavis.familymap.models.MapMarkerColor;
 import rbdavis.familymap.net.http.ServerProxy;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Person;
@@ -15,7 +18,6 @@ import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.responses.EventsResponse;
 import rbdavis.shared.models.http.responses.PeopleResponse;
 
-import static rbdavis.shared.utils.Constants.REG_SUCCESS;
 import static rbdavis.shared.utils.Constants.SUCCESS;
 
 public class SyncDataTask extends AsyncTask<String, String, String> {
@@ -39,16 +41,17 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
 
         // TODO put with constants
         String responseStr = "Finished!";
+        rest();
 
         String progressUpdate = "Fetching ancestors' data...";
         publishProgress(progressUpdate);
+        rest();
 
         PeopleRequest peopleRequest = new PeopleRequest(tokens[0]);
         PeopleResponse peopleResponse = ServerProxy.getInstance().getAllPeople(peopleRequest);
         if (peopleResponse.getMessage().equals(SUCCESS)) {
-            updateAppData(peopleResponse);
-            progressUpdate = "Got ancestors!";
-            publishProgress(progressUpdate);
+
+            App.getInstance().setPeople(peopleResponse);
         }
         else {
             responseStr = peopleResponse.getMessage();
@@ -65,22 +68,24 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
         EventsRequest eventsRequest = new EventsRequest(tokens[0]);
         EventsResponse eventsResponse = ServerProxy.getInstance().getAllEvents(eventsRequest);
         if (eventsResponse.getMessage().equals(SUCCESS)) {
-            updateAppData(eventsResponse);
-            progressUpdate = "Got life events!";
-            publishProgress(progressUpdate);
+
+            App.getInstance().setEvents(eventsResponse);
         }
         else {
             responseStr = eventsResponse.getMessage();
             callback.onSyncError(responseStr);
             //TODO Terminate early
         }
+
         rest();
 
         /*-------------------------------------------------------------------------------------------*/
 
         progressUpdate = "Organizing data...";
         publishProgress(progressUpdate);
+
         organizeAppData();
+
         rest();
 
         progressUpdate = responseStr;
@@ -90,55 +95,12 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
         return responseStr;
     }
 
-    private void updateAppData(PeopleResponse peopleResponse) {
-        App model = App.getInstance();
-
-        for (Person p : peopleResponse.getData()) {
-            String id = p.getId();
-            if (id.equals(model.getUserPersonId())) {
-                model.setUser(p);
-            }
-
-            model.getPeople().put(id, p);
-        }
-    }
-
-    private void updateAppData(EventsResponse eventsResponse) {
-        App model = App.getInstance();
-
-        for (Event e : eventsResponse.getData()) {
-            //
-            String id = e.getId();
-            model.getEvents().put(id, e);
-
-            // Gather all the event types
-            String eventType = e.getEventType();
-            model.getEventTypes().add(eventType);
-        }
-    }
 
     private void organizeAppData() {
         App model = App.getInstance();
 
-        organizePersonalEvents(model);
-        // organizeEventTypeColors
-    }
-
-    private void organizePersonalEvents(App model) {
-        for (Map.Entry<String, Event> entry : model.getEvents().entrySet()) {
-            Event e = entry.getValue();
-            String personId = e.getPersonId();
-
-            List<Event> personsEvents = model.getPersonalEvents().get(personId);
-            if (personsEvents == null) {
-                personsEvents = new ArrayList<>();
-                personsEvents.add(e);
-                model.getPersonalEvents().put(personId, personsEvents);
-            }
-            else {
-                personsEvents.add(e);
-            }
-        }
+        model.setPersonalEvents();
+        model.setEventTypeColors();
     }
 
     private void rest() {
