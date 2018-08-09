@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -31,6 +32,7 @@ import rbdavis.familymap.R;
 import rbdavis.familymap.models.App;
 import rbdavis.familymap.models.MapMarkerColor;
 import rbdavis.familymap.ui.screens.PersonActivity;
+import rbdavis.familymap.ui.screens.SettingsActivity;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.Person;
@@ -63,6 +65,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -247,6 +250,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     private void focusOnEvent(LatLng position) {
         CameraUpdate location = CameraUpdateFactory.newLatLngZoom(position, 3);
         map.animateCamera(location);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Intent settingsIntent = new Intent(getContext(), SettingsActivity.class);
+                startActivity(settingsIntent);
+                return true;
+            case R.id.search:
+
+                return true;
+            case R.id.filter:
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public String getFocusedEventId() {

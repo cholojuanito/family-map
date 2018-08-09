@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.screens.SettingsActivity">
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/settings_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp">
+
+            <TextView
+                android:id="@+id/person_appbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:text="Settings"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/settings_appbar"
+        android:padding="@dimen/app_padding">
+
+        <!-- MAP SECTION -->
+        <TextView
+            android:id="@+id/map_section_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:text="Map Customization"/>
+
+        <!-- COLORS ROW -->
+        <LinearLayout
+            android:id="@+id/line_colors_row"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/map_section_title"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="30dp"
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight=".7">
+
+                <TextView
+                    android:id="@+id/colors_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="Lines and Colors"/>
+
+                <TextView
+                    android:id="@+id/colors_subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:text="Toggle all lines on/off"/>
+
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/all_lines_switch"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"/>
+
+        </LinearLayout>
+
+        <!-- COLOR OPTIONS -->
+        <GridLayout
+            android:id="@+id/color_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line_colors_row"
+            android:layout_marginStart="30dp"
+            android:layout_alignParentEnd="true"
+            android:columnCount="1"
+            android:rowCount="3">
+
+            <!-- LIFE STORY ROW -->
+            <LinearLayout
+                android:id="@+id/life_story_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:padding="5dp"
+                android:layout_row="1"
+                android:weightSum="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:text="Life Story"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pick a color for Life Story events &amp; toggle on/off"
+                        android:textSize="10sp"
+                        android:maxLines="3"/>
+                </LinearLayout>
+
+                <Spinner
+                    android:id="@+id/life_story_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"/>
+
+                <Switch
+                    android:id="@+id/life_story_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".2"/>
+            </LinearLayout>
+            <!-- END LIFE STORY ROW -->
+
+            <!-- ANCESTOR ROW -->
+            <LinearLayout
+                android:id="@+id/ancestor_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:padding="5dp"
+                android:layout_row="1"
+                android:weightSum="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:text="Ancestors"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pick a color for Ancestor events &amp; toggle on/off"
+                        android:textSize="10sp"
+                        android:maxLines="3"/>
+                </LinearLayout>
+
+                <Spinner
+                    android:id="@+id/ancestor_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"/>
+
+                <Switch
+                    android:id="@+id/ancestor_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".2"/>
+            </LinearLayout>
+            <!-- END ANCESTOR ROW -->
+
+            <!-- SPOUSE ROW -->
+            <LinearLayout
+                android:id="@+id/spouse_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:padding="5dp"
+                android:layout_row="1"
+                android:weightSum="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:text="Spouse"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pick a color for Spouse events &amp; toggle on/off"
+                        android:textSize="10sp"
+                        android:maxLines="3"/>
+                </LinearLayout>
+
+                <Spinner
+                    android:id="@+id/spouse_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"/>
+
+                <Switch
+                    android:id="@+id/spouse_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".2"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
+            <!-- END SPOUSE ROW -->
+
+        </GridLayout>
+        <!-- END COLOR OPTIONS -->
+
+        <!-- MAP TYPE ROW -->
+        <LinearLayout
+            android:id="@+id/map_type_row"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/color_options"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="30dp"
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <!--<ImageView-->
+                <!--android:id="@+id/map_icon"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight=".4"-->
+                <!--android:src="@drawable/ic_map"/>-->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="Map Type"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:text="Change the type of map you see"/>
+            </LinearLayout>
+
+            <Spinner
+                android:id="@+id/map_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"/>
+
+        </LinearLayout>
+        <!-- END MAP SECTION -->
+
+        <!-- SECTION DIVIDER -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/disabledButtonBackgroundColor"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:layout_below="@+id/map_type_row"/>
+
+        <!-- PROFILE SECTION -->
+        <TextView
+            android:id="@+id/profile_section_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="40dp"
+            android:text="Profile"/>
+
+        <!-- SYNC OPTION -->
+        <RelativeLayout
+            android:id="@+id/sync_data_row"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/profile_section_title"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="30dp"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/sync_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="Sync Data"/>
+
+                <TextView
+                    android:id="@+id/sync_subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:text="Resyncs your data from the Family Map Service"
+                    android:maxLines="3"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/sync_button"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_alignParentEnd="true"
+                android:drawableStart="@drawable/ic_sync_black_24dp"
+                android:textSize="13sp"
+                android:text="Sync"/>
+
+        </RelativeLayout>
+
+        <!-- LOGOUT OPTION -->
+        <RelativeLayout
+            android:id="@+id/logout_row"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/sync_data_row"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="30dp"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/logout_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="Logout"/>
+
+                <TextView
+                    android:id="@+id/logout_subheader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:text="Bye! Come back soon!"
+                    android:maxLines="3"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/logout_button"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_alignParentEnd="true"
+                android:drawableStart="@drawable/ic_sign_out"
+                android:textSize="13sp"
+                android:text="Logout"/>
+
+        </RelativeLayout>
+
+        <!-- END PROFILE SECTION -->
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 
 import rbdavis.familymap.R;
 import rbdavis.familymap.net.http.ServerProxy;
@@ -43,6 +44,13 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
             });
             fragManager.beginTransaction().add(R.id.frag_container, mapFrag).commit();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main_menu_options, menu);
+        return true;
     }
 
     @Override

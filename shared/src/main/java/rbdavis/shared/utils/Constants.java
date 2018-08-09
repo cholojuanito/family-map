@@ -161,4 +161,9 @@ public class Constants {
 
     // Bundle Keys
     public static final String SYNC_ERROR_KEY = "syncError";
+
+    // Settings
+    public static final String HYBRID = "Hybrid";
+    public static final String NORMAL = "Normal";
+    public static final String SATELLITE = "Satellite";
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="rbdavis.familymap">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -26,22 +25,21 @@
         </activity>
         <activity
             android:name=".ui.screens.PersonActivity"
-            android:parentActivityName=".ui.screens.MainActivity"/>
-        <activity
-            android:name=".ui.screens.SettingsActivity"
-            android:parentActivityName=".ui.screens.MainActivity"
-            android:label="@string/title_activity_settings" />
+            android:parentActivityName=".ui.screens.MainActivity" />
         <activity
             android:name=".ui.screens.EventActivity"
+            android:parentActivityName=".ui.screens.MainActivity" />
+        <activity
+            android:name=".ui.screens.SettingsActivity"
             android:parentActivityName=".ui.screens.MainActivity"/>
         <activity
             android:name=".ui.screens.SearchActivity"
-            android:parentActivityName=".ui.screens.MainActivity"
-            android:label="Search"/>
+            android:label="Search"
+            android:parentActivityName=".ui.screens.MainActivity" />
         <activity
             android:name=".ui.screens.FilterActivity"
-            android:parentActivityName=".ui.screens.MainActivity"
-            android:label="Filters"/>
+            android:label="Filters"
+            android:parentActivityName=".ui.screens.MainActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -53,6 +51,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB_pkzpS9_fgcOYTMgEHkyLNYhPU-tqWqg" />
+
     </application>
 
 </manifest>

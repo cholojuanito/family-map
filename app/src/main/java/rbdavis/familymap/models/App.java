@@ -33,7 +33,7 @@ public class App {
     private Set<String> paternalAncestors;
     private Set<String> maternalAncestors;
     private Map<String, List<Person>> childrenOfPerson;
-    // Settings
+    private Settings settings;
     // Filters
 
     // Map data
@@ -54,7 +54,7 @@ public class App {
         paternalAncestors = new HashSet<>();
         maternalAncestors =  new HashSet<>();
         childrenOfPerson = new HashMap<>();
-        // Settings
+        settings = new Settings();
         // Filters
         focusedPersonId = null;
         eventTypes = new HashSet<>();
@@ -228,5 +228,13 @@ public class App {
 
     public void setConnections(List<Polyline> connections) {
         this.connections = connections;
+    }
+
+    public Settings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(Settings settings) {
+        this.settings = settings;
     }
 }
