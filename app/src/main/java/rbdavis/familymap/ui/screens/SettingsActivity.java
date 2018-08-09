@@ -1,6 +1,8 @@
 package rbdavis.familymap.ui.screens;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,12 +15,17 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
+
+import java.util.Map;
 
 import rbdavis.familymap.R;
 import rbdavis.familymap.models.App;
 import rbdavis.familymap.models.Settings;
+import rbdavis.familymap.ui.components.MapFragment;
+import rbdavis.familymap.ui.components.SyncDataProgressFragment;
 
-public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, SyncDataProgressFragment.Callback {
 
     private Switch allLinesSwitch;
     private Switch lifeStorySwitch;
@@ -88,6 +95,11 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 model.getSettings().setShowLifeStoryLines(isChecked);
+
+                if (!model.getSettings().isShowLines() && isChecked) {
+                    model.getSettings().setShowLines(true);
+                    allLinesSwitch.setChecked(true);
+                }
             }
         });
 
@@ -95,6 +107,11 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 model.getSettings().setShowAncestorsLines(isChecked);
+
+                if (!model.getSettings().isShowLines() && isChecked) {
+                    model.getSettings().setShowLines(true);
+                    allLinesSwitch.setChecked(true);
+                }
             }
         });
 
@@ -102,6 +119,11 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 model.getSettings().setShowSpouseLines(isChecked);
+
+                if (!model.getSettings().isShowLines() && isChecked) {
+                    model.getSettings().setShowLines(true);
+                    allLinesSwitch.setChecked(true);
+                }
             }
         });
     }
@@ -137,6 +159,11 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         ancestorsSpinner.setAdapter(linesAdapter);
         spouseSpinner.setAdapter(linesAdapter);
 
+        mapTypeSpinner.setOnItemSelectedListener(this);
+        lifeStorySpinner.setOnItemSelectedListener(this);
+        ancestorsSpinner.setOnItemSelectedListener(this);
+        spouseSpinner.setOnItemSelectedListener(this);
+
         mapTypeSpinner.setSelection(model.getSettings().getSelectedMapTypeIndex());
         lifeStorySpinner.setSelection(model.getSettings().getSelectedLifeStoryIndex());
         ancestorsSpinner.setSelection(model.getSettings().getSelectedAncestorsIndex());
@@ -160,31 +187,119 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     }
 
     private void sync() {
+        App.getInstance().resetModel(true);
+
+        FragmentManager fragManager = getSupportFragmentManager();
+        SyncDataProgressFragment syncDataFrag = SyncDataProgressFragment.newInstance(SettingsActivity.this);
+        Bundle bundle = new Bundle();
+        // Add stuff to bundle if you need
+        fragManager.beginTransaction().replace(R.id.frag_container_settings, syncDataFrag).commit();
+    }
+
+    @Override
+    public void onSyncError(String... messages) {
+        //"Error occurred while syncing your data. Please try again"
+        FragmentManager fragManager = getSupportFragmentManager();
+        SyncDataProgressFragment syncDataFrag = SyncDataProgressFragment.newInstance(SettingsActivity.this);
+        fragManager.beginTransaction().remove(syncDataFrag).commit();
+
+        Toast
+        .makeText(SettingsActivity.this, messages[0], Toast.LENGTH_LONG)
+        .show();
+    }
+
+    @Override
+    public void onSynced(String... messages) {
+
+        if (android.os.Debug.isDebuggerConnected()) {
+            android.os.Debug.waitForDebugger();
+        }
+
+        Intent intent = new Intent( SettingsActivity.this , MainActivity.class);
+        startActivity(intent);
 
     }
 
     private void logout() {
-        // TODO Model logout first
+        App.getInstance().performLogout();
 
-//        Intent intent = new Intent( this , MainActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(intent);
+        App model = App.getInstance();
+
+        Intent intent = new Intent( SettingsActivity.this , MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        App model = App.getInstance();
 
         switch (parent.getId()) {
             case R.id.map_spinner:
-                // TODO reset previous maps
+                for(Map.Entry<String, Boolean> entry : model.getSettings().getMapTypeOptions().entrySet()){
+                    entry.setValue(false);
+                }
+
+                model.getSettings().getMapTypeOptions().put(parent.getSelectedItem().toString(), true);
+                model.getSettings().setSelectedMapTypeIndex(position);
                 break;
+
             case R.id.life_story_spinner:
+                for(Map.Entry<Integer, Boolean> entry : model.getSettings().getLifeStoryOptions().entrySet()){
+                    entry.setValue(false);
+                }
+                String lifeStoryColor = parent.getSelectedItem().toString();
+                if (lifeStoryColor.equals(getString(R.string.green))) {
+                    model.getSettings().getLifeStoryOptions().put(Color.GREEN, true);
+                }
+                else if (lifeStoryColor.equals(getString(R.string.red))) {
+                    model.getSettings().getLifeStoryOptions().put(Color.RED, true);
+                }
+                else {
+                    model.getSettings().getLifeStoryOptions().put(Color.BLUE, true);
+                }
+
+                model.getSettings().setSelectedLifeStoryIndex(position);
                 break;
+
             case R.id.ancestor_spinner:
+                for(Map.Entry<Integer, Boolean> entry : model.getSettings().getAncestorsOptions().entrySet()){
+                    entry.setValue(false);
+                }
+
+                String ancestorColor = parent.getSelectedItem().toString();
+                if (ancestorColor.equals(getString(R.string.green))) {
+                    model.getSettings().getAncestorsOptions().put(Color.GREEN, true);
+                }
+                else if (ancestorColor.equals(getString(R.string.red))) {
+                    model.getSettings().getAncestorsOptions().put(Color.RED, true);
+                }
+                else {
+                    model.getSettings().getAncestorsOptions().put(Color.BLUE, true);
+                }
+
+                model.getSettings().setSelectedAncestorsIndex(position);
                 break;
+
             case R.id.spouse_spinner:
+                for(Map.Entry<Integer, Boolean> entry : model.getSettings().getSpouseOptions().entrySet()){
+                    entry.setValue(false);
+                }
+
+                String spouseColor = parent.getSelectedItem().toString();
+                if (spouseColor.equals(getString(R.string.green))) {
+                    model.getSettings().getSpouseOptions().put(Color.GREEN, true);
+                }
+                else if (spouseColor.equals(getString(R.string.red))) {
+                    model.getSettings().getSpouseOptions().put(Color.RED, true);
+                }
+                else {
+                    model.getSettings().getSpouseOptions().put(Color.BLUE, true);
+                }
+
+                model.getSettings().setSelectedSpouseIndex(position);
                 break;
         }
     }

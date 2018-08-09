@@ -121,7 +121,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             Marker marker = model.getEventsToMarkers().get(focusedEventId);
             focusOnEvent(marker.getPosition());
             showEventForMarker(marker);
-            drawMapLines(marker);
+            if (model.getSettings().isShowLines()) {
+                drawMapLines(marker);
+            }
         }
 
         // TODO Check for setting/filter stuff
@@ -131,7 +133,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             public boolean onMarkerClick(Marker marker) {
                 focusOnEvent(marker.getPosition());
                 showEventForMarker(marker);
-                drawMapLines(marker);
+                if (App.getInstance().getSettings().isShowLines()) {
+                    drawMapLines(marker);
+                }
                 return true;
             }
         });

@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
 
     @Override
     public void onLogin() {
-        //showAppBar();
         FragmentManager fragManager = getSupportFragmentManager();
         SyncDataProgressFragment syncDataFrag = SyncDataProgressFragment.newInstance(MainActivity.this);
         Bundle bundle = new Bundle();
@@ -86,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
         if (android.os.Debug.isDebuggerConnected()) {
             android.os.Debug.waitForDebugger();
         }
-        //showAppBar();
+
         FragmentManager fragManager = getSupportFragmentManager();
         MapFragment mapFrag = MapFragment.newInstance();
         mapFrag.setShowAppBarListener(new MapFragment.ShowAppBarListener() {

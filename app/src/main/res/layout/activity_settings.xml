@@ -410,4 +410,10 @@
         <!-- END PROFILE SECTION -->
     </RelativeLayout>
 
+    <FrameLayout
+        android:id="@+id/frag_container_settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
 </RelativeLayout>

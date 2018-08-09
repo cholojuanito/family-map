@@ -119,10 +119,15 @@ public class App {
 
     public void performLogout() {
         ServerProxy.getInstance().logout();
-        resetModel();
+        resetModel(false);
     }
 
-    public void resetModel() {
+    public void resetModel(boolean keepSettings) {
+
+        for (MapMarkerColor color : MapMarkerColor.values()) {
+            color.setIsUsed(false);
+        }
+
         people = new HashMap<>();
         events = new HashMap<>();
         personalEvents = new HashMap<>();
@@ -131,7 +136,9 @@ public class App {
         paternalAncestors = new HashSet<>();
         maternalAncestors =  new HashSet<>();
         childrenOfPerson = new HashMap<>();
-        settings = new Settings();
+        if (!keepSettings) {
+            settings = new Settings();
+        }
         filters = new Filters();
         focusedPersonId = null;
         eventTypes = new HashSet<>();
