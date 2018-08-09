@@ -39,7 +39,7 @@ public class App {
     private Set<String> maternalAncestors;
     private Map<String, List<Person>> childrenOfPerson;
     private Settings settings;
-    // Filters
+    private Filters filters;
 
     // Map data
     private String focusedPersonId;
@@ -60,7 +60,7 @@ public class App {
         maternalAncestors =  new HashSet<>();
         childrenOfPerson = new HashMap<>();
         settings = new Settings();
-        //TODO Filters
+        filters = new Filters();
         focusedPersonId = null;
         eventTypes = new HashSet<>();
         eventTypeColors = new HashMap<>();
@@ -132,7 +132,7 @@ public class App {
         maternalAncestors =  new HashSet<>();
         childrenOfPerson = new HashMap<>();
         settings = new Settings();
-        // TODO Filters
+        filters = new Filters();
         focusedPersonId = null;
         eventTypes = new HashSet<>();
         eventTypeColors = new HashMap<>();
@@ -140,6 +140,15 @@ public class App {
         eventsToMarkers = new HashMap<>();
         personMarkers = new HashMap<>();
         connections = new LinkedList<>();
+    }
+
+    public void resetLines() {
+
+        for (Polyline line : connections) {
+            line.remove();
+        }
+
+        connections.clear();
     }
 
     public Map<String, Person> getPeople() {
@@ -167,17 +176,23 @@ public class App {
         return events;
     }
 
+    public Map<String, Event> filteredEvents() {
+        // Uses filters
+        return null;
+    }
+
     public void setEvents(EventsResponse eventsResponse) {
 
         for (Event e : eventsResponse.getData()) {
-            //
             String id = e.getId();
             getEvents().put(id, e);
 
-            // Gather all the event types
+            // Gather all the event types while we are at it
             String eventType = e.getEventType();
             getEventTypes().add(eventType);
         }
+
+        addEventTypesToFilters();
     }
 
     public void setEvents(Map<String, Event> events) {
@@ -331,5 +346,19 @@ public class App {
 
     public void setSettings(Settings settings) {
         this.settings = settings;
+    }
+
+    public void addEventTypesToFilters() {
+        for (String type : eventTypes) {
+            filters.getFilterOptions().put(type, false);
+        }
+    }
+
+    public Filters getFilters() {
+        return filters;
+    }
+
+    public void setFilters(Filters filters) {
+        this.filters = filters;
     }
 }

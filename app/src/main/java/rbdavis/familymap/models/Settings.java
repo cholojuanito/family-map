@@ -31,7 +31,7 @@ public class Settings {
 
         selectedMapTypeIndex = 0;   // Normal
         selectedLifeStoryIndex = 0; // Red
-        selectedAncestorsIndex = 1; // Yellow
+        selectedAncestorsIndex = 1; // Green
         selectedSpouseIndex = 2;    // Blue
 
         initMapTypeOptions();
@@ -49,19 +49,19 @@ public class Settings {
 
     private void initLifeStoryOptions() {
         lifeStoryOptions.put(Color.RED, true);
-        lifeStoryOptions.put(Color.YELLOW, false);
+        lifeStoryOptions.put(Color.GREEN, false);
         lifeStoryOptions.put(Color.BLUE, false);
     }
 
     private void initAncestorOptions() {
         ancestorsOptions.put(Color.RED, false);
-        ancestorsOptions.put(Color.YELLOW, true);
+        ancestorsOptions.put(Color.GREEN, true);
         ancestorsOptions.put(Color.BLUE, false);
     }
 
     private void initSpouseOptions() {
         spouseOptions.put(Color.RED, false);
-        spouseOptions.put(Color.YELLOW, false);
+        spouseOptions.put(Color.GREEN, false);
         spouseOptions.put(Color.BLUE, true);
     }
 

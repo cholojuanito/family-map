@@ -39,7 +39,7 @@
     <string name="satellite">Satellite</string>
 
     <string name="red">Red</string>
-    <string name="yellow">Yellow</string>
+    <string name="green">Green</string>
     <string name="blue">Blue</string>
 
     <string-array name="map_types">
@@ -47,9 +47,10 @@
         <item>@string/hybrid</item>
         <item>@string/satellite</item>
     </string-array>
+
     <string-array name="line_options">
         <item>@string/red</item>
-        <item>@string/yellow</item>
+        <item>@string/green</item>
         <item>@string/blue</item>
     </string-array>
 

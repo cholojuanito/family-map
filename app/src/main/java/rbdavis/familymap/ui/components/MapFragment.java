@@ -1,7 +1,6 @@
 package rbdavis.familymap.ui.components;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,6 +35,7 @@ import rbdavis.familymap.ui.screens.SettingsActivity;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.Person;
+import rbdavis.shared.utils.Constants;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback{
     private final DateTimeFormatter EVENT_FORMATTER = DateTimeFormatter.ofPattern("dd MMM yyyy");
@@ -121,6 +121,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             Marker marker = model.getEventsToMarkers().get(focusedEventId);
             focusOnEvent(marker.getPosition());
             showEventForMarker(marker);
+            drawMapLines(marker);
         }
 
         // TODO Check for setting/filter stuff
@@ -130,8 +131,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             public boolean onMarkerClick(Marker marker) {
                 focusOnEvent(marker.getPosition());
                 showEventForMarker(marker);
-                updateModelInfo(marker);
-                //drawMapLines(marker);
+                drawMapLines(marker);
                 return true;
             }
         });
@@ -145,8 +145,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             }
         });
 
-        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        setMapType(model);
+    }
 
+    private void setMapType(App model) {
+        if (model.getSettings().getMapTypeOptions().get(Constants.NORMAL)) {
+            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+        else if (model.getSettings().getMapTypeOptions().get(Constants.HYBRID)) {
+            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        }
+        else {
+            map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        }
     }
 
     // TODO: Setup settings/filter then handle this stuff.
@@ -155,29 +166,158 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         String eventId = model.getMarkersToEvents().get(marker);
         Event event = model.getEvents().get(eventId);
         Person person = model.getPeople().get(event.getPersonId());
-        List<Event> personEvents = model.getPersonalEvents().get(person.getId());
         LatLng currLatLng = marker.getPosition();
-        MapMarkerColor lineColor = model.getEventTypeColors().get(event.getEventType());
 
-        model.getConnections().clear();
+        model.resetLines();
 
-        for (Event e : personEvents) {
-            double lat = Double.parseDouble(e.getLatitude());
-            double lng = Double.parseDouble(e.getLongitude());
-            LatLng eventLatLng = new LatLng(lat, lng);
+        drawLifeStoryLines(model, currLatLng, person);
 
-             Polyline line = addLine(currLatLng, eventLatLng, Color.RED);
-             model.getConnections().add(line);
+        float initialLineWidth = 10;
+        determineAncestorLinesToDraw(model, currLatLng, person, initialLineWidth);
+
+        drawSpouseLines(model, currLatLng, person);
+
+    }
+
+    private void drawLifeStoryLines(App model, LatLng currLatLng, Person person) {
+        List<Event> personalEvents = model.getPersonalEvents().get(person.getId());
+        Map<String, Boolean> filters = model.getFilters().getFilterOptions();
+
+        if (model.getSettings().isShowLifeStoryLines()) {
+            for (Event e : personalEvents) {
+                // If not filtered
+                if (!filters.get(e.getEventType())) {
+                    double lat = Double.parseDouble(e.getLatitude());
+                    double lng = Double.parseDouble(e.getLongitude());
+                    LatLng eventLatLng = new LatLng(lat, lng);
+                    Polyline line = addLine(currLatLng, eventLatLng);
+
+                    // Get color from settings
+                    for (Map.Entry<Integer, Boolean> entry : model.getSettings().getLifeStoryOptions().entrySet()) {
+                        if (entry.getValue()) {
+                            line.setColor(entry.getKey());
+                        }
+                    }
+
+                    model.getConnections().add(line);
+                }
+            }
+        }
+    }
+
+    private void determineAncestorLinesToDraw(App model, LatLng currLatLng, Person person, float lineWidth) {
+        Map<String, Boolean> filters = model.getFilters().getFilterOptions();
+        if (model.getSettings().isShowAncestorsLines()) {
+            if (person.getFatherId() != null && !filters.get(Constants.BY_FATHER_SIDE) &&
+                    !filters.get(Constants.BY_MALE)) {
+
+                drawAncestorLine(model, currLatLng, person, lineWidth);
+            }
+
+            if (person.getMotherId() != null && !filters.get(Constants.BY_MOTHER_SIDE) &&
+                    !filters.get(Constants.BY_FEMALE)) {
+
+                drawAncestorLine(model, currLatLng, person, lineWidth);
+            }
+        }
+    }
+
+    private void drawAncestorLine(App model, LatLng currLatLng, Person person, float lineWidth) {
+        List<Event> ancestorPersonalEvents = model.getPersonalEvents().get(person.getId());
+        Map<String, Boolean> filters = model.getFilters().getFilterOptions();
+
+        Event ancestorEvent = findBestUnfilteredEvent(ancestorPersonalEvents);
+
+        LatLng newLatLng = null;
+        if (ancestorEvent != null) {
+            addAncestorLine(model, currLatLng, ancestorEvent, lineWidth);
+
+            double newLat = Double.parseDouble(ancestorEvent.getLatitude());
+            double newLng = Double.parseDouble(ancestorEvent.getLongitude());
+            newLatLng = new LatLng(newLat, newLng);
+        }
+
+        lineWidth--;
+
+        if (person.getFatherId() != null && !filters.get(Constants.BY_MALE)) {
+            Person father = model.getPeople().get(person.getFatherId());
+            drawAncestorLine(model, newLatLng, father, lineWidth);
+        }
+
+        if (person.getMotherId() != null && !filters.get(Constants.BY_FEMALE)) {
+            Person mother = model.getPeople().get(person.getMotherId());
+            drawAncestorLine(model, newLatLng, mother, lineWidth);
         }
 
     }
 
-    private Polyline addLine(LatLng position, LatLng position2, int color) {
+    private void addAncestorLine(App model, LatLng currLatLng, Event ancestorEvent, float lineWidth) {
+        double lat = Double.parseDouble(ancestorEvent.getLatitude());
+        double lng = Double.parseDouble(ancestorEvent.getLongitude());
+        LatLng eventLatLng = new LatLng(lat, lng);
+        Polyline line = addLine(currLatLng, eventLatLng);
+        line.setWidth(lineWidth);
+
+        // Get color from settings
+        for (Map.Entry<Integer, Boolean> entry : model.getSettings().getAncestorsOptions().entrySet()) {
+            if (entry.getValue()) {
+                line.setColor(entry.getKey());
+            }
+        }
+
+        model.getConnections().add(line);
+    }
+
+    private void drawSpouseLines(App model, LatLng currLatLng, Person person) {
+        if (person.getSpouseId() != null && model.getSettings().isShowSpouseLines()) {
+            List<Event> spousePersonalEvents = model.getPersonalEvents().get(person.getSpouseId());
+            Map<String, Boolean> filters = model.getFilters().getFilterOptions();
+
+            Event spouseEvent = findBestUnfilteredEvent(spousePersonalEvents);
+
+            if (spouseEvent != null) {
+                if (person.getGender() == Gender.M && (!filters.get(Constants.BY_FEMALE))) {
+                    addSpouseLine(model, currLatLng, spouseEvent);
+                }
+                else if (person.getGender() == Gender.F && (!filters.get(Constants.BY_MALE))) {
+                    addSpouseLine(model, currLatLng, spouseEvent);
+                }
+            }
+        }
+    }
+
+    private void addSpouseLine(App model, LatLng currLatLng, Event spouseEvent) {
+        double lat = Double.parseDouble(spouseEvent.getLatitude());
+        double lng = Double.parseDouble(spouseEvent.getLongitude());
+        LatLng eventLatLng = new LatLng(lat, lng);
+        Polyline line = addLine(currLatLng, eventLatLng);
+
+        // Get color from settings
+        for (Map.Entry<Integer, Boolean> entry : model.getSettings().getSpouseOptions().entrySet()) {
+            if (entry.getValue()) {
+                line.setColor(entry.getKey());
+            }
+        }
+
+        model.getConnections().add(line);
+
+    }
+
+    private Event findBestUnfilteredEvent(List<Event> personalEvents) {
+        Map<String, Boolean> filters = App.getInstance().getFilters().getFilterOptions();
+        for (Event e : personalEvents) {
+            if (!filters.get(e.getEventType())) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+    private Polyline addLine(LatLng position, LatLng position2) {
         return map.addPolyline(
                 new PolylineOptions()
                 .clickable(false)
                 .add(position, position2)
-                .color(color)
         );
     }
 
@@ -208,17 +348,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             eventMarkers.put(marker, entry.getKey());
             eventsToMarkers.put(entry.getKey(), marker);
             personMarkers.put(marker, event.getPersonId());
-        }
-    }
-
-    // TODO Should this be async?
-    private void updateModelInfo(Marker marker) {
-        String personId = App.getInstance().getPersonMarkers().get(marker);
-        Map<String, Person> people = App.getInstance().getPeople();
-
-        for (Map.Entry<String, Person> entry : people.entrySet()) {
-            Person p = entry.getValue();
-
         }
     }
 
