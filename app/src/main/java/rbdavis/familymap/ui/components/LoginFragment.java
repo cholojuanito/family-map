@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -101,9 +100,9 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
 
         fillDefaults();
 
-        initOnTextChangeListeners();
+        initEditTexts();
 
-        initOnClickListeners();
+        initButtons();
 
         if (hideAppBarListener != null) {
             hideAppBarListener.hideAppBar();
@@ -119,7 +118,7 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
         ((MainActivity)getActivity()).getSupportActionBar().hide();
     }
 
-    private void initOnTextChangeListeners() {
+    private void initEditTexts() {
         hostEditText.addTextChangedListener(new LoginTextWatcher());
         portEditText.addTextChangedListener(new LoginTextWatcher());
         usernameEditText.addTextChangedListener(new LoginTextWatcher());
@@ -129,14 +128,13 @@ public class LoginFragment extends Fragment implements LoginUserTask.Callback, R
         emailEditText.addTextChangedListener(new LoginTextWatcher());
     }
 
-    private void initOnClickListeners() {
+    private void initButtons() {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onLoginButtonClick();
             }
         });
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

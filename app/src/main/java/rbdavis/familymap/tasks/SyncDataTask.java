@@ -3,6 +3,7 @@ package rbdavis.familymap.tasks;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +50,8 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
         PeopleRequest peopleRequest = new PeopleRequest(tokens[0]);
         PeopleResponse peopleResponse = ServerProxy.getInstance().getAllPeople(peopleRequest);
         if (peopleResponse.getMessage().equals(SUCCESS)) {
-            updateAppData(peopleResponse);
+
+            App.getInstance().setPeople(peopleResponse);
         }
         else {
             responseStr = peopleResponse.getMessage();
@@ -66,7 +68,8 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
         EventsRequest eventsRequest = new EventsRequest(tokens[0]);
         EventsResponse eventsResponse = ServerProxy.getInstance().getAllEvents(eventsRequest);
         if (eventsResponse.getMessage().equals(SUCCESS)) {
-            updateAppData(eventsResponse);
+
+            App.getInstance().setEvents(eventsResponse);
         }
         else {
             responseStr = eventsResponse.getMessage();
@@ -80,80 +83,24 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
 
         progressUpdate = "Organizing data...";
         publishProgress(progressUpdate);
+
         organizeAppData();
+
         rest();
 
         progressUpdate = responseStr;
         publishProgress(progressUpdate);
-        //rest();
+        rest();
 
         return responseStr;
     }
 
-    private void updateAppData(PeopleResponse peopleResponse) {
-        App model = App.getInstance();
-
-        for (Person p : peopleResponse.getData()) {
-            String id = p.getId();
-            if (id.equals(model.getUserPersonId())) {
-                model.setUser(p);
-            }
-
-            model.getPeople().put(id, p);
-            model.addChildToParent(p);
-        }
-    }
-
-    private void updateAppData(EventsResponse eventsResponse) {
-        App model = App.getInstance();
-
-        for (Event e : eventsResponse.getData()) {
-            //
-            String id = e.getId();
-            model.getEvents().put(id, e);
-
-            // Gather all the event types
-            String eventType = e.getEventType();
-            model.getEventTypes().add(eventType);
-        }
-    }
 
     private void organizeAppData() {
         App model = App.getInstance();
 
-        organizePersonalEvents(model);
-        organizeEventTypeColors(model);
-    }
-
-    private void organizePersonalEvents(App model) {
-        for (Map.Entry<String, Event> entry : model.getEvents().entrySet()) {
-            Event e = entry.getValue();
-            String personId = e.getPersonId();
-
-            List<Event> personsEvents = model.getPersonalEvents().get(personId);
-            if (personsEvents == null) {
-                personsEvents = new ArrayList<>();
-                personsEvents.add(e);
-                model.getPersonalEvents().put(personId, personsEvents);
-            }
-            else {
-                personsEvents.add(e);
-            }
-        }
-    }
-
-    private void organizeEventTypeColors(App model) {
-        Set<String> eventTypes = model.getEventTypes();
-
-        for (String type : eventTypes) {
-            for (MapMarkerColor color : MapMarkerColor.values()) {
-                if (!color.isUsed()) {
-                    color.setIsUsed(true);
-                    model.getEventTypeColors().put(type, color);
-                    break;
-                }
-            }
-        }
+        model.setPersonalEvents();
+        model.setEventTypeColors();
     }
 
     private void rest() {

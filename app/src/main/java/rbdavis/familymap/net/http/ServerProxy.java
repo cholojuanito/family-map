@@ -48,6 +48,11 @@ public class ServerProxy {
 
     private ServerProxy() {}
 
+    public void logout() {
+        setToken(null);
+        setLoggedIn(false);
+    }
+
     public LoginOrRegisterResponse login(LoginRequest request) {
         LoginOrRegisterResponse response = new LoginOrRegisterResponse();
 
@@ -70,7 +75,7 @@ public class ServerProxy {
         if (response.getAuthToken() != null) {
             setToken(response.getAuthToken());
             App.getInstance().setUserPersonId(response.getPersonID());
-            isLoggedIn = true;
+            setLoggedIn(true);
         }
 
         return response;
@@ -98,7 +103,7 @@ public class ServerProxy {
         if (response.getAuthToken() != null) {
             setToken(response.getAuthToken());
             App.getInstance().setUserPersonId(response.getPersonID());
-            isLoggedIn = true;
+            setLoggedIn(true);
         }
 
         return response;

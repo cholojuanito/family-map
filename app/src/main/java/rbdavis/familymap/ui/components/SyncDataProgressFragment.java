@@ -52,7 +52,6 @@ public class SyncDataProgressFragment extends Fragment implements SyncDataTask.C
     public void onResume() {
         super.onResume();
         //TODO Run tests on how to handle this part well
-        //syncData("badToken");
         syncData(ServerProxy.getInstance().getToken());
     }
 

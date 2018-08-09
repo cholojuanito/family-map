@@ -4,14 +4,19 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import rbdavis.familymap.net.http.ServerProxy;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Person;
+import rbdavis.shared.models.http.responses.EventsResponse;
+import rbdavis.shared.models.http.responses.PeopleResponse;
 
 public class App {
     /*Singleton*/
@@ -55,14 +60,14 @@ public class App {
         maternalAncestors =  new HashSet<>();
         childrenOfPerson = new HashMap<>();
         settings = new Settings();
-        // Filters
+        //TODO Filters
         focusedPersonId = null;
         eventTypes = new HashSet<>();
         eventTypeColors = new HashMap<>();
         markersToEvents = new HashMap<>();
         eventsToMarkers = new HashMap<>();
         personMarkers = new HashMap<>();
-        connections = new ArrayList<>();
+        connections = new LinkedList<>();
     }
 
     private void findAncestors(String id, Set<String> ancestors) {
@@ -106,8 +111,52 @@ public class App {
 
     }
 
+    public void sortPersonalEvents() {
+        for (Map.Entry<String, List<Event>> entry : personalEvents.entrySet()) {
+            Collections.sort(entry.getValue());
+        }
+    }
+
+    public void performLogout() {
+        ServerProxy.getInstance().logout();
+        resetModel();
+    }
+
+    public void resetModel() {
+        people = new HashMap<>();
+        events = new HashMap<>();
+        personalEvents = new HashMap<>();
+        userPersonId = null;
+        user = null;
+        paternalAncestors = new HashSet<>();
+        maternalAncestors =  new HashSet<>();
+        childrenOfPerson = new HashMap<>();
+        settings = new Settings();
+        // TODO Filters
+        focusedPersonId = null;
+        eventTypes = new HashSet<>();
+        eventTypeColors = new HashMap<>();
+        markersToEvents = new HashMap<>();
+        eventsToMarkers = new HashMap<>();
+        personMarkers = new HashMap<>();
+        connections = new LinkedList<>();
+    }
+
     public Map<String, Person> getPeople() {
         return people;
+    }
+
+    public void setPeople(PeopleResponse peopleResponse) {
+
+        for (Person p : peopleResponse.getData()) {
+            String id = p.getId();
+            if (id.equals(getUserPersonId())) {
+                setUser(p);
+            }
+
+            people.put(id, p);
+            addChildToParent(p);
+        }
     }
 
     public void setPeople(Map<String, Person> people) {
@@ -118,12 +167,45 @@ public class App {
         return events;
     }
 
+    public void setEvents(EventsResponse eventsResponse) {
+
+        for (Event e : eventsResponse.getData()) {
+            //
+            String id = e.getId();
+            getEvents().put(id, e);
+
+            // Gather all the event types
+            String eventType = e.getEventType();
+            getEventTypes().add(eventType);
+        }
+    }
+
     public void setEvents(Map<String, Event> events) {
         this.events = events;
     }
 
     public Map<String, List<Event>> getPersonalEvents() {
         return personalEvents;
+    }
+
+    public void setPersonalEvents() {
+
+        for (Map.Entry<String, Event> entry : getEvents().entrySet()) {
+            Event e = entry.getValue();
+            String personId = e.getPersonId();
+
+            List<Event> personsEvents = personalEvents.get(personId);
+            if (personsEvents == null) {
+                personsEvents = new LinkedList<>();
+                personsEvents.add(e);
+                personalEvents.put(personId, personsEvents);
+            }
+            else {
+                personsEvents.add(e);
+            }
+        }
+
+        sortPersonalEvents();
     }
 
     public void setPersonalEvents(Map<String, List<Event>> personalEvents) {
@@ -140,6 +222,19 @@ public class App {
 
     public Map<String, MapMarkerColor> getEventTypeColors() {
         return eventTypeColors;
+    }
+
+    public void setEventTypeColors() {
+
+        for (String type : eventTypes) {
+            for (MapMarkerColor color : MapMarkerColor.values()) {
+                if (!color.isUsed()) {
+                    color.setIsUsed(true);
+                    getEventTypeColors().put(type, color);
+                    break;
+                }
+            }
+        }
     }
 
     public void setEventTypeColors(Map<String, MapMarkerColor> eventTypeColors) {
