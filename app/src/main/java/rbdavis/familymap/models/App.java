@@ -133,7 +133,6 @@ public class App {
         people = new HashMap<>();
         events = new HashMap<>();
         personalEvents = new HashMap<>();
-        userPersonId = null;
         user = null;
         paternalAncestors = new HashSet<>();
         maternalAncestors =  new HashSet<>();
@@ -198,6 +197,7 @@ public class App {
         boolean fatherSideCanBeShown = filters.getFilterOptions().get(Constants.BY_FATHER_SIDE);
         boolean motherSideCanBeShown = filters.getFilterOptions().get(Constants.BY_MOTHER_SIDE);
 
+
         if (fatherSideCanBeShown && motherSideCanBeShown) {
             // Make a copy of all the events
             filteredEvents = new HashMap<>(events);
@@ -237,15 +237,15 @@ public class App {
         return events;
     }
 
-    private void filterByEventType(Map<String, Event> filteredEvents) {
+    public void filterByEventType(Map<String, Event> filteredEvents) {
 
         Map<String, Event> copyMap = new HashMap<>(filteredEvents);
 
         for (Map.Entry<String, Event> entry : copyMap.entrySet()) {
             Event e = entry.getValue();
-            boolean eventCanBeShown = filters.getFilterOptions().get(e.getEventType());
+            boolean eventTypeCanBeShown = filters.getFilterOptions().get(e.getEventType());
 
-            if (eventCanBeShown) {
+            if (eventTypeCanBeShown) {
                 filterByGender(filteredEvents, e);
             }
             else {
@@ -378,9 +378,10 @@ public class App {
     }
 
     public void setPaternalAncestors() {
-        String fatherId = people.get(userPersonId).getFatherId();
-        paternalAncestors.add(userPersonId);
-        findAncestors(fatherId, paternalAncestors);
+        if (user.getFatherId() != null) {
+            String fatherId = people.get(userPersonId).getFatherId();
+            findAncestors(fatherId, paternalAncestors);
+        }
     }
 
     public void setPaternalAncestors(Set<String> paternalAncestors) {
@@ -392,9 +393,10 @@ public class App {
     }
 
     public void setMaternalAncestors() {
-        String motherId = people.get(userPersonId).getMotherId();
-        maternalAncestors.add(userPersonId);
-        findAncestors(motherId, maternalAncestors);
+        if (user.getMotherId() != null) {
+            String motherId = people.get(userPersonId).getMotherId();
+            findAncestors(motherId, maternalAncestors);
+        }
     }
 
     public void setMaternalAncestors(Set<String> maternalAncestors) {

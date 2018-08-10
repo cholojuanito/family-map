@@ -223,8 +223,6 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     private void logout() {
         App.getInstance().performLogout();
 
-        App model = App.getInstance();
-
         Intent intent = new Intent( SettingsActivity.this , MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -238,7 +236,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
         switch (parent.getId()) {
             case R.id.map_spinner:
-                for(Map.Entry<String, Boolean> entry : model.getSettings().getMapTypeOptions().entrySet()){
+                for(Map.Entry<String, Boolean> entry : model.getSettings().getMapTypeOptions().entrySet()) {
                     entry.setValue(false);
                 }
 

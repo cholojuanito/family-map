@@ -166,6 +166,7 @@ public class Constants {
     public static final String HYBRID = "Hybrid";
     public static final String NORMAL = "Normal";
     public static final String SATELLITE = "Satellite";
+    public static final String TERRAIN = "Terrain";
 
     // Filters
     public static final String BY_FATHER_SIDE = "Father's Side";

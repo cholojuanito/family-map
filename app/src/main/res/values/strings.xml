@@ -37,6 +37,7 @@
     <string name="normal">Normal</string>
     <string name="hybrid">Hybrid</string>
     <string name="satellite">Satellite</string>
+    <string name="terrain">Terrain</string>
 
     <string name="red">Red</string>
     <string name="green">Green</string>
@@ -46,6 +47,7 @@
         <item>@string/normal</item>
         <item>@string/hybrid</item>
         <item>@string/satellite</item>
+        <item>@string/terrain</item>
     </string-array>
 
     <string-array name="line_options">

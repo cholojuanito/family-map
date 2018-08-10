@@ -74,7 +74,6 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
 
         public void updateFilter(boolean isChecked) {
             App.getInstance().getFilters().getFilterOptions().put(eventType, isChecked);
-
             updateText();
         }
 

@@ -159,6 +159,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         else if (model.getSettings().getMapTypeOptions().get(Constants.HYBRID)) {
             map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         }
+        else if (model.getSettings().getMapTypeOptions().get(Constants.TERRAIN)) {
+            map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        }
         else {
             map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         }
@@ -215,13 +218,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             if (person.getFatherId() != null && filters.get(Constants.BY_FATHER_SIDE) &&
                     filters.get(Constants.BY_MALE)) {
 
-                drawAncestorLine(model, currLatLng, person, lineWidth);
+                Person father = model.getPeople().get(person.getFatherId());
+                drawAncestorLine(model, currLatLng, father, lineWidth);
             }
 
             if (person.getMotherId() != null && filters.get(Constants.BY_MOTHER_SIDE) &&
                     filters.get(Constants.BY_FEMALE)) {
 
-                drawAncestorLine(model, currLatLng, person, lineWidth);
+                Person mother = model.getPeople().get(person.getMotherId());
+                drawAncestorLine(model, currLatLng, mother, lineWidth);
             }
         }
     }
@@ -280,10 +285,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             Event spouseEvent = findBestUnfilteredEvent(spousePersonalEvents);
 
             if (spouseEvent != null) {
-                if (person.getGender() == Gender.M && (filters.get(Constants.BY_FEMALE))) {
+                if (person.getGender() == Gender.M && filters.get(Constants.BY_FEMALE) && filters.get(Constants.BY_MOTHER_SIDE)) {
                     addSpouseLine(model, currLatLng, spouseEvent);
                 }
-                else if (person.getGender() == Gender.F && (filters.get(Constants.BY_MALE))) {
+                else if (person.getGender() == Gender.F && filters.get(Constants.BY_MALE) && filters.get(Constants.BY_FATHER_SIDE)) {
                     addSpouseLine(model, currLatLng, spouseEvent);
                 }
             }
