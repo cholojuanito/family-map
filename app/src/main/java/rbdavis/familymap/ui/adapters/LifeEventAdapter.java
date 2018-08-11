@@ -24,6 +24,13 @@ public class LifeEventAdapter extends ExpandableRecyclerAdapter<LifeEventParent,
     private LayoutInflater layoutInflater;
     private OnChildClickListener childClickListener;
 
+    public interface OnChildClickListener {
+        void onChildClick(View v, String id);
+    }
+    public void setChildClickListener(OnChildClickListener clickListener) {
+        this.childClickListener = clickListener;
+    }
+
     public LifeEventAdapter(Context context,OnChildClickListener listener, @NonNull List<LifeEventParent> parentList) {
         super(parentList);
         childClickListener = listener;
@@ -55,16 +62,6 @@ public class LifeEventAdapter extends ExpandableRecyclerAdapter<LifeEventParent,
     @Override
     public void onBindChildViewHolder(@NonNull LifeEventChildViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull LifeEventChild child) {
         childViewHolder.bind(child);
-    }
-
-    public void setChildClickListener(OnChildClickListener clickListener) {
-        this.childClickListener = clickListener;
-    }
-
-    public interface OnChildClickListener {
-
-        void onChildClick(View v, String id);
-
     }
 
     public class LifeEventParentViewHolder extends ParentViewHolder {

@@ -46,11 +46,14 @@ public class App {
     // Map data
     private String focusedPersonId;
     private Set<String> eventTypes;
-    private Map<String, MapMarkerColor> eventTypeColors;
+    private Map<String, Float> eventTypeColors;
     private Map<Marker, String> markersToEvents;
     private Map<String, Marker> eventsToMarkers;
     private Map<Marker, String> personMarkers;
     private List<Polyline> connections;
+
+    // Searching
+    private List<SearchResult> searchableList;
 
     private App() {
         people = new HashMap<>();
@@ -274,6 +277,40 @@ public class App {
         }
     }
 
+    public List<SearchResult> search(String query) {
+        List<SearchResult> results = new ArrayList<>();
+        Map<String, Boolean> filters = this.filters.getFilterOptions();
+
+        for (SearchResult possibleResult : searchableList) {
+
+            if (possibleResult.getTopLine().toLowerCase().contains(query)) {
+                results.add(possibleResult);
+            }
+            else {
+                if (possibleResult.getBotLine() != null) {
+                    if (possibleResult.getBotLine().toLowerCase().contains(query)) {
+                        results.add(possibleResult);
+                    }
+                }
+            }
+
+            // TODO Filter stuff out if I want
+//            String personId = (possibleResult.getResultType() == SearchResult.PERSON_RESULT)
+//                              ? possibleResult.getId() : events.get(possibleResult.getId()).getPersonId();
+//            Person p = people.get(personId);
+//
+//            if ((p.getGender() == Gender.M && filters.get(Constants.BY_MALE)) ||
+//                    (p.getGender() == Gender.F && filters.get(Constants.BY_FEMALE))) {
+//                if (paternalAncestors.contains(personId) && filters.get(Constants.BY_FATHER_SIDE) ||
+//                        maternalAncestors.contains(personId) && filters.get(Constants.BY_MOTHER_SIDE)) {
+//
+//                }
+//            }
+        }
+
+        return results;
+    }
+
     public void setEvents(EventsResponse eventsResponse) {
 
         for (Event e : eventsResponse.getData()) {
@@ -328,24 +365,22 @@ public class App {
         this.eventTypes = eventTypes;
     }
 
-    public Map<String, MapMarkerColor> getEventTypeColors() {
+    public Map<String, Float> getEventTypeColors() {
         return eventTypeColors;
     }
 
     public void setEventTypeColors() {
-
+        final int TOTAL_NUM_COLORS = 359;
+        int numEvents = eventTypes.size();
+        int colorSpacing = TOTAL_NUM_COLORS / numEvents;
+        float markerColor = 0.0f;
         for (String type : eventTypes) {
-            for (MapMarkerColor color : MapMarkerColor.values()) {
-                if (!color.isUsed()) {
-                    color.setIsUsed(true);
-                    getEventTypeColors().put(type, color);
-                    break;
-                }
-            }
+            getEventTypeColors().put(type, markerColor);
+            markerColor += colorSpacing;
         }
     }
 
-    public void setEventTypeColors(Map<String, MapMarkerColor> eventTypeColors) {
+    public void setEventTypeColors(Map<String, Float> eventTypeColors) {
         this.eventTypeColors = eventTypeColors;
     }
 
@@ -472,5 +507,35 @@ public class App {
 
     public void setFilters(Filters filters) {
         this.filters = filters;
+    }
+
+    public List<SearchResult> getSearchableList() {
+        return searchableList;
+    }
+
+    public void setSearchableList() {
+        List<SearchResult> newList = new ArrayList<>();
+
+        for (Map.Entry<String, Person> entry : this.people.entrySet()) {
+            Person p = entry.getValue();
+            String firstLineText = p.getFirstName() + " " + p.getLastName();
+
+            newList.add(new SearchResult(SearchResult.PERSON_RESULT, entry.getKey(), firstLineText, ""));
+        }
+
+        for (Map.Entry<String, Event> entry : this.events.entrySet()) {
+            Event e = entry.getValue();
+            Person assocPerson = this.people.get(e.getPersonId());
+            String firstLineText = e.getEventType() + ": " + e.getCity() + ", " + e.getCountry() + " (" + e.getDateHappened().getYear() + ")";
+            String secondLineText = assocPerson.getFirstName() + " " + assocPerson.getLastName();
+
+            newList.add(new SearchResult(SearchResult.EVENT_RESULT, entry.getKey(), firstLineText, secondLineText));
+        }
+
+        setSearchableList(newList);
+    }
+
+    public void setSearchableList(List<SearchResult> searchableList) {
+        this.searchableList = searchableList;
     }
 }

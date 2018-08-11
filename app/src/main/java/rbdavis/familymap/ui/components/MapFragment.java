@@ -348,13 +348,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             double lng = Double.parseDouble(event.getLongitude());
             LatLng location = new LatLng(lat, lng);
 
-            MapMarkerColor markerColor = model.getEventTypeColors().get(event.getEventType());
+            Float markerColor = model.getEventTypeColors().get(event.getEventType());
 
             Marker marker = map.addMarker(
                     new MarkerOptions()
                      .position(location)
                      .title(event.getEventType())
-                     .icon(BitmapDescriptorFactory.defaultMarker(markerColor.getValue()))
+                     .icon(BitmapDescriptorFactory.defaultMarker(markerColor))
             );
 
             eventMarkers.put(marker, entry.getKey());
@@ -399,10 +399,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             case R.id.settings:
                 Intent settingsIntent = new Intent(getContext(), SettingsActivity.class);
                 startActivity(settingsIntent);
-                return true;
-            case R.id.search:
-//                Intent searchIntent = new Intent(getContext(), SearchActivity.class);
-//                startActivity(searchIntent);
                 return true;
             case R.id.filter:
                 Intent filterIntent = new Intent(getContext(), FilterActivity.class);
