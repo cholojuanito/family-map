@@ -2,6 +2,7 @@ package rbdavis.familymap.models;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import rbdavis.shared.utils.Constants;
 
@@ -9,11 +10,11 @@ public class Filters {
     private Map<String, Boolean> filterOptions;
 
     public Filters() {
-        filterOptions = new HashMap<>();
-        filterOptions.put(Constants.BY_FATHER_SIDE, false);
-        filterOptions.put(Constants.BY_MOTHER_SIDE, false);
-        filterOptions.put(Constants.BY_MALE, false);
-        filterOptions.put(Constants.BY_FEMALE, false);
+        filterOptions = new TreeMap<>();
+        filterOptions.put(Constants.BY_FATHER_SIDE, true);
+        filterOptions.put(Constants.BY_MOTHER_SIDE, true);
+        filterOptions.put(Constants.BY_MALE, true);
+        filterOptions.put(Constants.BY_FEMALE, true);
     }
 
     public Map<String, Boolean> getFilterOptions() {

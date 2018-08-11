@@ -1,6 +1,7 @@
 package rbdavis.familymap.ui.screens;
 
 import android.content.Intent;
+import android.provider.CalendarContract;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +28,7 @@ import rbdavis.familymap.ui.adapters.LifeEventAdapter;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.Person;
+import rbdavis.shared.utils.Constants;
 
 public class PersonActivity extends AppCompatActivity {
 
@@ -126,7 +129,7 @@ public class PersonActivity extends AppCompatActivity {
 
         // TODO CHANGE THE ICON TO THE OPPOSITE ON A PARENT CLICK
 
-        LifeEventAdapter lifeEventAdapter = new LifeEventAdapter(this, lifeEventParents);
+        final LifeEventAdapter lifeEventAdapter = new LifeEventAdapter(this, lifeEventParents);
         lifeEventAdapter.setChildClickListener(new LifeEventAdapter.OnChildClickListener() {
             @Override
             public void onChildClick(View v, String id) {
@@ -134,7 +137,7 @@ public class PersonActivity extends AppCompatActivity {
             }
         });
 
-        FamilyMemberAdapter familyMemberAdapter = new FamilyMemberAdapter(this, familyMemberParents);
+        final FamilyMemberAdapter familyMemberAdapter = new FamilyMemberAdapter(this, familyMemberParents);
         familyMemberAdapter.setChildClickListener(new FamilyMemberAdapter.OnChildClickListener() {
             @Override
             public void onChildClick(View v, String id) {
@@ -153,7 +156,11 @@ public class PersonActivity extends AppCompatActivity {
         lifeEventParents.clear();
         lifeEvents.clear();
 
-        List<Event> events = model.getPersonalEvents().get(personId);
+        List<Event> events = new LinkedList<>(model.getPersonalEvents().get(personId));
+
+        if (model.hasFilters()) {
+            events = applyFilters(model, events);
+        }
 
         for (Event e : events) {
             String info = e.getEventType() + ": " + e.getCity() + ", " + e.getCountry() +
@@ -163,6 +170,32 @@ public class PersonActivity extends AppCompatActivity {
         }
 
         lifeEventParents.add(new LifeEventParent(lifeEvents));
+    }
+
+    private List<Event> applyFilters(App model, List<Event> events) {
+        Person person = model.getPeople().get(personId);
+        Map<String, Boolean> filters = model.getFilters().getFilterOptions();
+
+        if ((person.getGender() == Gender.M && !filters.get(Constants.BY_MALE)) ||
+                (person.getGender() == Gender.F && !filters.get(Constants.BY_FEMALE))) {
+            events = new LinkedList<>();
+        }
+
+        if (model.getPaternalAncestors().contains(personId) && !filters.get(Constants.BY_FATHER_SIDE) ||
+                model.getMaternalAncestors().contains(personId) && !filters.get(Constants.BY_MOTHER_SIDE)) {
+            events = new LinkedList<>();
+        }
+
+        List<Event> eventsCopy = new LinkedList<>(events);
+        for (Event e : eventsCopy) {
+            boolean eventTypeCanBeShown = filters.get(e.getEventType());
+
+            if (!eventTypeCanBeShown) {
+                events.remove(e);
+            }
+        }
+
+        return events;
     }
 
     private void addFamilyMembersToList(App model) {

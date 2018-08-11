@@ -51,6 +51,7 @@ public class ServerProxy {
     public void logout() {
         setToken(null);
         setLoggedIn(false);
+        App.getInstance().setUserPersonId(null);
     }
 
     public LoginOrRegisterResponse login(LoginRequest request) {

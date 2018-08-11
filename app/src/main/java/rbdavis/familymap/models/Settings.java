@@ -45,6 +45,7 @@ public class Settings {
         mapTypeOptions.put(NORMAL, true);
         mapTypeOptions.put(HYBRID, false);
         mapTypeOptions.put(SATELLITE, false);
+        mapTypeOptions.put(TERRAIN, false);
     }
 
     private void initLifeStoryOptions() {

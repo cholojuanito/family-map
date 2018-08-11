@@ -30,7 +30,9 @@ import java.util.Map;
 import rbdavis.familymap.R;
 import rbdavis.familymap.models.App;
 import rbdavis.familymap.models.MapMarkerColor;
+import rbdavis.familymap.ui.screens.FilterActivity;
 import rbdavis.familymap.ui.screens.PersonActivity;
+import rbdavis.familymap.ui.screens.SearchActivity;
 import rbdavis.familymap.ui.screens.SettingsActivity;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Gender;
@@ -51,11 +53,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
 
     private String focusedEventId;
-    private String focusedPersonId;
 
     public MapFragment() {
         focusedEventId = null;
-        focusedPersonId = null;
     }
 
     public static MapFragment newInstance() {
@@ -114,7 +114,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         }
 
         if (model.getEvents() != null) {
-            addMarkers(model);
+            addMarkers(model, model.hasFilters());
         }
 
         if (focusedEventId != null) {
@@ -144,7 +144,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PersonActivity.class);
-                intent.putExtra(getString(R.string.personKey), focusedPersonId);
+                intent.putExtra(getString(R.string.personKey), App.getInstance().getFocusedPersonId());
                 startActivity(intent);
             }
         });
@@ -158,6 +158,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         }
         else if (model.getSettings().getMapTypeOptions().get(Constants.HYBRID)) {
             map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        }
+        else if (model.getSettings().getMapTypeOptions().get(Constants.TERRAIN)) {
+            map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         }
         else {
             map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
@@ -190,11 +193,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         if (model.getSettings().isShowLifeStoryLines()) {
             for (Event e : personalEvents) {
                 // If not filtered
-                if (!filters.get(e.getEventType())) {
+                if (filters.get(e.getEventType())) {
                     double lat = Double.parseDouble(e.getLatitude());
                     double lng = Double.parseDouble(e.getLongitude());
                     LatLng eventLatLng = new LatLng(lat, lng);
                     Polyline line = addLine(currLatLng, eventLatLng);
+                    currLatLng = eventLatLng;
 
                     // Get color from settings
                     for (Map.Entry<Integer, Boolean> entry : model.getSettings().getLifeStoryOptions().entrySet()) {
@@ -212,16 +216,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     private void determineAncestorLinesToDraw(App model, LatLng currLatLng, Person person, float lineWidth) {
         Map<String, Boolean> filters = model.getFilters().getFilterOptions();
         if (model.getSettings().isShowAncestorsLines()) {
-            if (person.getFatherId() != null && !filters.get(Constants.BY_FATHER_SIDE) &&
-                    !filters.get(Constants.BY_MALE)) {
+            if (person.getFatherId() != null && filters.get(Constants.BY_FATHER_SIDE) &&
+                    filters.get(Constants.BY_MALE)) {
 
-                drawAncestorLine(model, currLatLng, person, lineWidth);
+                Person father = model.getPeople().get(person.getFatherId());
+                drawAncestorLine(model, currLatLng, father, lineWidth);
             }
 
-            if (person.getMotherId() != null && !filters.get(Constants.BY_MOTHER_SIDE) &&
-                    !filters.get(Constants.BY_FEMALE)) {
+            if (person.getMotherId() != null && filters.get(Constants.BY_MOTHER_SIDE) &&
+                    filters.get(Constants.BY_FEMALE)) {
 
-                drawAncestorLine(model, currLatLng, person, lineWidth);
+                Person mother = model.getPeople().get(person.getMotherId());
+                drawAncestorLine(model, currLatLng, mother, lineWidth);
             }
         }
     }
@@ -243,12 +249,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
         lineWidth--;
 
-        if (person.getFatherId() != null && !filters.get(Constants.BY_MALE)) {
+        if (person.getFatherId() != null && filters.get(Constants.BY_MALE)) {
             Person father = model.getPeople().get(person.getFatherId());
             drawAncestorLine(model, newLatLng, father, lineWidth);
         }
 
-        if (person.getMotherId() != null && !filters.get(Constants.BY_FEMALE)) {
+        if (person.getMotherId() != null && filters.get(Constants.BY_FEMALE)) {
             Person mother = model.getPeople().get(person.getMotherId());
             drawAncestorLine(model, newLatLng, mother, lineWidth);
         }
@@ -280,10 +286,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             Event spouseEvent = findBestUnfilteredEvent(spousePersonalEvents);
 
             if (spouseEvent != null) {
-                if (person.getGender() == Gender.M && (!filters.get(Constants.BY_FEMALE))) {
+                if (person.getGender() == Gender.M && filters.get(Constants.BY_FEMALE) && filters.get(Constants.BY_MOTHER_SIDE)) {
                     addSpouseLine(model, currLatLng, spouseEvent);
                 }
-                else if (person.getGender() == Gender.F && (!filters.get(Constants.BY_MALE))) {
+                else if (person.getGender() == Gender.F && filters.get(Constants.BY_MALE) && filters.get(Constants.BY_FATHER_SIDE)) {
                     addSpouseLine(model, currLatLng, spouseEvent);
                 }
             }
@@ -310,22 +316,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     private Event findBestUnfilteredEvent(List<Event> personalEvents) {
         Map<String, Boolean> filters = App.getInstance().getFilters().getFilterOptions();
         for (Event e : personalEvents) {
-            if (!filters.get(e.getEventType())) {
+            if (filters.get(e.getEventType())) {
                 return e;
             }
         }
         return null;
     }
 
-    private Polyline addLine(LatLng position, LatLng position2) {
+    private Polyline addLine(LatLng position1, LatLng position2) {
         return map.addPolyline(
                 new PolylineOptions()
                 .clickable(false)
-                .add(position, position2)
+                .add(position1, position2)
         );
     }
 
-    private void addMarkers(App model) {
+    private void addMarkers(App model, boolean useFilters) {
 
         Map<Marker, String> eventMarkers = model.getMarkersToEvents();
         Map<String, Marker> eventsToMarkers = model.getEventsToMarkers();
@@ -334,7 +340,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         eventMarkers.clear();
         personMarkers.clear();
 
-        for (Map.Entry<String, Event> entry : model.getEvents().entrySet()) {
+        Map<String, Event> eventsToShow = (useFilters) ? model.getFilteredEvents() : model.getEvents();
+
+        for (Map.Entry<String, Event> entry : eventsToShow.entrySet()) {
             Event event = entry.getValue();
             double lat = Double.parseDouble(event.getLatitude());
             double lng = Double.parseDouble(event.getLongitude());
@@ -364,7 +372,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         String locationStr = event.getCity() + ", " + event.getCountry();
 
         setFocusedEventId(eventId);
-        setFocusedPersonId(person.getId());
+        App.getInstance().setFocusedPersonId(person.getId());
 
         if (person.getGender() == Gender.M) {
             genderIcon.setImageResource(R.drawable.ic_male);
@@ -393,10 +401,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
                 startActivity(settingsIntent);
                 return true;
             case R.id.search:
-
+//                Intent searchIntent = new Intent(getContext(), SearchActivity.class);
+//                startActivity(searchIntent);
                 return true;
             case R.id.filter:
-
+                Intent filterIntent = new Intent(getContext(), FilterActivity.class);
+                startActivity(filterIntent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -408,14 +418,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
     public void setFocusedEventId(String focusedEventId) {
         this.focusedEventId = focusedEventId;
-    }
-
-    public String getFocusedPersonId() {
-        return focusedPersonId;
-    }
-
-    public void setFocusedPersonId(String focusedPersonId) {
-        this.focusedPersonId = focusedPersonId;
     }
 
     public interface ShowAppBarListener {

@@ -14,9 +14,11 @@ import java.util.Set;
 
 import rbdavis.familymap.net.http.ServerProxy;
 import rbdavis.shared.models.data.Event;
+import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.Person;
 import rbdavis.shared.models.http.responses.EventsResponse;
 import rbdavis.shared.models.http.responses.PeopleResponse;
+import rbdavis.shared.utils.Constants;
 
 public class App {
     /*Singleton*/
@@ -131,7 +133,6 @@ public class App {
         people = new HashMap<>();
         events = new HashMap<>();
         personalEvents = new HashMap<>();
-        userPersonId = null;
         user = null;
         paternalAncestors = new HashSet<>();
         maternalAncestors =  new HashSet<>();
@@ -183,9 +184,94 @@ public class App {
         return events;
     }
 
-    public Map<String, Event> filteredEvents() {
-        // Uses filters
-        return null;
+    public Map<String, Event> getFilteredEvents() {
+        Map<String, Event> filteredEvents = filterByFamilySide();
+
+        filterByEventType(filteredEvents);
+
+        return filteredEvents;
+    }
+
+    private Map<String, Event> filterByFamilySide() {
+        Map<String, Event> filteredEvents = new HashMap<>();
+        boolean fatherSideCanBeShown = filters.getFilterOptions().get(Constants.BY_FATHER_SIDE);
+        boolean motherSideCanBeShown = filters.getFilterOptions().get(Constants.BY_MOTHER_SIDE);
+
+
+        if (fatherSideCanBeShown && motherSideCanBeShown) {
+            // Make a copy of all the events
+            filteredEvents = new HashMap<>(events);
+        }
+        else if (!fatherSideCanBeShown && motherSideCanBeShown) {
+            filteredEvents = gatherMotherSideEvents();
+        }
+        else if (fatherSideCanBeShown && !motherSideCanBeShown) {
+            filteredEvents = gatherFatherSideEvents();
+        }
+
+        // Add user's events
+        for (Event userEvent : personalEvents.get(userPersonId)) {
+            filteredEvents.put(userEvent.getId(), userEvent);
+        }
+
+        return filteredEvents;
+    }
+
+    private Map<String, Event> gatherFatherSideEvents() {
+        Map<String, Event> events = new HashMap<>();
+        for (String personId : paternalAncestors) {
+            for (Event e : personalEvents.get(personId)) {
+                events.put(e.getId(), e);
+            }
+        }
+        return events;
+    }
+
+    private Map<String, Event> gatherMotherSideEvents() {
+        Map<String, Event> events = new HashMap<>();
+        for (String personId : maternalAncestors) {
+            for (Event e : personalEvents.get(personId)) {
+                events.put(e.getId(), e);
+            }
+        }
+        return events;
+    }
+
+    public void filterByEventType(Map<String, Event> filteredEvents) {
+
+        Map<String, Event> copyMap = new HashMap<>(filteredEvents);
+
+        for (Map.Entry<String, Event> entry : copyMap.entrySet()) {
+            Event e = entry.getValue();
+            boolean eventTypeCanBeShown = filters.getFilterOptions().get(e.getEventType());
+
+            if (eventTypeCanBeShown) {
+                filterByGender(filteredEvents, e);
+            }
+            else {
+                filteredEvents.remove(e.getId());
+            }
+        }
+    }
+
+    private void filterByGender(Map<String, Event> filteredEvents, Event event) {
+        boolean maleCanBeShown = filters.getFilterOptions().get(Constants.BY_MALE);
+        boolean femaleCanBeShown = filters.getFilterOptions().get(Constants.BY_FEMALE);
+
+
+        if (!maleCanBeShown && !femaleCanBeShown) {
+            filteredEvents.remove(event.getId());
+        }
+        else if (!maleCanBeShown && femaleCanBeShown) {
+            if (people.get(event.getPersonId()).getGender() == Gender.M) {
+                filteredEvents.remove(event.getId());
+            }
+        }
+        else if (maleCanBeShown && !femaleCanBeShown) {
+            if (people.get(event.getPersonId()).getGender() == Gender.F) {
+                filteredEvents.remove(event.getId());
+            }
+        }
     }
 
     public void setEvents(EventsResponse eventsResponse) {
@@ -279,14 +365,23 @@ public class App {
         this.user = user;
     }
 
+    public String getFocusedPersonId() {
+        return focusedPersonId;
+    }
+
+    public void setFocusedPersonId(String focusedPersonId) {
+        this.focusedPersonId = focusedPersonId;
+    }
+
     public Set<String> getPaternalAncestors() {
         return paternalAncestors;
     }
 
     public void setPaternalAncestors() {
-        String fatherId = people.get(focusedPersonId).getFatherId();
-        paternalAncestors.add(focusedPersonId);
-        findAncestors(fatherId, paternalAncestors);
+        if (user.getFatherId() != null) {
+            String fatherId = people.get(userPersonId).getFatherId();
+            findAncestors(fatherId, paternalAncestors);
+        }
     }
 
     public void setPaternalAncestors(Set<String> paternalAncestors) {
@@ -298,9 +393,10 @@ public class App {
     }
 
     public void setMaternalAncestors() {
-        String motherId = people.get(focusedPersonId).getMotherId();
-        maternalAncestors.add(focusedPersonId);
-        findAncestors(motherId, maternalAncestors);
+        if (user.getMotherId() != null) {
+            String motherId = people.get(userPersonId).getMotherId();
+            findAncestors(motherId, maternalAncestors);
+        }
     }
 
     public void setMaternalAncestors(Set<String> maternalAncestors) {
@@ -357,8 +453,17 @@ public class App {
 
     public void addEventTypesToFilters() {
         for (String type : eventTypes) {
-            filters.getFilterOptions().put(type, false);
+            filters.getFilterOptions().put(type, true);
         }
+    }
+
+    public boolean hasFilters() {
+        for (Map.Entry<String, Boolean> entry : filters.getFilterOptions().entrySet()) {
+            if (!entry.getValue()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Filters getFilters() {
