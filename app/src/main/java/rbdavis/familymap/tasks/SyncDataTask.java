@@ -41,11 +41,11 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
 
         // TODO put with constants
         String responseStr = "Finished!";
-        //rest();
+        rest();
 
         String progressUpdate = "Fetching ancestors' data...";
         publishProgress(progressUpdate);
-        //rest();
+        rest();
 
         PeopleRequest peopleRequest = new PeopleRequest(tokens[0]);
         PeopleResponse peopleResponse = ServerProxy.getInstance().getAllPeople(peopleRequest);
@@ -61,7 +61,7 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
 
         progressUpdate = "Fetching life events...";
         publishProgress(progressUpdate);
-        //rest();
+        rest();
 
         /*------------------------------------------------------------------------------------------*/
 
@@ -77,7 +77,7 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
             //TODO Terminate early
         }
 
-        //rest();
+        rest();
 
         /*-------------------------------------------------------------------------------------------*/
 
@@ -86,7 +86,7 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
 
         organizeAppData();
 
-        //rest();
+        rest();
 
         progressUpdate = responseStr;
         publishProgress(progressUpdate);

@@ -1,5 +1,6 @@
 package rbdavis.familymap.ui.screens;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -147,15 +148,17 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
     private void startNewActivity(String id, int type) {
         switch (type) {
             case SearchResult.PERSON_RESULT:
-
-
-                //searchRecyclerView.setVisibility(View.GONE);
+                Intent personIntent = new Intent(this, PersonActivity.class);
+                personIntent.putExtra(getString(R.string.personKey), id);
+                startActivity(personIntent);
+                searchRecyclerView.setVisibility(View.GONE);
                 break;
 
             case SearchResult.EVENT_RESULT:
-
-
-                //searchRecyclerView.setVisibility(View.GONE);
+                Intent eventIntent = new Intent(this, EventActivity.class);
+                eventIntent.putExtra(getString(R.string.eventKey), id);
+                startActivity(eventIntent);
+                searchRecyclerView.setVisibility(View.GONE);
                 break;
         }
     }
