@@ -1,19 +1,40 @@
 package rbdavis.familymap.ui.screens;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import rbdavis.familymap.R;
+import rbdavis.familymap.models.App;
+import rbdavis.familymap.models.SearchResult;
 import rbdavis.familymap.net.http.ServerProxy;
+import rbdavis.familymap.ui.adapters.SearchAdapter;
 import rbdavis.familymap.ui.components.LoginFragment;
 import rbdavis.familymap.ui.components.MapFragment;
 import rbdavis.familymap.ui.components.SyncDataProgressFragment;
+import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.utils.Constants;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.Callback, SyncDataProgressFragment.Callback {
+public class MainActivity extends AppCompatActivity implements LoginFragment.Callback, SyncDataProgressFragment.Callback,
+                                                               SearchView.OnQueryTextListener, SearchAdapter.OnSearchItemClickListener {
+
+    private SearchAdapter searchAdapter;
+    private RecyclerView searchRecyclerView;
+    private SearchView searchView;
+    private TextView noSearchResultsView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +43,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
 
         Toolbar appBar = (Toolbar) findViewById(R.id.main_appbar);
         setSupportActionBar(appBar);
+
+        searchRecyclerView = (RecyclerView) findViewById(R.id.search_recycler_view);
+        noSearchResultsView = (TextView) findViewById(R.id.empty_view);
+
+        searchRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        searchAdapter = new SearchAdapter(MainActivity.this);
+        searchAdapter.setResults(new ArrayList<SearchResult>());
+        searchRecyclerView.setAdapter(searchAdapter);
 
         FragmentManager fragManager = getSupportFragmentManager();
         if (!ServerProxy.getInstance().isLoggedIn()) {
@@ -44,13 +73,94 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
             });
             fragManager.beginTransaction().add(R.id.frag_container, mapFrag).commit();
         }
+
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main_menu_options, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint("Search your family tree...");
+        searchView.setOnQueryTextListener(this);
+        searchView.setIconified(false);
+
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                searchView.onActionViewExpanded();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                searchRecyclerView.setVisibility(View.GONE);
+                noSearchResultsView.setVisibility(View.GONE);
+                searchView.onActionViewCollapsed();
+                return true;
+            }
+        });
+
         return true;
+    }
+
+    /* Search methods */
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        // TODO Make an async task
+//        searchView.clearFocus();
+//        searchView.setQuery("", false);
+
+        if (query != null && !query.equals("")) {
+            List<SearchResult> results = App.getInstance().search(query.toLowerCase());
+            if (results.size() > 0) {
+                searchAdapter.setResults(results);
+                //searchAdapter.setResults(results);
+                noSearchResultsView.setVisibility(View.GONE);
+                searchRecyclerView.setVisibility(View.VISIBLE);
+            }
+            else {
+                searchRecyclerView.setVisibility(View.GONE);
+                noSearchResultsView.setVisibility(View.VISIBLE);
+            }
+        }
+        else {
+            searchRecyclerView.setVisibility(View.GONE);
+            noSearchResultsView.setVisibility(View.VISIBLE);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    @Override
+    public void onSearchItemClick(View v, String id, int type) {
+        startNewActivity(id, type);
+    }
+
+    private void startNewActivity(String id, int type) {
+        switch (type) {
+            case SearchResult.PERSON_RESULT:
+                Intent personIntent = new Intent(this, PersonActivity.class);
+                personIntent.putExtra(getString(R.string.personKey), id);
+                startActivity(personIntent);
+                searchRecyclerView.setVisibility(View.GONE);
+                break;
+
+            case SearchResult.EVENT_RESULT:
+                Intent eventIntent = new Intent(this, EventActivity.class);
+                eventIntent.putExtra(getString(R.string.eventKey), id);
+                startActivity(eventIntent);
+                searchRecyclerView.setVisibility(View.GONE);
+                break;
+        }
     }
 
     @Override

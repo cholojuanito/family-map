@@ -56,4 +56,6 @@
         <item>@string/blue</item>
     </string-array>
 
+    <string name="no_data_available">Sorry! Looks like nothing matches that criteria. Try a different search.</string>
+
 </resources>
