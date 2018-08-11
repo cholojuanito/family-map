@@ -20,6 +20,7 @@ import rbdavis.shared.models.http.requests.RegisterRequest;
 import rbdavis.shared.models.http.responses.EventsResponse;
 import rbdavis.shared.models.http.responses.LoginOrRegisterResponse;
 import rbdavis.shared.models.http.responses.PeopleResponse;
+import rbdavis.shared.models.http.responses.Response;
 
 import static rbdavis.shared.utils.StreamCommunicator.readString;
 import static rbdavis.shared.utils.StreamCommunicator.writeString;
@@ -47,6 +48,12 @@ public class ServerProxy {
 
     private ServerProxy() {}
 
+    public void logout() {
+        setToken(null);
+        setLoggedIn(false);
+        App.getInstance().setUserPersonId(null);
+    }
+
     public LoginOrRegisterResponse login(LoginRequest request) {
         LoginOrRegisterResponse response = new LoginOrRegisterResponse();
 
@@ -61,11 +68,15 @@ public class ServerProxy {
         catch (IOException e) {
             response.setMessage(CONNECT_SERVER_ERR);
         }
+        catch (Exception e) {
+            //TODO: Log it
+            response.setMessage("Error while deserializing response");
+        }
 
         if (response.getAuthToken() != null) {
             setToken(response.getAuthToken());
             App.getInstance().setUserPersonId(response.getPersonID());
-            isLoggedIn = true;
+            setLoggedIn(true);
         }
 
         return response;
@@ -85,11 +96,15 @@ public class ServerProxy {
         catch (IOException e) {
             response.setMessage(CONNECT_SERVER_ERR);
         }
+        catch (Exception e) {
+            //TODO: Log it
+            response.setMessage("Error while deserializing response");
+        }
 
         if (response.getAuthToken() != null) {
             setToken(response.getAuthToken());
             App.getInstance().setUserPersonId(response.getPersonID());
-            isLoggedIn = true;
+            setLoggedIn(true);
         }
 
         return response;
@@ -108,6 +123,10 @@ public class ServerProxy {
         catch (IOException e) {
             response.setMessage(CONNECT_SERVER_ERR);
         }
+        catch (Exception e) {
+            //TODO: Log it
+            response.setMessage("Error while deserializing response");
+        }
 
         return response;
     }
@@ -124,6 +143,10 @@ public class ServerProxy {
         }
         catch (IOException e) {
             response.setMessage(CONNECT_SERVER_ERR);
+        }
+        catch (Exception e) {
+            //TODO: Log it
+            response.setMessage("Error while deserializing response");
         }
 
         return response;
@@ -142,13 +165,12 @@ public class ServerProxy {
 
     private HttpURLConnection openHttpConnection(String endPoint, String requestMethod, String authCode) throws MalformedURLException, IOException {
         HttpURLConnection result = null;
-            URL url = new URL(getUrlPrefix() + endPoint);
-            result = (HttpURLConnection) url.openConnection();
-            result.setRequestMethod(requestMethod);
-            result.setRequestProperty(AUTH, authCode);
-            result.setDoOutput(false);
-            result.connect();
-
+        URL url = new URL(getUrlPrefix() + endPoint);
+        result = (HttpURLConnection) url.openConnection();
+        result.setRequestMethod(requestMethod);
+        result.setRequestProperty(AUTH, authCode);
+        result.setDoOutput(false);
+        result.connect();
 
         return result;
     }
@@ -166,7 +188,7 @@ public class ServerProxy {
         }
     }
 
-    private Object deserializeResponse(HttpURLConnection connection, Class<?> theClass) {
+    private Object deserializeResponse(HttpURLConnection connection, Class<?> theClass) throws Exception {
         Object result = null;
         try {
             switch (connection.getResponseCode()) {
@@ -201,13 +223,7 @@ public class ServerProxy {
         }
         catch (JsonSyntaxException | JsonIOException | IOException e) {
             //TODO: Log it
-            System.out.println("Error in deserializeResponse");
-            e.printStackTrace();
-        }
-        catch (Exception e) {
-            //TODO: Log it
-            System.out.println("Error while deserializing Response");
-            e.printStackTrace();
+            return new Response("JSON syntax error while deserializing response");
         }
 
         return result;

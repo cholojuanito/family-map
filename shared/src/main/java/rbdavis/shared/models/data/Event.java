@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 
+import rbdavis.shared.utils.Constants;
+
 /**
  * The {@code Event} model represents the Event table in the database.
  * <p>
@@ -24,7 +26,7 @@ import java.time.LocalDate;
  * @since v0.1
  */
 
-public class Event {
+public class Event implements Comparable<Event> {
     @SerializedName(value = "id", alternate = "eventID")
     private String id;
     @SerializedName(value = "personId", alternate = "personID")
@@ -71,6 +73,27 @@ public class Event {
         this.city = other.city;
         this.country = other.country;
         this.dateHappened = other.dateHappened;
+    }
+
+    @Override
+    public int compareTo(Event other) {
+        if (other.getEventType().toLowerCase().equals("birth")) {
+            return 1;
+        }
+
+        if (other.getEventType().toLowerCase().equals("death")) {
+            return -1;
+        }
+
+        if (other.getDateHappened().getYear() > this.getDateHappened().getYear()) {
+            return -1;
+        }
+        else if (other.getDateHappened().getYear() < this.getDateHappened().getYear()) {
+            return 1;
+        }
+        else {
+            return other.getEventType().toLowerCase().compareTo(this.getEventType().toLowerCase());
+        }
     }
 
     public String getId() {

@@ -18,4 +18,17 @@
     <dimen name="sync_data_text_size">20sp</dimen>
     <dimen name="sync_data_circle_size">200dp</dimen>
 
+
+    <!-- SETTINGS SCREEN -->
+    <dimen name="section_title_indentation">40dp</dimen>
+    <dimen name="row_indentation">30dp</dimen>
+    <dimen name="subrow_indentation">20dp</dimen>
+    <dimen name="row_padding">10dp</dimen>
+    <dimen name="margins_top_bot">8dp</dimen>
+    <dimen name="row_margins_top_bot">5dp</dimen>
+    <dimen name="section_title_text_size">13sp</dimen>
+    <dimen name="header_text_size">16sp</dimen>
+    <dimen name="subheader_text_size">13sp</dimen>
+    <dimen name="subrow_subheader_text_size">12sp</dimen>
+
 </resources>

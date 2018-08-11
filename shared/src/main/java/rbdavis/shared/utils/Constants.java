@@ -158,4 +158,20 @@ public class Constants {
     public static final String REG_REQ_START = "Register request began";
     public static final String REG_REQ_SUCCESS = "Register request successful";
     public static final String REG_REQ_UNSUCCESS = "Registration unsuccessful";
+
+    // Bundle Keys
+    public static final String SYNC_ERROR_KEY = "syncError";
+
+    // Settings
+    public static final String HYBRID = "Hybrid";
+    public static final String NORMAL = "Normal";
+    public static final String SATELLITE = "Satellite";
+    public static final String TERRAIN = "Terrain";
+
+    // Filters
+    public static final String BY_FATHER_SIDE = "Father's Side";
+    public static final String BY_MOTHER_SIDE = "Mother's Side";
+    public static final String BY_MALE = "Male";
+    public static final String BY_FEMALE = "Female";
+
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/event_list_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="15dp">
+
+    <ImageView
+        android:id="@+id/event_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerVertical="true"
+        android:padding="8dp"
+        android:src="@drawable/ic_place"
+        />
+
+    <TextView
+        android:id="@+id/event_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/event_icon"
+        android:padding="8dp"
+        android:text="Sample Text"/>
+
+</RelativeLayout>
