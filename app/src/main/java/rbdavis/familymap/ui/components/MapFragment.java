@@ -198,6 +198,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
                     double lng = Double.parseDouble(e.getLongitude());
                     LatLng eventLatLng = new LatLng(lat, lng);
                     Polyline line = addLine(currLatLng, eventLatLng);
+                    currLatLng = eventLatLng;
 
                     // Get color from settings
                     for (Map.Entry<Integer, Boolean> entry : model.getSettings().getLifeStoryOptions().entrySet()) {
@@ -322,11 +323,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         return null;
     }
 
-    private Polyline addLine(LatLng position, LatLng position2) {
+    private Polyline addLine(LatLng position1, LatLng position2) {
         return map.addPolyline(
                 new PolylineOptions()
                 .clickable(false)
-                .add(position, position2)
+                .add(position1, position2)
         );
     }
 
