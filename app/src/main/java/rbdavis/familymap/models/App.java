@@ -46,7 +46,7 @@ public class App {
     // Map data
     private String focusedPersonId;
     private Set<String> eventTypes;
-    private Map<String, MapMarkerColor> eventTypeColors;
+    private Map<String, Float> eventTypeColors;
     private Map<Marker, String> markersToEvents;
     private Map<String, Marker> eventsToMarkers;
     private Map<Marker, String> personMarkers;
@@ -365,24 +365,22 @@ public class App {
         this.eventTypes = eventTypes;
     }
 
-    public Map<String, MapMarkerColor> getEventTypeColors() {
+    public Map<String, Float> getEventTypeColors() {
         return eventTypeColors;
     }
 
     public void setEventTypeColors() {
-
+        final int TOTAL_NUM_COLORS = 359;
+        int numEvents = eventTypes.size();
+        int colorSpacing = TOTAL_NUM_COLORS / numEvents;
+        float markerColor = 0.0f;
         for (String type : eventTypes) {
-            for (MapMarkerColor color : MapMarkerColor.values()) {
-                if (!color.isUsed()) {
-                    color.setIsUsed(true);
-                    getEventTypeColors().put(type, color);
-                    break;
-                }
-            }
+            getEventTypeColors().put(type, markerColor);
+            markerColor += colorSpacing;
         }
     }
 
-    public void setEventTypeColors(Map<String, MapMarkerColor> eventTypeColors) {
+    public void setEventTypeColors(Map<String, Float> eventTypeColors) {
         this.eventTypeColors = eventTypeColors;
     }
 

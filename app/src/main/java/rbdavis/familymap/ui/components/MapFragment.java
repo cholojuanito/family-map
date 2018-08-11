@@ -348,13 +348,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             double lng = Double.parseDouble(event.getLongitude());
             LatLng location = new LatLng(lat, lng);
 
-            MapMarkerColor markerColor = model.getEventTypeColors().get(event.getEventType());
+            Float markerColor = model.getEventTypeColors().get(event.getEventType());
 
             Marker marker = map.addMarker(
                     new MarkerOptions()
                      .position(location)
                      .title(event.getEventType())
-                     .icon(BitmapDescriptorFactory.defaultMarker(markerColor.getValue()))
+                     .icon(BitmapDescriptorFactory.defaultMarker(markerColor))
             );
 
             eventMarkers.put(marker, entry.getKey());
