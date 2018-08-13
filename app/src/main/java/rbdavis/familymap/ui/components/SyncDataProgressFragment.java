@@ -12,6 +12,12 @@ import rbdavis.familymap.R;
 import rbdavis.familymap.net.http.ServerProxy;
 import rbdavis.familymap.tasks.SyncDataTask;
 
+/*
+ * An intermediate fragment that simply uses the SyncTask
+ * It displays a circular progress bar and and text that updates
+ * as the SyncTask publishes its progress
+ */
+
 public class SyncDataProgressFragment extends Fragment implements SyncDataTask.Callback {
 
     private static Callback callback;

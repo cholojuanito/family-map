@@ -19,10 +19,32 @@ import rbdavis.familymap.models.FamilyMemberChild;
 import rbdavis.familymap.models.FamilyMemberParent;
 import rbdavis.shared.models.data.Gender;
 
+/*
+ * I used the ExpandableRecyclerView from Big Nerd Ranch to implement the PersonActivity
+ * This adapter requires a Parent, Child, ParentViewHolder and a ChildViewHolder to work
+ * The parent data members represent the bar/line that can be clicked in order to expand/collapse
+ * the list.
+ * The child data members represent the list view that is expanded/collapsed.
+ *
+ * This adapter is specific to people
+ */
+
 public class FamilyMemberAdapter extends ExpandableRecyclerAdapter<FamilyMemberParent, FamilyMemberChild, FamilyMemberAdapter.FamilyMemberParentViewHolder, FamilyMemberAdapter.FamilyMemberChildViewHolder> {
 
     private LayoutInflater layoutInflater;
     private OnChildClickListener childClickListener;
+
+    /*
+     * Allows the hosting activity to open other activities when
+     * a child view holder is clicked
+     */
+    public interface OnChildClickListener {
+        void onChildClick(View v, String id);
+    }
+
+    public void setChildClickListener(FamilyMemberAdapter.OnChildClickListener clickListener) {
+        this.childClickListener = clickListener;
+    }
 
     public FamilyMemberAdapter(Context context, OnChildClickListener listener, @NonNull List<FamilyMemberParent> parentList) {
         super(parentList);
@@ -55,16 +77,6 @@ public class FamilyMemberAdapter extends ExpandableRecyclerAdapter<FamilyMemberP
     @Override
     public void onBindChildViewHolder(@NonNull FamilyMemberChildViewHolder childViewHolder, int parentPosition, int childPosition, @NonNull FamilyMemberChild child) {
         childViewHolder.bind(child);
-    }
-
-    public void setChildClickListener(FamilyMemberAdapter.OnChildClickListener clickListener) {
-        this.childClickListener = clickListener;
-    }
-
-    public interface OnChildClickListener {
-
-        void onChildClick(View v, String id);
-
     }
 
 

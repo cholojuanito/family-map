@@ -4,6 +4,11 @@ import com.bignerdranch.expandablerecyclerview.model.Parent;
 
 import java.util.List;
 
+/*
+ * A class that serves as a data holder for the dropdown portion of
+ * the Expandable Recycler View class on the PersonActivity
+ */
+
 public class LifeEventParent implements Parent<LifeEventChild> {
 
     private List<LifeEventChild> eventList;

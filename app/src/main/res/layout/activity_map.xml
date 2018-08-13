@@ -15,7 +15,6 @@
         tools:context=".ui.components.MapFragment"
         android:elevation="0dp"/>
 
-    <!--TODO Make a personalized view class? -->
     <RelativeLayout
         android:id="@+id/event_info_panel"
         android:layout_width="match_parent"
@@ -77,6 +76,5 @@
         </TextView>
 
         </RelativeLayout>
-    <!-- TODO Instead of this relative layout -->
 
 </RelativeLayout>

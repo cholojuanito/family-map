@@ -29,17 +29,15 @@ import java.util.Map;
 
 import rbdavis.familymap.R;
 import rbdavis.familymap.models.App;
-import rbdavis.familymap.models.MapMarkerColor;
 import rbdavis.familymap.ui.screens.FilterActivity;
 import rbdavis.familymap.ui.screens.PersonActivity;
-import rbdavis.familymap.ui.screens.SearchActivity;
 import rbdavis.familymap.ui.screens.SettingsActivity;
 import rbdavis.shared.models.data.Event;
 import rbdavis.shared.models.data.Gender;
 import rbdavis.shared.models.data.Person;
 import rbdavis.shared.utils.Constants;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback{
+public class MapFragment extends Fragment implements OnMapReadyCallback {
     private final DateTimeFormatter EVENT_FORMATTER = DateTimeFormatter.ofPattern("dd MMM yyyy");
 
     private ShowAppBarListener showAppBarListener;
@@ -126,8 +124,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
             }
         }
 
-        // TODO Check for setting/filter stuff
-
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -167,7 +163,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         }
     }
 
-    // TODO: Setup settings/filter then handle this stuff.
     private void drawMapLines(Marker marker) {
         App model = App.getInstance();
         String eventId = model.getMarkersToEvents().get(marker);
@@ -393,6 +388,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         map.animateCamera(location);
     }
 
+    /*
+     * Opens corresponding activity of the icons in the App bar.
+     * Search is implemented as a SearchView in the MainActivity
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

@@ -6,6 +6,15 @@ import java.util.TreeMap;
 
 import rbdavis.shared.utils.Constants;
 
+/*
+ * A wrapper class that encapsulates the possible event filters
+ * within the app. All the event types are dynamically taken add
+ * except for Father's side, Mother's side, male, and female.
+ * Filters are just a Map of a String to a Boolean. They are either on
+ * (allowed to show that event type) or off (not allowed to show that
+ * event type).
+ */
+
 public class Filters {
     private Map<String, Boolean> filterOptions;
 

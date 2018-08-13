@@ -52,7 +52,7 @@ public class App {
     private Map<Marker, String> personMarkers;
     private List<Polyline> connections;
 
-    // Searching
+    // Searchable data
     private List<SearchResult> searchableList;
 
     private App() {
@@ -75,15 +75,15 @@ public class App {
         connections = new LinkedList<>();
     }
 
-    private void findAncestors(String id, Set<String> ancestors) {
+    private void addAncestors(String id, Set<String> ancestors) {
         ancestors.add(id);
 
         if (people.get(id).getFatherId() != null) {
-            findAncestors(people.get(id).getFatherId(), ancestors);
+            addAncestors(people.get(id).getFatherId(), ancestors);
         }
 
         if (people.get(id).getMotherId() != null) {
-            findAncestors(people.get(id).getMotherId(), ancestors);
+            addAncestors(people.get(id).getMotherId(), ancestors);
         }
     }
 
@@ -93,7 +93,6 @@ public class App {
                 childrenOfPerson.get(child.getFatherId()).add(child);
             }
             else {
-                // Todo maybe make it a LinkedList
                 List<Person> children = new ArrayList<>();
 
                 children.add(child);
@@ -106,7 +105,6 @@ public class App {
                 childrenOfPerson.get(child.getMotherId()).add(child);
             }
             else {
-                // Todo maybe make it a LinkedList
                 List<Person> children = new ArrayList<>();
 
                 children.add(child);
@@ -128,10 +126,6 @@ public class App {
     }
 
     public void resetModel(boolean keepSettings) {
-
-        for (MapMarkerColor color : MapMarkerColor.values()) {
-            color.setIsUsed(false);
-        }
 
         people = new HashMap<>();
         events = new HashMap<>();
@@ -160,31 +154,6 @@ public class App {
         }
 
         connections.clear();
-    }
-
-    public Map<String, Person> getPeople() {
-        return people;
-    }
-
-    public void setPeople(PeopleResponse peopleResponse) {
-
-        for (Person p : peopleResponse.getData()) {
-            String id = p.getId();
-            if (id.equals(getUserPersonId())) {
-                setUser(p);
-            }
-
-            people.put(id, p);
-            addChildToParent(p);
-        }
-    }
-
-    public void setPeople(Map<String, Person> people) {
-        this.people = people;
-    }
-
-    public Map<String, Event> getEvents() {
-        return events;
     }
 
     public Map<String, Event> getFilteredEvents() {
@@ -277,45 +246,63 @@ public class App {
         }
     }
 
-    public List<SearchResult> search(String query) {
-        List<SearchResult> results = new ArrayList<>();
-        Map<String, Boolean> filters = this.filters.getFilterOptions();
+    public Map<String, Person> getPeople() {
+        return people;
+    }
 
-        for (SearchResult possibleResult : searchableList) {
+    public void setPeople(PeopleResponse peopleResponse) {
 
-            if (possibleResult.getTopLine().toLowerCase().contains(query)) {
-                results.add(possibleResult);
-            }
-            else {
-                if (possibleResult.getBotLine() != null) {
-                    if (possibleResult.getBotLine().toLowerCase().contains(query)) {
-                        results.add(possibleResult);
-                    }
-                }
+        for (Person p : peopleResponse.getData()) {
+            String id = p.getId();
+            if (id.equals(getUserPersonId())) {
+                setUser(p);
             }
 
-            // TODO Filter stuff out if I want
-//            String personId = (possibleResult.getResultType() == SearchResult.PERSON_RESULT)
-//                              ? possibleResult.getId() : events.get(possibleResult.getId()).getPersonId();
-//            Person p = people.get(personId);
-//
-//            if ((p.getGender() == Gender.M && filters.get(Constants.BY_MALE)) ||
-//                    (p.getGender() == Gender.F && filters.get(Constants.BY_FEMALE))) {
-//                if (paternalAncestors.contains(personId) && filters.get(Constants.BY_FATHER_SIDE) ||
-//                        maternalAncestors.contains(personId) && filters.get(Constants.BY_MOTHER_SIDE)) {
-//
-//                }
-//            }
+            people.put(id, p);
+            addChildToParent(p);
         }
+    }
 
-        return results;
+    public void setPeople(List<Person> people) {
+
+        for (Person p : people) {
+            String id = p.getId();
+            if (id.equals(getUserPersonId())) {
+                setUser(p);
+            }
+
+            this.people.put(id, p);
+            addChildToParent(p);
+        }
+    }
+
+    public void setPeople(Map<String, Person> people) {
+        this.people = people;
+    }
+
+    public Map<String, Event> getEvents() {
+        return events;
     }
 
     public void setEvents(EventsResponse eventsResponse) {
 
         for (Event e : eventsResponse.getData()) {
             String id = e.getId();
-            getEvents().put(id, e);
+            this.events.put(id, e);
+
+            // Gather all the event types while we are at it
+            String eventType = e.getEventType();
+            getEventTypes().add(eventType);
+        }
+
+        addEventTypesToFilters();
+    }
+
+    public void setEvents(List<Event> events) {
+
+        for (Event e : events) {
+            String id = e.getId();
+            this.events.put(id, e);
 
             // Gather all the event types while we are at it
             String eventType = e.getEventType();
@@ -415,7 +402,7 @@ public class App {
     public void setPaternalAncestors() {
         if (user.getFatherId() != null) {
             String fatherId = people.get(userPersonId).getFatherId();
-            findAncestors(fatherId, paternalAncestors);
+            addAncestors(fatherId, paternalAncestors);
         }
     }
 
@@ -430,7 +417,7 @@ public class App {
     public void setMaternalAncestors() {
         if (user.getMotherId() != null) {
             String motherId = people.get(userPersonId).getMotherId();
-            findAncestors(motherId, maternalAncestors);
+            addAncestors(motherId, maternalAncestors);
         }
     }
 
@@ -537,5 +524,38 @@ public class App {
 
     public void setSearchableList(List<SearchResult> searchableList) {
         this.searchableList = searchableList;
+    }
+
+    public List<SearchResult> search(String query) {
+        List<SearchResult> results = new ArrayList<>();
+        Map<String, Boolean> filters = this.filters.getFilterOptions();
+
+        for (SearchResult possibleResult : searchableList) {
+
+            if (possibleResult.getTopLine().toLowerCase().contains(query)) {
+                results.add(possibleResult);
+            }
+            else {
+                if (possibleResult.getBotLine() != null) {
+                    if (possibleResult.getBotLine().toLowerCase().contains(query)) {
+                        results.add(possibleResult);
+                    }
+                }
+            }
+
+//            String personId = (possibleResult.getResultType() == SearchResult.PERSON_RESULT)
+//                              ? possibleResult.getId() : events.get(possibleResult.getId()).getPersonId();
+//            Person p = people.get(personId);
+//
+//            if ((p.getGender() == Gender.M && filters.get(Constants.BY_MALE)) ||
+//                    (p.getGender() == Gender.F && filters.get(Constants.BY_FEMALE))) {
+//                if (paternalAncestors.contains(personId) && filters.get(Constants.BY_FATHER_SIDE) ||
+//                        maternalAncestors.contains(personId) && filters.get(Constants.BY_MOTHER_SIDE)) {
+//
+//                }
+//            }
+        }
+
+        return results;
     }
 }

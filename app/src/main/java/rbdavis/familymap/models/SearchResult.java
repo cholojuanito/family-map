@@ -1,5 +1,15 @@
 package rbdavis.familymap.models;
 
+/*
+ * A class that serves as a data holder for the Recycler view holder
+ * on the MainActivity's SearchView.
+ * It contains two types: person and event results
+ *
+ * Person results show just one line of text and a male/female icon to
+ * determine gender
+ * Event results show two lines of text and an event icon
+ */
+
 public class SearchResult {
 
     public static final int PERSON_RESULT = 0;

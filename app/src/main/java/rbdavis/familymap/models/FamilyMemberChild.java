@@ -2,6 +2,11 @@ package rbdavis.familymap.models;
 
 import rbdavis.shared.models.data.Gender;
 
+/*
+ * A class that serves as a data holder for the list view portion of
+ * the Expandable Recycler View class on the PersonActivity
+ */
+
 public class FamilyMemberChild {
     private String id;
     private Gender gender;

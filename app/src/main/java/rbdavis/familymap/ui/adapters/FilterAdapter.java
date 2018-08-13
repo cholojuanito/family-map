@@ -14,6 +14,10 @@ import java.util.List;
 import rbdavis.familymap.R;
 import rbdavis.familymap.models.App;
 
+/*
+ * Basic adapter for the FilterActivity
+ */
+
 public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterViewHolder> {
 
     private List<String> filters;
