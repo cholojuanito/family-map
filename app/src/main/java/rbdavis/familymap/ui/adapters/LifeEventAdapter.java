@@ -19,11 +19,25 @@ import rbdavis.familymap.R;
 import rbdavis.familymap.models.LifeEventChild;
 import rbdavis.familymap.models.LifeEventParent;
 
+/*
+ * I used the ExpandableRecyclerView from Big Nerd Ranch to implement the PersonActivity
+ * This adapter requires a Parent, Child, ParentViewHolder and a ChildViewHolder to work
+ * The parent data members represent the bar/line that can be clicked in order to expand/collapse
+ * the list.
+ * The child data members represent the list view that is expanded/collapsed.
+ *
+ * This adapter is specific to events
+ */
+
 public class LifeEventAdapter extends ExpandableRecyclerAdapter<LifeEventParent, LifeEventChild, LifeEventAdapter.LifeEventParentViewHolder, LifeEventAdapter.LifeEventChildViewHolder> {
 
     private LayoutInflater layoutInflater;
     private OnChildClickListener childClickListener;
 
+    /*
+     * Allows the hosting activity to open other activities when
+     * a child view holder is clicked
+     */
     public interface OnChildClickListener {
         void onChildClick(View v, String id);
     }

@@ -7,6 +7,13 @@ import java.util.Map;
 
 import static rbdavis.shared.utils.Constants.*;
 
+/*
+ * A wrapper class that contains all the possible settings that can be changed in the Family Map App
+ * Each option is a Map of some data type to a Boolean. The Boolean simply decides which of the options
+ * in a setting is one or off. It is not possible to have more than one option in a setting turned
+ * to the on (true) position.
+ */
+
 public class Settings {
     private Map<String, Boolean> mapTypeOptions;
     private Map<Integer, Boolean> lifeStoryOptions;

@@ -1,5 +1,10 @@
 package rbdavis.familymap.models;
 
+/*
+ * A class that serves as a data holder for the list view portion of
+ * the Expandable Recycler View class on the PersonActivity
+ */
+
 public class LifeEventChild {
     private String id;
     private String info;

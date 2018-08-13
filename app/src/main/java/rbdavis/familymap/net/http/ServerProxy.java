@@ -54,6 +54,7 @@ public class ServerProxy {
         App.getInstance().setUserPersonId(null);
     }
 
+    /* Calls the Family Map login service */
     public LoginOrRegisterResponse login(LoginRequest request) {
         LoginOrRegisterResponse response = new LoginOrRegisterResponse();
 
@@ -69,7 +70,6 @@ public class ServerProxy {
             response.setMessage(CONNECT_SERVER_ERR);
         }
         catch (Exception e) {
-            //TODO: Log it
             response.setMessage("Error while deserializing response");
         }
 
@@ -82,6 +82,7 @@ public class ServerProxy {
         return response;
     }
 
+    /* Calls the Family Map register service */
     public LoginOrRegisterResponse register(RegisterRequest request) {
         LoginOrRegisterResponse response = new LoginOrRegisterResponse();
 
@@ -97,7 +98,6 @@ public class ServerProxy {
             response.setMessage(CONNECT_SERVER_ERR);
         }
         catch (Exception e) {
-            //TODO: Log it
             response.setMessage("Error while deserializing response");
         }
 
@@ -110,6 +110,7 @@ public class ServerProxy {
         return response;
     }
 
+    /* Calls the Family Map person service */
     public PeopleResponse getAllPeople(PeopleRequest request) {
         PeopleResponse response = new PeopleResponse();
 
@@ -124,13 +125,13 @@ public class ServerProxy {
             response.setMessage(CONNECT_SERVER_ERR);
         }
         catch (Exception e) {
-            //TODO: Log it
             response.setMessage("Error while deserializing response");
         }
 
         return response;
     }
 
+    /* Calls the Family Map event service */
     public EventsResponse getAllEvents(EventsRequest request) {
         EventsResponse response = new EventsResponse();
 
@@ -145,13 +146,13 @@ public class ServerProxy {
             response.setMessage(CONNECT_SERVER_ERR);
         }
         catch (Exception e) {
-            //TODO: Log it
             response.setMessage("Error while deserializing response");
         }
 
         return response;
     }
 
+    /* Opens an http connection that doesn't require an auth token */
     private HttpURLConnection openHttpConnection(String endPoint, String requestMethod) throws MalformedURLException, IOException  {
         HttpURLConnection result = null;
         URL url = new URL(getUrlPrefix() + endPoint);
@@ -163,6 +164,7 @@ public class ServerProxy {
         return result;
     }
 
+    /* Opens an http connection that requires an auth token */
     private HttpURLConnection openHttpConnection(String endPoint, String requestMethod, String authCode) throws MalformedURLException, IOException {
         HttpURLConnection result = null;
         URL url = new URL(getUrlPrefix() + endPoint);
@@ -183,7 +185,6 @@ public class ServerProxy {
             os.close();
         }
         catch (IOException e) {
-            //TODO: Log it
             e.printStackTrace();
         }
     }
@@ -209,7 +210,6 @@ public class ServerProxy {
                     break;
 
                 case HttpURLConnection.HTTP_BAD_REQUEST:
-                    //TODO: Log it
                     InputStream errorResp = connection.getErrorStream();
                     String respData = readString(errorResp);
                     result = gson.fromJson(respData, theClass);
@@ -217,12 +217,10 @@ public class ServerProxy {
                     break;
 
                 default:
-                    //TODO: Log it
                     throw new Exception("HTTP code " + connection.getResponseCode());
             }
         }
         catch (JsonSyntaxException | JsonIOException | IOException e) {
-            //TODO: Log it
             return new Response("JSON syntax error while deserializing response");
         }
 

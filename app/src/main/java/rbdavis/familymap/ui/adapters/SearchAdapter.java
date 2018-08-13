@@ -21,6 +21,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchResu
     private List<SearchResult> results;
     private OnSearchItemClickListener clickListener;
 
+    /*
+     * Provides a way for the parent activity to start other activities
+     * based on the type of search result clicked
+     */
     public interface OnSearchItemClickListener {
         void onSearchItemClick(View v, String id, int type);
     }
@@ -109,7 +113,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchResu
                     break;
 
                 case SearchResult.EVENT_RESULT:
-                    // TODO Change icon color to the correct color
+                    // TODO: Change icon color to the correct event type color
                     icon.setImageResource(R.drawable.ic_place);
                     topLine.setText(resultItem.getTopLine());
                     botLine.setText(resultItem.getBotLine());

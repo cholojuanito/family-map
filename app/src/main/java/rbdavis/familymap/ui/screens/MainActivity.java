@@ -77,6 +77,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
 
     }
 
+    /****** SEARCH METHODS ******/
+    /*
+     * I implemented the App's search functionality as a SearchView
+     * by following Google's tutorial on SearchViews
+     *
+     * This way I didn't have to make a new activity just for
+     * searching purposes
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -108,12 +116,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
         return true;
     }
 
-    /* Search methods */
     @Override
     public boolean onQueryTextSubmit(String query) {
-        // TODO Make an async task
-//        searchView.clearFocus();
-//        searchView.setQuery("", false);
 
         if (query != null && !query.equals("")) {
             List<SearchResult> results = App.getInstance().search(query.toLowerCase());
@@ -162,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
                 break;
         }
     }
+    /****** END SEARCH METHODS ******/
 
     @Override
     public void onLogin() {

@@ -2,23 +2,21 @@ package rbdavis.familymap.tasks;
 
 import android.os.AsyncTask;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import rbdavis.familymap.models.App;
-import rbdavis.familymap.models.MapMarkerColor;
 import rbdavis.familymap.net.http.ServerProxy;
-import rbdavis.shared.models.data.Event;
-import rbdavis.shared.models.data.Person;
 import rbdavis.shared.models.http.requests.EventsRequest;
 import rbdavis.shared.models.http.requests.PeopleRequest;
 import rbdavis.shared.models.http.responses.EventsResponse;
 import rbdavis.shared.models.http.responses.PeopleResponse;
 
 import static rbdavis.shared.utils.Constants.SUCCESS;
+
+/*
+ * This AsyncTask simply calls the person and event API's to
+ * sync the app with the data in the database
+ * It calls methods on the App model to organize the data that needs
+ * organization
+ */
 
 public class SyncDataTask extends AsyncTask<String, String, String> {
     public interface Callback {
@@ -56,7 +54,6 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
         else {
             responseStr = peopleResponse.getMessage();
             callback.onSyncError(responseStr);
-            //TODO Terminate early
         }
 
         progressUpdate = "Fetching life events...";
@@ -107,6 +104,12 @@ public class SyncDataTask extends AsyncTask<String, String, String> {
         model.setSearchableList();
     }
 
+    /*
+     * Since our data sets were so small the SyncFragment didn't show very long,
+     * which is sad, because I worked hard on that. So this method just puts the
+     * Async thread to sleep for a short time to all the user to see the progress that
+     * is posted from this AsyncTask
+     */
     private void rest() {
         try {
             Thread.sleep(1000);
