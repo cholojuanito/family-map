@@ -10,18 +10,17 @@ This repo contains the code for both the server and the app.
 
 Once the server and app are running you should be able to view the app in a connect Android device or an emulator.
 
-**App/Server info and features**
-Info:
+## App/Server info and features
+#### Info:
 - The data used in the app is generated in the server code located in the ```family-map/server``` package.
 - Signning up for the app generates 4 generations of family members and basic life events from their 'lives'.
 
-Features:
-- Tapping on a life event (the map markers), are color coordinated based on the type of event,
-   and do the following:
+#### Features:
+- Tapping on a life event (the map markers), which are color coordinated based on the type of event, do the following:
   - Show info about the person behind the event
   - Connect color coordinated lines between:
     1. Family members
     2. Spouses
     3. Other personal events
 - Tapping on the event info window sends you to a personal info screen with info about the person
-- Life events, lines, map type, etc. can all be changed by tapping the Settings or Filter buttons
+- Life events, lines, map type, etc. can all be changed by tapping the Settings or Filter icons
