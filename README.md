@@ -1,12 +1,14 @@
 # family-map
 Family map is a family history application for Android.
 
+![alt text](./images/family-map-screenshot.png)
+
 This repo contains the code for both the server and the app.
 
 **To run this app you need to do a few things:**
   1. Start the server in ```family-map/server/src/main/java/rbdavis/server/Server.java``` 
       and include a port number for it to listen on. i.e. 8080
-  2. I have not made a release APK for the app so you will have to run the app in Android Studio.
+  2. I have not made an APK for the app so you will have to run the app in Android Studio.
 
 Once the server and app are running you should be able to view the app in a connect Android device or an emulator.
 
