@@ -61,9 +61,9 @@ public class UserSqlDAO extends SqlDAO implements DAO<User> {
         try {
             PreparedStatement stmt = null;
             try {
-                String sql = "INSERT INTO Users" +
-                             "(username, person_id, password, email, first_name, last_name, gender)" +
-                             "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO Users " +
+                             "(username, person_id, password, email, first_name, last_name, gender) " +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?);";
                 stmt = connection.prepareStatement(sql);
                 stmt.setString(1, user.getUsername());
                 stmt.setString(2, user.getPersonId());

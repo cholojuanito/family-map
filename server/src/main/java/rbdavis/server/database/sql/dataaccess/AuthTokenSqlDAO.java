@@ -63,9 +63,9 @@ public class AuthTokenSqlDAO extends SqlDAO implements DAO<AuthToken> {
         try {
             PreparedStatement stmt = null;
             try {
-                String sql = "INSERT INTO AuthTokens" +
-                        "(token, user_id, start_time, end_time)" +
-                        "VALUES (?, ?, ?, ?)";
+                String sql = "INSERT INTO AuthTokens " +
+                        "(token, user_id, start_time, end_time) " +
+                        "VALUES (?, ?, ?, ?);";
                 stmt = connection.prepareStatement(sql);
                 stmt.setString(1, token.getToken());
                 stmt.setString(2, token.getUserId());

@@ -68,7 +68,7 @@ public class EventSqlDAO extends SqlDAO implements DAO<Event> {
             try {
                 String sql = "INSERT INTO Events " +
                         "(id, person_id, user_id, type, latitude, longitude, city, country, date_happened) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
                 stmt = connection.prepareStatement(sql);
                 stmt.setString(1, event.getId());
                 stmt.setString(2, event.getPersonId());

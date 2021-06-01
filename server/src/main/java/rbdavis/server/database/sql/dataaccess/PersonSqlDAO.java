@@ -63,8 +63,8 @@ public class PersonSqlDAO extends SqlDAO implements DAO<Person> {
             PreparedStatement stmt = null;
             try {
                 String sql = "INSERT INTO Persons " +
-                        "(id, user_id, first_name, last_name, gender, father_id, mother_id, spouse_id)" +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                        "(id, user_id, first_name, last_name, gender, father_id, mother_id, spouse_id) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
                 stmt = connection.prepareStatement(sql);
                 stmt.setString(1, person.getId());
                 stmt.setString(2, person.getUserId());
